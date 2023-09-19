@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:~/test
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    hikari.jdbc-url: jdbc:h2:mem:~/test;MODE=MYSQL
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:h2/schema.sql
+      data-locations: classpath:h2/data.sql
