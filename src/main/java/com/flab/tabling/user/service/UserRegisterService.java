@@ -20,7 +20,12 @@ public class UserRegisterService {
         }
         String encodedMail = passwordEncoder.encode(memberDto.getEmail());
         String encodedPassword = passwordEncoder.encode(memberDto.getPassword());
-        Member member = new Member(memberDto.getName(), encodedMail, encodedPassword, memberDto.getRoleType());
+        Member member = Member.builder()
+            .name(memberDto.getName())
+            .email(encodedMail)
+            .password(encodedPassword)
+            .roleType(memberDto.getRoleType())
+            .build();
         memberRepository.save(member);
     }
 
