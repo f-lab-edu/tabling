@@ -1,5 +1,7 @@
 package com.flab.tabling.user.dto;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.flab.tabling.user.domain.RoleType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -15,6 +17,6 @@ public class MemberDto {
 
     private RoleType roleType;
 
-    @Min(value = 8, message = "INVALID_PASSWORD")
+    @Length(min = 8, message = "INVALID_PASSWORD")
     private String password;
 }
