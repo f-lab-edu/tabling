@@ -1,5 +1,6 @@
 package com.flab.tabling.user.domain;
 
+import com.flab.tabling.global.util.BaseTime;
 import com.flab.tabling.user.util.RoleTypeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
