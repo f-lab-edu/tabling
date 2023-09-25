@@ -7,5 +7,5 @@ import lombok.Getter;
 
 @Getter
 public enum RoleType {
-	CUSTOMER, ADMIN, STORE;
+	CUSTOMER, ADMIN, SELLER;
 }

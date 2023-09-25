@@ -3,6 +3,9 @@ package com.flab.tabling.global.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
+import org.springframework.security.crypto.encrypt.BytesEncryptor;
+import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -16,5 +19,13 @@ public class SecurityConfig {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	/**
+	 * BytesEncryptor password, salt 설정은 추후에 시크릿 변수로 수정할 필요 있음
+	 */
+	@Bean
+	public BytesEncryptor bytesEncryptor() {
+		return Encryptors.stronger("This is a password!", "0123456f");
 	}
 }

@@ -1,12 +1,13 @@
 package com.flab.tabling.user.controller;
 
-import com.flab.tabling.user.dto.MemberDto;
+import com.flab.tabling.user.dto.MemberAddDto;
 import com.flab.tabling.user.service.MemberRegisterService;
 
 import jakarta.validation.Valid;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +25,8 @@ public class MemberController {
 	private final MemberRegisterService memberRegisterService;
 
 	@PostMapping("/members")
-	private void add(@Valid @RequestBody MemberDto memberDto) {
+	private ResponseEntity add(@Valid @RequestBody MemberAddDto.Request memberDto) {
 		memberRegisterService.add(memberDto);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
-
 }
