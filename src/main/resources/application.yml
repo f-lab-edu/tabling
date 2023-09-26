@@ -16,3 +16,6 @@ spring:
       mode: always
       schema-locations: classpath:h2/schema.sql
       data-locations: classpath:h2/data.sql
+
+bytes-encryptor-password: "This is a password!"
+bytes-encryptor-salt: "0123456f"
