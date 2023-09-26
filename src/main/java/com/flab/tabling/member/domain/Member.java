@@ -1,4 +1,4 @@
-package com.flab.tabling.user.domain;
+package com.flab.tabling.member.domain;
 
 import com.flab.tabling.global.util.BaseTime;
 

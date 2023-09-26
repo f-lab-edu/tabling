@@ -1,13 +1,12 @@
-package com.flab.tabling.user.dto;
+package com.flab.tabling.member.dto;
 
-import com.flab.tabling.user.domain.RoleType;
+import com.flab.tabling.member.domain.RoleType;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 public class MemberAddDto {
 	@Getter
@@ -30,6 +29,22 @@ public class MemberAddDto {
 			this.email = email;
 			this.roleType = roleType;
 			this.password = password;
+		}
+	}
+
+	@Getter
+	public static class Response {
+		private Long id;
+		private String name;
+		private String email;
+		private RoleType roleType;
+
+		@Builder
+		public Response(Long id, String name, String email, RoleType roleType) {
+			this.id = id;
+			this.name = name;
+			this.email = email;
+			this.roleType = roleType;
 		}
 	}
 
