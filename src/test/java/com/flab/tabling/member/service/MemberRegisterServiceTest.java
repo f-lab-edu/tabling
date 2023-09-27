@@ -36,8 +36,7 @@ class MemberRegisterServiceTest {
 			.email("euijin@test.com")
 			.password("123456789")
 			.build();
-		MemberAddDto.Request memberRequestDto = MemberAddDto.Request
-			.builder()
+		MemberAddDto.Request memberRequestDto = MemberAddDto.Request.builder()
 			.name("euijin")
 			.roleType(RoleType.CUSTOMER)
 			.email("euijin@test.com")
