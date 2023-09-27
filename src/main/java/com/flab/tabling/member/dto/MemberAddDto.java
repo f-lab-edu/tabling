@@ -5,11 +5,14 @@ import com.flab.tabling.member.domain.RoleType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class MemberAddDto {
 	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class Request {
 		@NotNull(message = "NO_NICKNAME")
 		@Size(min = 1, max = 30, message = "INVALID_NAME")
@@ -33,6 +36,7 @@ public class MemberAddDto {
 	}
 
 	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class Response {
 		private Long id;
 		private String name;

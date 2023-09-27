@@ -18,14 +18,14 @@ public class MemberRegisterService {
 	private final MemberRepository memberRepository;
 	private final CipherService cipherService;
 
-	public MemberAddDto.Response add(MemberAddDto.Request memberDto) {
-		String encryptedPassword = cipherService.encryptPassword(memberDto.getPassword());
-		String encryptedEmail = cipherService.encryptEmail(memberDto.getEmail());
+	public MemberAddDto.Response add(MemberAddDto.Request memberRequestDto) {
+		String encryptedPassword = cipherService.encryptPassword(memberRequestDto.getPassword());
+		String encryptedEmail = cipherService.encryptEmail(memberRequestDto.getEmail());
 		Member member = Member.builder()
-			.name(memberDto.getName())
+			.name(memberRequestDto.getName())
 			.email(encryptedEmail)
 			.password(encryptedPassword)
-			.roleType(memberDto.getRoleType())
+			.roleType(memberRequestDto.getRoleType())
 			.build();
 		memberRepository.save(member);
 		return MemberAddDto.Response.builder()
