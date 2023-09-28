@@ -39,16 +39,10 @@ public class MemberAddDto {
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class Response {
 		private Long id;
-		private String name;
-		private String email;
-		private RoleType roleType;
 
 		@Builder
-		public Response(Long id, String name, String email, RoleType roleType) {
+		public Response(Long id) {
 			this.id = id;
-			this.name = name;
-			this.email = email;
-			this.roleType = roleType;
 		}
 	}
 

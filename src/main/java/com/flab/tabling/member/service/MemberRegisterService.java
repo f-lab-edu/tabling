@@ -16,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberRegisterService {
 	private final MemberRepository memberRepository;
-	private final CipherService cipherService;
+	private final CipherService oneWayCipherService;
+	private final CipherService twoWayCipherService;
 
 	public MemberAddDto.Response add(MemberAddDto.Request memberRequestDto) {
-		String encryptedPassword = cipherService.encryptPassword(memberRequestDto.getPassword());
-		String encryptedEmail = cipherService.encryptEmail(memberRequestDto.getEmail());
+
+		String encryptedPassword = oneWayCipherService.encrypt(memberRequestDto.getPassword());
+		String encryptedEmail = twoWayCipherService.encrypt(memberRequestDto.getEmail());
 		Member member = Member.builder()
 			.name(memberRequestDto.getName())
 			.email(encryptedEmail)
@@ -28,12 +30,7 @@ public class MemberRegisterService {
 			.roleType(memberRequestDto.getRoleType())
 			.build();
 		memberRepository.save(member);
-		return MemberAddDto.Response.builder()
-			.id(member.getId())
-			.name(member.getName())
-			.email(cipherService.decryptEmail(member.getEmail()))
-			.roleType(member.getRoleType())
-			.build();
+		return new MemberAddDto.Response(member.getId());
 	}
 
 }
