@@ -42,7 +42,7 @@ class MemberControllerTest {
 	@Test
 	void addUser() throws Exception {
 		//given
-		String name = stringGenerator.makeName(8);
+		String name = stringGenerator.makeByNumbersAndLowerLetters(8);
 		String password = stringGenerator.makePassword(10);
 		RoleType roleType = RoleType.CUSTOMER;
 		String email = stringGenerator.makeEmail(8);
@@ -56,9 +56,6 @@ class MemberControllerTest {
 			.build();
 		MemberAddDto.Response memberResponseDto = MemberAddDto.Response
 			.builder()
-			.name(name)
-			.roleType(roleType)
-			.email(email)
 			.id(1L)
 			.build();
 
