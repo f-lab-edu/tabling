@@ -1,4 +1,10 @@
 package com.flab.tabling.member.exception;
 
-public class MemberExistException extends RuntimeException {
+import com.flab.tabling.global.exception.BusinessException;
+import com.flab.tabling.global.exception.ErrorCode;
+
+public class MemberExistException extends BusinessException {
+	public MemberExistException() {
+		super(ErrorCode.MISSING_PARAMETER);
+	}
 }
