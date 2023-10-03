@@ -2,7 +2,7 @@ package com.flab.tabling.global.config;
 
 import java.util.Random;
 
-public class StringGenerateFixture {
+public final class StringGenerateFixture {
 	private static final Random random = new Random();
 	private static final int leftLimit = '0';
 	private static final int rightLimit = 'z';
