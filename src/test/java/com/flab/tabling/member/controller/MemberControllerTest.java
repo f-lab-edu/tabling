@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flab.tabling.global.config.StringGenerator;
+import com.flab.tabling.global.config.StringGenerateFixture;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.service.MemberRegisterService;
@@ -36,16 +36,14 @@ class MemberControllerTest {
 	private MockMvc mvc;
 	ObjectMapper objectMapper = new ObjectMapper();
 
-	private StringGenerator stringGenerator = new StringGenerator();
-
 	@DisplayName("회원가입")
 	@Test
 	void addUser() throws Exception {
 		//given
-		String name = stringGenerator.makeByNumbersAndLowerLetters(8);
-		String password = stringGenerator.makePassword(10);
+		String name = StringGenerateFixture.makeByNumbersAndLowerLetters(8);
+		String password = StringGenerateFixture.makePassword(10);
 		RoleType roleType = RoleType.CUSTOMER;
-		String email = stringGenerator.makeEmail(8);
+		String email = StringGenerateFixture.makeEmail(8);
 
 		MemberAddDto.Request memberRequestDto = MemberAddDto.Request
 			.builder()
