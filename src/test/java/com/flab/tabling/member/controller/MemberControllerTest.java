@@ -23,6 +23,14 @@ import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.service.MemberRegisterService;
 
+/**
+ * @WebMvcTest : 웹 계층과 관련된 빈들만을 찾아서 빈으로 등록 @RestController,  @RestControllerAdvice, WebMvcConfigurer, HandlerMethodArgumentResolver
+ * @MockBean : 가짜 객체인 Mock 객체를 빈으로 등록, main 클래스의 @EnableJpaAuditing JpaMetamodelMappingContext.class 빈 등록
+ * @Autowired : 의존성 주입, 필드 주입, 수정자 주입, 생성자 주입 방식이 있고 생성자가 1개일 경우 생략될 수 있다. 필드 주입은 권장되지 않으나 테스트코드에서는
+ * 필드 주입을 통해서 Jupiter가 스프링 컨테이너에 요청하게 되어서 정상적으로 빈 주입을 받을 수 있게 된다.
+ * @AutoConfigureMockMvc : addFilters = false로 해서 Filter 없이 MockMvc auto-configuration을 설정했다.
+ */
+
 @WebMvcTest(MemberController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureMockMvc(addFilters = false)

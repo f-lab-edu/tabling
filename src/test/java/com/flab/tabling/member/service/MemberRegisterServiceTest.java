@@ -14,6 +14,10 @@ import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.repository.MemberRepository;
 
+/**
+ * @InjectMocks : @Mock이 붙은 Mock 객체를 @InjectMocks이 붙은 객체에 주입
+ * @Mock : Mock 객체 생성
+ */
 @ExtendWith(MockitoExtension.class)
 class MemberRegisterServiceTest {
 	@InjectMocks
