@@ -26,7 +26,7 @@ class OneWayCipherServiceTest {
 	@DisplayName("비밀번호 일치 검사")
 	void checkValidPassword() {
 		//given
-		String password = StringGenerateFixture.makePassword(10);
+		String password = StringGenerateFixture.makeByNumbersAndAlphabets(10);
 		//when
 		String encryptedPassword = oneWayCipherService.encrypt(password);
 		//then
@@ -37,11 +37,11 @@ class OneWayCipherServiceTest {
 	@DisplayName("비밀번호 불일치 검사")
 	void checkInvalidPassword() {
 		//given
-		String invalidPassword = StringGenerateFixture.makePassword(10);
+		String invalidPassword = StringGenerateFixture.makeByNumbersAndAlphabets(10);
 		//when
-		String password = StringGenerateFixture.makePassword(10);
+		String password = StringGenerateFixture.makeByNumbersAndAlphabets(10);
 		while (invalidPassword.equals(password)) {
-			password = StringGenerateFixture.makePassword(10);
+			password = StringGenerateFixture.makeByNumbersAndAlphabets(10);
 		}
 		String encryptedPassword = oneWayCipherService.encrypt(password);
 		//then

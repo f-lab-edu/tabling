@@ -41,7 +41,7 @@ class MemberControllerTest {
 	void addUser() throws Exception {
 		//given
 		String name = StringGenerateFixture.makeByNumbersAndLowerLetters(8);
-		String password = StringGenerateFixture.makePassword(10);
+		String password = StringGenerateFixture.makeByNumbersAndAlphabets(10);
 		RoleType roleType = RoleType.CUSTOMER;
 		String email = StringGenerateFixture.makeEmail(8);
 

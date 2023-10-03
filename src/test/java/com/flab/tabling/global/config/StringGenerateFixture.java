@@ -12,7 +12,7 @@ public class StringGenerateFixture {
 
 	private static final String emailDomain = "@test.com";
 
-	public static String makePassword(int length) {
+	public static String makeByNumbersAndAlphabets(int length) {
 		return random.ints(leftLimit, rightLimit + 1)
 			.filter(i -> ('0' <= i && i <= '9') || ('a' <= i && i <= 'z') || ('A' <= i && i <= 'Z'))
 			.limit(length)
@@ -45,11 +45,6 @@ public class StringGenerateFixture {
 
 	public static String makeByNumbersAndAlphabets() {
 		int length = random.nextInt(min, max);
-		return random.ints(leftLimit, rightLimit + 1)
-			.filter(i -> ('0' <= i && i <= '9') || ('a' <= i && i <= 'z') || ('A' <= i && i <= 'Z'))
-			.limit(length)
-			.collect(StringBuilder::new,
-				StringBuilder::appendCodePoint, StringBuilder::append)
-			.toString();
+		return makeByNumbersAndAlphabets(length);
 	}
 }
