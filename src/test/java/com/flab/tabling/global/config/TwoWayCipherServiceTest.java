@@ -13,12 +13,12 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 class TwoWayCipherServiceTest {
 	private TwoWayCipherService twoWayCipherService;
 	@Spy
-	StringGenerator stringGenerator;
+	StringGenerateFixture stringGenerateFixture;
 
 	@BeforeEach
 	void init() {
-		String encryptorsPassword = stringGenerator.make();
-		String salt = stringGenerator.makeByHexCharacter(32);
+		String encryptorsPassword = StringGenerateFixture.makeByNumbersAndAlphabets();
+		String salt = StringGenerateFixture.makeByHexCharacter(32);
 		twoWayCipherService = new TwoWayCipherService(Encryptors.stronger(encryptorsPassword, salt));
 	}
 
@@ -26,7 +26,7 @@ class TwoWayCipherServiceTest {
 	@DisplayName("이메일 암호화 검사")
 	void encryptEmail() {
 		//given
-		String email = stringGenerator.makeEmail(7);
+		String email = stringGenerateFixture.makeEmail(7);
 
 		//when
 		String encryptedEmail = twoWayCipherService.encrypt(email);

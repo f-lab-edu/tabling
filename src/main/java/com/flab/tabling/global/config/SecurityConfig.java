@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @Configuration : 빈 정의와 런타임 때 빈에 대한 서비스 요청을 생성하기 위해
  * 스프링 컨테이너에 의해 처리될 수 있음
  * @Bean: 스프링 컨테이너에 의해 관리되는 빈 생성
+ * @PropertySource : 설정된 파일을 읽어서 스프링 Environment 오브젝트에 저장
+ * @Value : 외부 변수의 값을 읽어 온다.
  */
 
 @PropertySource("classpath:application.yml")

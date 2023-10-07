@@ -1,6 +1,7 @@
 package com.flab.tabling.member.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.config.CipherService;
 import com.flab.tabling.member.domain.Member;
@@ -19,6 +20,7 @@ public class MemberRegisterService {
 	private final CipherService oneWayCipherService;
 	private final CipherService twoWayCipherService;
 
+	@Transactional
 	public MemberAddDto.Response add(MemberAddDto.Request memberRequestDto) {
 
 		String encryptedPassword = oneWayCipherService.encrypt(memberRequestDto.getPassword());
