@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
+	private final String invalidParameterCode = "INVALID_PARAMETER";
+	private final String invalidParameterMessage = " is invalid";
+
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
 		ErrorResponse errorResponse = ErrorResponse.builder()
@@ -22,7 +25,7 @@ public class GlobalExceptionAdvice {
 			.code(e.getErrorCode().name())
 			.build();
 		return ResponseEntity
-			.status(HttpStatus.BAD_REQUEST)
+			.status(e.getErrorCode().getStatus())
 			.body(errorResponse);
 	}
 
@@ -30,8 +33,8 @@ public class GlobalExceptionAdvice {
 	public ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException e) {
 		FieldError fieldError = e.getBindingResult().getFieldErrors().get(0);
 		ErrorResponse errorResponse = ErrorResponse.builder()
-			.message(fieldError.getField() + " is invalid")
-			.code(fieldError.getDefaultMessage())
+			.message(fieldError.getField() + invalidParameterMessage)
+			.code(invalidParameterCode)
 			.build();
 		return ResponseEntity
 			.status(HttpStatus.BAD_REQUEST)
