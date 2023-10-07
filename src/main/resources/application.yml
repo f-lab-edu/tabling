@@ -6,6 +6,10 @@ spring:
     password:
     hikari.jdbc-url: jdbc:h2:mem:~/test;MODE=MYSQL
 
+  jpa:
+    hibernate:
+      ddl-auto: none
+
   h2:
     console:
       enabled: true
