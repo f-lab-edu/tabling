@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @Aspect : advice와 pointcut 모듈화한 것
+ * @Before : before advice, 포인트 컷이 실행되기 전 지정한 어드바이스 실행
+ */
+
 @Component
 @Aspect
 @Slf4j
