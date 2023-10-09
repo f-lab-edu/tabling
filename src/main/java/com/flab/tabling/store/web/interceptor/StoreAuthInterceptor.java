@@ -18,16 +18,27 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		HttpSession session = request.getSession();
+		loginValidation(session);
+		memberRoleTypeValidation(session);
+		return true;
+	}
+
+	private void loginValidation(HttpSession session) {
 		if (session == null || session.getAttribute("LOGIN_SESSION") == null) { // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
 			throw new RuntimeException("NO_SESSION"); // TODO: 2023-10-04 커스텀 인증 예외로 교체 필요
 		}
+	}
 
-		Object sessionValue = session.getAttribute("LOGIN_SESSION"); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
-		Long loginMemberId = Long.valueOf(sessionValue.toString());
-		boolean isSeller = roleTypeCheckService.isSeller(loginMemberId);
+	private void memberRoleTypeValidation(HttpSession session) {
+		Long sessionMemberId = getSessionMemberId(session);
+		boolean isSeller = roleTypeCheckService.isSeller(sessionMemberId);
 		if (!isSeller) {
 			throw new RuntimeException("INCORRECT_MEMBER_ROLE_TYPE"); // TODO: 2023-10-06 잘못된 회원 타입을 명시하는 커스텀 예외로 교체
 		}
-		return true;
+	}
+
+	private Long getSessionMemberId(HttpSession session) {
+		Object sessionValue = session.getAttribute("LOGIN_SESSION"); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		return Long.valueOf(sessionValue.toString());
 	}
 }

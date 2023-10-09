@@ -19,8 +19,7 @@ public class StoreCrudService {
 
 	@Transactional
 	public StoreAddDto.Response add(StoreAddDto.Request storeRequestDto, Long memberId) {
-		Member seller = memberRepository.findById(memberId)
-			.orElseThrow(RuntimeException::new); // TODO: 2023-10-03 커스텀 예외로 수정 필요
+		Member seller = getMember(memberId);
 
 		Store newStore = Store.builder()
 			.member(seller)
@@ -34,5 +33,10 @@ public class StoreCrudService {
 		return StoreAddDto.Response.builder()
 			.id(savedStore.getId())
 			.build();
+	}
+
+	private Member getMember(Long memberId) {
+		return memberRepository.findById(memberId)
+			.orElseThrow(RuntimeException::new); // TODO: 2023-10-03 커스텀 예외로 수정 필요
 	}
 }
