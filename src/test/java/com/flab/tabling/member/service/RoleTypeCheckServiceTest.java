@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,7 @@ class RoleTypeCheckServiceTest {
 	void checkSellerSuccessReturnTrue() {
 		//given
 		Member seller = getSeller();
+
 		doReturn(Optional.ofNullable(seller)).when(memberRepository)
 			.findById(1L);
 
@@ -45,6 +48,7 @@ class RoleTypeCheckServiceTest {
 	void checkSellerFailReturnFalse() {
 		//given
 		Member customer = getCustomer();
+
 		doReturn(Optional.ofNullable(customer)).when(memberRepository)
 			.findById(1L);
 
@@ -56,20 +60,16 @@ class RoleTypeCheckServiceTest {
 	}
 
 	private Member getCustomer() {
-		return Member.builder()
-			.name("CUSTOMER_A")
-			.email("customer@test.test")
-			.password("password")
-			.roleType(RoleType.CUSTOMER)
-			.build();
+		EasyRandomParameters customerParam = new EasyRandomParameters();
+		customerParam.randomize(RoleType.class, () -> RoleType.CUSTOMER);
+		EasyRandom customerRandom = new EasyRandom(customerParam);
+		return customerRandom.nextObject(Member.class);
 	}
 
 	private Member getSeller() {
-		return Member.builder()
-			.name("SELLER_A")
-			.email("seller@test.test")
-			.password("password")
-			.roleType(RoleType.SELLER)
-			.build();
+		EasyRandomParameters sellerParam = new EasyRandomParameters();
+		sellerParam.randomize(RoleType.class, () -> RoleType.SELLER);
+		EasyRandom sellerRandom = new EasyRandom(sellerParam);
+		return sellerRandom.nextObject(Member.class);
 	}
 }

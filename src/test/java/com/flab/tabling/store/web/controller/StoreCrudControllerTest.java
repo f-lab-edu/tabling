@@ -66,6 +66,7 @@ class StoreCrudControllerTest {
 				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
 				.content(requestJson)
 			)
+			.andExpect(MockMvcResultMatchers.status().isCreated())
 			.andExpect(MockMvcResultMatchers.content().json(responseJson));
 	}
 }
