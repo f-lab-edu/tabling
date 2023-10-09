@@ -4,6 +4,7 @@ import jakarta.persistence.Lob;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class StoreAddDto {
 		@Lob
 		private String description;
 		@NotNull
+		@Positive
 		@Max(50)
 		private Integer maxWaitingCount;
 
