@@ -5,8 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-	MEMBER_ALREADY_EXISTENT("member already exists", 400),
-	MEMBER_NOT_FOUND("member not found", 404);
+	MEMBER_DUPLICATED("member already exists", 400),
+	MEMBER_NOT_FOUND("member not found", 404),
+	INVALID_PARAMETER("parameter is invalid", 400);
 
 	private final String message;
 	private final int status;

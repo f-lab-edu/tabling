@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
 	private String message;
-	private String code;
+	private ErrorCode code;
 
 	@Builder
-	public ErrorResponse(String message, String code) {
+	public ErrorResponse(String message, ErrorCode code) {
 		this.message = message;
 		this.code = code;
 	}

@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.tabling.global.config.StringGenerateFixture;
+import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.exception.ErrorResponse;
 import com.flab.tabling.global.exception.GlobalExceptionAdvice;
 import com.flab.tabling.member.domain.RoleType;
@@ -108,8 +109,8 @@ class MemberControllerTest {
 			.build();
 		ErrorResponse errorResponse = ErrorResponse
 			.builder()
-			.code("INVALID_PARAMETER")
-			.message("name is invalid")
+			.code(ErrorCode.INVALID_PARAMETER)
+			.message(ErrorCode.INVALID_PARAMETER.getMessage())
 			.build();
 
 		//when

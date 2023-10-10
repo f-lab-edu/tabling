@@ -1,11 +1,11 @@
 package com.flab.tabling.global.exception;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @RestControllerAdvice : 흩어져 있는 exception handler를 단 하나의 전역 컴포넌트에 통합시킬 수 있게 한다.
@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * 처리해주는 기능
  */
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
-	private final String invalidParameterCode = "INVALID_PARAMETER";
-	private final String invalidParameterMessage = " is invalid";
-
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+		log.warn(e.getClass().getName(), e);
 		ErrorResponse errorResponse = ErrorResponse.builder()
 			.message(e.getMessage())
-			.code(e.getErrorCode().name())
+			.code(e.getErrorCode())
 			.build();
 		return ResponseEntity
 			.status(e.getErrorCode().getStatus())
@@ -30,14 +29,15 @@ public class GlobalExceptionAdvice {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException e) {
-		FieldError fieldError = e.getBindingResult().getFieldErrors().get(0);
+	public ResponseEntity<ErrorResponse> handleInvalidParameterException(MethodArgumentNotValidException e) {
+		log.warn(e.getClass().getName(), e);
+		InvalidParameterException ex = new InvalidParameterException(e);
 		ErrorResponse errorResponse = ErrorResponse.builder()
-			.message(fieldError.getField() + invalidParameterMessage)
-			.code(invalidParameterCode)
+			.message(ex.getMessage())
+			.code(ex.getErrorCode())
 			.build();
 		return ResponseEntity
-			.status(HttpStatus.BAD_REQUEST)
+			.status(ex.getErrorCode().getStatus())
 			.body(errorResponse);
 	}
 
