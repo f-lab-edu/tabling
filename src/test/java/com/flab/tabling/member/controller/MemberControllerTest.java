@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,8 +24,10 @@ import com.flab.tabling.global.config.StringGenerateFixture;
 import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.exception.ErrorResponse;
 import com.flab.tabling.global.exception.GlobalExceptionAdvice;
+import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
+import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.service.MemberRegisterService;
 
 /**
@@ -45,6 +48,7 @@ class MemberControllerTest {
 	private MemberRegisterService memberRegisterService;
 	private MockMvc mvc;
 	ObjectMapper objectMapper = new ObjectMapper();
+	private MockHttpSession session = new MockHttpSession();
 
 	@BeforeEach
 	void init() {
@@ -126,4 +130,44 @@ class MemberControllerTest {
 		Assertions.assertThat(memberResponseDtoResult).usingRecursiveComparison().isEqualTo(errorResponse);
 	}
 
+	@DisplayName("로그인 세션 테스트")
+	@Test
+	void login() throws Exception {
+		String email = StringGenerateFixture.makeEmail(10);
+		String password = StringGenerateFixture.makeByNumbersAndAlphabets(10);
+		MemberAuthDto.Request memberRequestDto = MemberAuthDto.Request
+			.builder()
+			.email(email)
+			.password(password)
+			.build();
+		MemberAuthDto.Response memberResponseDto = MemberAuthDto.Response
+			.builder()
+			.id(1L)
+			.build();
+
+		doReturn(memberResponseDto).when(memberRegisterService).findByEmail(any());
+		MockHttpServletResponse response = mvc.perform(post("/login")
+				.session(session)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(memberRequestDto)))
+			.andExpect(status().isOk())
+			.andReturn().getResponse();
+
+		MemberAuthDto.Response result = objectMapper.readValue(response.getContentAsString(),
+			MemberAuthDto.Response.class);
+		Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(memberResponseDto);
+		Assertions.assertThat((Long)session.getAttribute(SessionConstant.MEMBER_ID.getKey())).isEqualTo(result.getId());
+
+	}
+
+	@DisplayName("로그아웃 세션 테스트")
+	@Test
+	void logout() throws Exception {
+		Long memberId = 1L;
+		session.setAttribute(SessionConstant.MEMBER_ID.getKey(), memberId);
+		mvc.perform(delete("/logout")
+				.session(session))
+			.andExpect(status().isOk());
+		Assertions.assertThat(session.isInvalid()).isTrue();
+	}
 }
