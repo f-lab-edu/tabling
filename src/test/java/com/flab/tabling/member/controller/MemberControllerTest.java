@@ -125,4 +125,5 @@ class MemberControllerTest {
 			ErrorResponse.class);
 		Assertions.assertThat(memberResponseDtoResult).usingRecursiveComparison().isEqualTo(errorResponse);
 	}
+
 }

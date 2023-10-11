@@ -8,4 +8,6 @@ import com.flab.tabling.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByName(String name);
+
+	Optional<Member> findByEmail(String email);
 }

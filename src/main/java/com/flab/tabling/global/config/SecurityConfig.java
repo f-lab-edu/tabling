@@ -1,13 +1,19 @@
 package com.flab.tabling.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.flab.tabling.global.auth.AuthenticationFilter;
+import com.flab.tabling.global.auth.ExceptionHandlerFilter;
+
+import jakarta.servlet.Filter;
 
 /**
  * @Configuration : 빈 정의와 런타임 때 빈에 대한 서비스 요청을 생성하기 위해
@@ -20,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @PropertySource("classpath:application.yml")
 @Configuration
 public class SecurityConfig {
+	private final String ANY_URI = "/*";
 	@Value("${bytes-encryptor-password}")
 	private String encryptorPassword;
 	@Value("${bytes-encryptor-salt}")
@@ -35,6 +42,24 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public BytesEncryptor bytesEncryptor() {
-		return Encryptors.stronger(encryptorPassword, encryptorSalt);
+		return new AesBytesEncryptor(encryptorPassword, encryptorSalt);
+	}
+
+	@Bean
+	public FilterRegistrationBean<Filter> authenticationFilter() {
+		FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
+		bean.setFilter(new AuthenticationFilter());
+		bean.setOrder(2);
+		bean.addUrlPatterns(ANY_URI);
+		return bean;
+	}
+
+	@Bean
+	public FilterRegistrationBean<Filter> exceptionHandlerFilter() {
+		FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
+		bean.setFilter(new ExceptionHandlerFilter());
+		bean.setOrder(1);
+		bean.addUrlPatterns(ANY_URI);
+		return bean;
 	}
 }
