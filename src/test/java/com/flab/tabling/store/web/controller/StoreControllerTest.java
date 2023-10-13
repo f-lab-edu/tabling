@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.tabling.store.dto.StoreUpdateDto;
+import com.flab.tabling.store.service.StoreRemoveService;
 import com.flab.tabling.store.service.StoreUpdateService;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +30,8 @@ class StoreControllerTest {
 	private StoreController storeController;
 	@Mock
 	private StoreUpdateService storeUpdateService;
+	@Mock
+	private StoreRemoveService storeRemoveService;
 	private MockMvc mockMvc;
 	private ObjectMapper objectMapper;
 
@@ -39,7 +42,7 @@ class StoreControllerTest {
 	}
 
 	@Test
-	@DisplayName("수정 요청이 성공하면 상태코드와 함께 응답을 전송한다.")
+	@DisplayName("수정 요청이 성공적으로 수행되면, 상태코드와 함께 응답을 반환한다.")
 	void updateStoreSuccess() throws Exception {
 		//given
 		EasyRandomParameters conditions = getStoreDtoConditions();
@@ -61,6 +64,17 @@ class StoreControllerTest {
 			)
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
+	@Test
+	@DisplayName("삭제 요청이 성공적으로 수행되면, 상태코드를 반환한다.")
+	void deleteStoreSuccess() throws Exception {
+		//expected
+		mockMvc.perform(MockMvcRequestBuilders.delete("/stores/{id}", 2L)
+				.contentType(MediaType.APPLICATION_JSON)
+				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-13 세션 이름 변경 필요
+			)
+			.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
 	private EasyRandomParameters getStoreDtoConditions() {
