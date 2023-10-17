@@ -19,10 +19,7 @@ public class GlobalExceptionAdvice {
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
 		log.warn(e.getClass().getName(), e);
-		ErrorResponse errorResponse = ErrorResponse.builder()
-			.message(e.getMessage())
-			.code(e.getErrorCode())
-			.build();
+		ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode());
 		return ResponseEntity
 			.status(e.getErrorCode().getStatus())
 			.body(errorResponse);
@@ -32,10 +29,7 @@ public class GlobalExceptionAdvice {
 	public ResponseEntity<ErrorResponse> handleInvalidParameterException(MethodArgumentNotValidException e) {
 		log.warn(e.getClass().getName(), e);
 		InvalidParameterException ex = new InvalidParameterException(e);
-		ErrorResponse errorResponse = ErrorResponse.builder()
-			.message(ex.getMessage())
-			.code(ex.getErrorCode())
-			.build();
+		ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode());
 		return ResponseEntity
 			.status(ex.getErrorCode().getStatus())
 			.body(errorResponse);
