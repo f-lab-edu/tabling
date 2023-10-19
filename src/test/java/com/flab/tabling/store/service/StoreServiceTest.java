@@ -20,10 +20,10 @@ import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.repository.StoreRepository;
 
 @ExtendWith(MockitoExtension.class)
-class StoreCrudServiceTest {
+class StoreServiceTest {
 
 	@InjectMocks
-	private StoreCrudService storeCrudService;
+	private StoreService storeService;
 	@Mock
 	private StoreRepository storeRepository;
 	@Mock
@@ -42,7 +42,7 @@ class StoreCrudServiceTest {
 		doReturn(savedStore).when(storeRepository).save(any(Store.class));
 
 		//when
-		storeCrudService.add(storeRequestDto, 1L);
+		storeService.add(storeRequestDto, 1L);
 
 		//then
 		verify(storeRepository, times(1)).save(any(Store.class));
@@ -57,7 +57,7 @@ class StoreCrudServiceTest {
 		doReturn(Optional.empty()).when(memberRepository).findById(1L);
 		// TODO: 2023-10-04 커스텀 예외로 수정 필요
 		//expected
-		assertThrows(RuntimeException.class, () -> storeCrudService.add(storeRequestDto, 1L));
+		assertThrows(RuntimeException.class, () -> storeService.add(storeRequestDto, 1L));
 	}
 
 }

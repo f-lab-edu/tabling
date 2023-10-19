@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.flab.tabling.store.dto.StoreAddDto;
-import com.flab.tabling.store.service.StoreCrudService;
+import com.flab.tabling.store.service.StoreService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
-public class StoreCrudController {
-	private final StoreCrudService storeCrudService;
+public class StoreController {
+	private final StoreService storeService;
 
 	@PostMapping("/stores")
 	public ResponseEntity<StoreAddDto.Response> add(@Valid @RequestBody StoreAddDto.Request request,
 		@SessionAttribute(name = "LOGIN_SESSION") Long memberId) { // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
-		StoreAddDto.Response storeResponseDto = storeCrudService.add(request, memberId);
+		StoreAddDto.Response storeResponseDto = storeService.add(request, memberId);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(storeResponseDto);
 	}

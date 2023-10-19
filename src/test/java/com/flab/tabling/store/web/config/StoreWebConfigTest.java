@@ -14,20 +14,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.flab.tabling.store.web.controller.StoreCrudController;
+import com.flab.tabling.store.web.controller.StoreController;
 import com.flab.tabling.store.web.interceptor.StoreAuthInterceptor;
 
 @ExtendWith(MockitoExtension.class)
 class StoreWebConfigTest {
 	@InjectMocks
-	private StoreCrudController storeCrudController;
+	private StoreController storeController;
 	@Mock
 	private StoreAuthInterceptor storeAuthInterceptor;
 	private MockMvc mockMvc;
 
 	@BeforeEach
 	void init() {
-		mockMvc = MockMvcBuilders.standaloneSetup(storeCrudController).addInterceptors(storeAuthInterceptor).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(storeController).addInterceptors(storeAuthInterceptor).build();
 	}
 
 	@Test

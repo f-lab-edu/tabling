@@ -20,19 +20,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.tabling.store.dto.StoreAddDto;
-import com.flab.tabling.store.service.StoreCrudService;
+import com.flab.tabling.store.service.StoreService;
 
 /*
 @ExtendWith: Junit의 확장기능, mock 객체를 사용하기 위해 mockito 확장
  */
 @ExtendWith(MockitoExtension.class)
-class StoreCrudControllerTest {
+class StoreControllerTest {
 
 	@InjectMocks
-	private StoreCrudController storeCrudController;
+	private StoreController storeController;
 
 	@Mock
-	private StoreCrudService storeCrudService;
+	private StoreService storeService;
 
 	private MockMvc mockMvc;
 
@@ -40,7 +40,7 @@ class StoreCrudControllerTest {
 
 	@BeforeEach
 	void init() {
-		mockMvc = MockMvcBuilders.standaloneSetup(storeCrudController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(storeController).build();
 		objectMapper = new ObjectMapper();
 	}
 
@@ -57,7 +57,7 @@ class StoreCrudControllerTest {
 		StoreAddDto.Response responseDto = easyRandom.nextObject(StoreAddDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
-		doReturn(responseDto).when(storeCrudService)
+		doReturn(responseDto).when(storeService)
 			.add(any(StoreAddDto.Request.class), eq(1L));
 
 		//expected
