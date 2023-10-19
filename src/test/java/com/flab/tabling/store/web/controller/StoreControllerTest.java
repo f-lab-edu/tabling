@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
+import org.jeasy.random.randomizers.range.IntegerRangeRandomizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ class StoreControllerTest {
 	@DisplayName("올바른 정보로 식당등록을 요청하면 성공적으로 수행된다.")
 	void addStoreSuccess() throws Exception {
 		//given
-		EasyRandomParameters conditions = new EasyRandomParameters().stringLengthRange(2, 10);
+		EasyRandomParameters conditions = getStoreDtoConditions();
 		EasyRandom easyRandom = new EasyRandom(conditions);
 
 		StoreAddDto.Request requestDto = easyRandom.nextObject(StoreAddDto.Request.class);
@@ -68,5 +70,12 @@ class StoreControllerTest {
 			)
 			.andExpect(MockMvcResultMatchers.status().isCreated())
 			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
+	private EasyRandomParameters getStoreDtoConditions() {
+		return new EasyRandomParameters()
+			.stringLengthRange(2, 20)
+			.randomize(FieldPredicates.named("id"), () -> 2L)
+			.randomize(FieldPredicates.named("maxWaitingCount"), new IntegerRangeRandomizer(1, 50));
 	}
 }
