@@ -14,16 +14,16 @@ public class MemberAddDto {
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class Request {
-		@NotNull(message = "NO_NICKNAME")
-		@Size(min = 1, max = 30, message = "INVALID_NAME")
+		@NotNull
+		@Size(min = 1, max = 30)
 		private String name;
 		@NotNull
-		@Email(message = "INVALID_EMAIL")
+		@Email
 		private String email;
-		@NotNull(message = "NO_ROLE_TYPE")
+		@NotNull
 		private RoleType roleType;
-		@NotNull(message = "NO_PASSWORD")
-		@Size(min = 8, message = "INVALID_PASSWORD")
+		@NotNull
+		@Size(min = 8)
 		private String password;
 
 		@Builder
