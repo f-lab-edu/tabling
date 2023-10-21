@@ -36,15 +36,11 @@ public class ExceptionHandlerFilter implements Filter {
 		ObjectMapper objectMapper = new ObjectMapper();
 		httpResponse.setStatus(errorCode.getStatus());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		ErrorResponse errorResponse = ErrorResponse.builder()
-			.code(errorCode)
-			.message(errorCode.getMessage())
-			.build();
+		ErrorResponse errorResponse = new ErrorResponse(errorCode);
 		try {
 			response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
 		} catch (IOException e) {
 			log.warn(e.getMessage(), e);
 		}
-
 	}
 }

@@ -31,7 +31,6 @@ public class MemberRegisterService {
 		if (memberRepository.findByEmail(encryptedEmail).isPresent()) {
 			throw new MemberDuplicatedException();
 		}
-		;
 		Member member = Member.builder()
 			.name(memberRequestDto.getName())
 			.email(encryptedEmail)

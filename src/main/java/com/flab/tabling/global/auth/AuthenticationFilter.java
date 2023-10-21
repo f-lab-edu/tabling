@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 public class AuthenticationFilter implements Filter {
+	private static final String h2ConsolePath = "/h2-console*";
 	private static final String[] whiteList = {"/login", "/members"};
 
 	@Override
@@ -35,7 +36,8 @@ public class AuthenticationFilter implements Filter {
 
 	private boolean isAuthenticationCheckPath(HttpServletRequest request) {
 		return !(PatternMatchUtils.simpleMatch(whiteList, request.getRequestURI())
-			&& request.getMethod().equals(HttpMethod.POST.name()));
+			&& request.getMethod().equals(HttpMethod.POST.name()) ||
+			PatternMatchUtils.simpleMatch(h2ConsolePath, request.getRequestURI()));
 	}
 
 }

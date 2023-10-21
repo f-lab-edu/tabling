@@ -30,8 +30,12 @@ public class MemberController {
 	private final MemberRegisterService memberRegisterService;
 
 	@PostMapping("/members")
-	private ResponseEntity<MemberAddDto.Response> add(@Valid @RequestBody MemberAddDto.Request memberRequestDto) {
+	private ResponseEntity<MemberAddDto.Response> add(HttpServletRequest request,
+		@Valid @RequestBody MemberAddDto.Request memberRequestDto) {
+		addSession(request, memberRequestDto.getName());
 		MemberAddDto.Response memberResponseDto = memberRegisterService.add(memberRequestDto);
+		HttpSession session = request.getSession(false);
+		session.invalidate();
 		return ResponseEntity
 			.status(HttpStatus.CREATED)
 			.body(memberResponseDto);
@@ -41,7 +45,7 @@ public class MemberController {
 	public MemberAuthDto.Response login(HttpServletRequest request,
 		@RequestBody MemberAuthDto.Request memberRequestDto) {
 		MemberAuthDto.Response memberResponseDto = memberRegisterService.findByEmail(memberRequestDto);
-		addSession(request, memberResponseDto);
+		addSession(request, memberResponseDto.getId());
 		return memberResponseDto;
 	}
 
@@ -53,8 +57,13 @@ public class MemberController {
 		return new MemberAuthDto.Response(memberId);
 	}
 
-	private void addSession(HttpServletRequest request, MemberAuthDto.Response memberResponseDto) {
+	private void addSession(HttpServletRequest request, Long memberId) {
 		HttpSession session = request.getSession();
-		session.setAttribute(SessionConstant.MEMBER_ID.getKey(), memberResponseDto.getId());
+		session.setAttribute(SessionConstant.MEMBER_ID.getKey(), memberId);
+	}
+
+	private void addSession(HttpServletRequest request, String name) {
+		HttpSession session = request.getSession();
+		session.setAttribute(SessionConstant.MEMBER_NAME.getKey(), name);
 	}
 }

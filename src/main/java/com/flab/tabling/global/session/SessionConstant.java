@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum SessionConstant {
-	MEMBER_ID("member_id");
+	MEMBER_ID("member_id"),
+	MEMBER_NAME("member_name");
 
 	private final String key;
 
