@@ -1,5 +1,7 @@
 package com.flab.tabling.store.dto;
 
+import com.flab.tabling.store.domain.Category;
+
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -17,9 +19,7 @@ public class StoreAddDto {
 		@NotBlank
 		@Size(min = 1, max = 30)
 		private String name;
-		@NotBlank
-		@Size(min = 1, max = 20)
-		private String category;
+		private Category category;
 		@Lob
 		private String description;
 		@NotNull
@@ -28,7 +28,7 @@ public class StoreAddDto {
 		private Integer maxWaitingCount;
 
 		@Builder
-		public Request(String name, String category, String description, Integer maxWaitingCount) {
+		public Request(String name, Category category, String description, Integer maxWaitingCount) {
 			this.name = name;
 			this.category = category;
 			this.description = description;
