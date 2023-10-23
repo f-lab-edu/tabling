@@ -26,10 +26,9 @@ import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.repository.StoreRepository;
 
 @ExtendWith(MockitoExtension.class)
-class StoreQueryServiceTest {
-
+class StoreServiceTest {
 	@InjectMocks
-	private StoreQueryService storeQueryService;
+	private StoreService storeService;
 	@Mock
 	private StoreRepository storeRepository;
 	private EasyRandom easyRandom = new EasyRandom();
@@ -43,7 +42,7 @@ class StoreQueryServiceTest {
 		doReturn(Optional.ofNullable(savedStore)).when(storeRepository).findById(2L);
 
 		//when
-		StoreFindDto.Response storeFindResponse = storeQueryService.find(2L);
+		StoreFindDto.Response storeFindResponse = storeService.find(2L);
 
 		//then
 		assertThat(storeFindResponse.getName()).isEqualTo(savedStore.getName());
@@ -56,7 +55,7 @@ class StoreQueryServiceTest {
 		doReturn(Optional.empty()).when(storeRepository).findById(2L);
 
 		//expected TODO: 2023-10-08 커스텀 예외로 교체 필요
-		assertThrows(RuntimeException.class, () -> storeQueryService.find(2L));
+		assertThrows(RuntimeException.class, () -> storeService.find(2L));
 	}
 
 	@Test
@@ -76,7 +75,7 @@ class StoreQueryServiceTest {
 		doReturn(storePage).when(storeRepository).findAll(pageable);
 
 		//when
-		Page<StoreFindDto.Response> storeFindResponsePage = storeQueryService.findPage(pageable);
+		Page<StoreFindDto.Response> storeFindResponsePage = storeService.findPage(pageable);
 
 		//then
 		List<StoreFindDto.Response> pageContent = storeFindResponsePage.getContent();
@@ -96,7 +95,7 @@ class StoreQueryServiceTest {
 		doReturn(emptyPage).when(storeRepository).findAll(pageable);
 
 		//when
-		Page<StoreFindDto.Response> storeFindRespnosePage = storeQueryService.findPage(pageable);
+		Page<StoreFindDto.Response> storeFindRespnosePage = storeService.findPage(pageable);
 
 		//then
 		List<StoreFindDto.Response> pageContent = storeFindRespnosePage.getContent();

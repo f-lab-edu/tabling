@@ -26,25 +26,24 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.tabling.store.dto.StoreFindDto;
-import com.flab.tabling.store.service.StoreQueryService;
+import com.flab.tabling.store.service.StoreService;
 
 /*
 @ExtendWith: Junit의 확장기능, mock 객체를 사용하기 위해 mockito 확장
  */
 @ExtendWith(MockitoExtension.class)
-class StoreCrudControllerTest {
-
+class StoreControllerTest {
 	@InjectMocks
-	private StoreCrudController storeCrudController;
+	private StoreController storeController;
 	@Mock
-	private StoreQueryService storeQueryService;
+	private StoreService storeService;
 	private MockMvc mockMvc;
 	private ObjectMapper objectMapper;
 	private EasyRandom easyRandom = new EasyRandom();
 
 	@BeforeEach
 	void init() {
-		mockMvc = MockMvcBuilders.standaloneSetup(storeCrudController)
+		mockMvc = MockMvcBuilders.standaloneSetup(storeController)
 			.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
 			.build();
 		objectMapper = new ObjectMapper();
@@ -57,7 +56,7 @@ class StoreCrudControllerTest {
 		StoreFindDto.Response responseDto = easyRandom.nextObject(StoreFindDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
-		doReturn(responseDto).when(storeQueryService).find(2L);
+		doReturn(responseDto).when(storeService).find(2L);
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.get("/stores/{id}", 2L)
@@ -76,7 +75,7 @@ class StoreCrudControllerTest {
 		PageImpl<StoreFindDto.Response> storeFindResponsePage = new PageImpl<>(storeFindResponseList, pageable, 1);
 		String responseJson = objectMapper.writeValueAsString(storeFindResponsePage);
 
-		doReturn(storeFindResponsePage).when(storeQueryService).findPage(any(Pageable.class));
+		doReturn(storeFindResponsePage).when(storeService).findPage(any(Pageable.class));
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.get("/stores")
