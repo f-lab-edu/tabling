@@ -18,11 +18,11 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-		String httpMethod = request.getMethod();
+    String httpMethod = request.getMethod();
 		if (httpMethod.equals(HttpMethod.GET.name())) {
 			return true;
 		}
-
+    
 		HttpSession session = request.getSession();
 		loginValidation(session);
 		memberRoleTypeValidation(session);
@@ -44,7 +44,7 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 	}
 
 	private Long getSessionMemberId(HttpSession session) {
-		Object sessionMemberId = session.getAttribute("LOGIN_SESSION");
+		Object sessionMemberId = session.getAttribute("LOGIN_SESSION"); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
 		boolean isLongType = sessionMemberId instanceof Long;
 		if (!isLongType) {
 			throw new ClassCastException("Can not cast from " + sessionMemberId + " to Long.class");
