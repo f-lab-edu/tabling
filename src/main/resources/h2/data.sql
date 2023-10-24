@@ -61,15 +61,15 @@ VALUES (10, '일반사용자G', '$2a$10$V1nmXxqvSXzRPWZ9iMJweuLFTQ4iyqwMMrz73Q4D
 INSERT
 INTO store
 (id, member_id, category, name, description, max_waiting_count, created_at, modified_at, created_by, modified_by)
-VALUES (1, 2, '중식', '식당A', 'xx대학교 북문 앞 중식당입니다.', 10, '2023-09-18', null, null, null);
+VALUES (1, 2, 'CHINESE_FOOD', '식당A', 'xx대학교 북문 앞 중식당입니다.', 10, '2023-09-18', null, null, null);
 INSERT
 INTO store
 (id, member_id, category, name, description, max_waiting_count, created_at, modified_at, created_by, modified_by)
-VALUES (2, 3, '분식', '식당B', 'xx역 x번 출구 앞에 위치한 분식점입니다.', 10, '2023-09-19', null, null, null);
+VALUES (2, 3, 'SNACK_FOOD', '식당B', 'xx역 x번 출구 앞에 위치한 분식점입니다.', 10, '2023-09-19', null, null, null);
 INSERT
 INTO store
 (id, member_id, category, name, description, max_waiting_count, created_at, modified_at, created_by, modified_by)
-VALUES (3, 2, '양식', '식당C', 'xx해변에 위치한 레스토랑 입니다.', 30, '2023-09-19', null, null, null);
+VALUES (3, 2, 'WESTERN_FOOD', '식당C', 'xx해변에 위치한 레스토랑 입니다.', 30, '2023-09-19', null, null, null);
 
 -- 영업 시간
 INSERT

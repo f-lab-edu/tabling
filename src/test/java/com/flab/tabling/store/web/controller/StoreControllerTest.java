@@ -1,5 +1,6 @@
 package com.flab.tabling.store.web.controller;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.jeasy.random.EasyRandom;
@@ -20,25 +21,53 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
-import com.flab.tabling.store.service.StoreRemoveService;
-import com.flab.tabling.store.service.StoreUpdateService;
+import com.flab.tabling.store.service.StoreService;
 
+/*
+@ExtendWith: Junit의 확장기능, mock 객체를 사용하기 위해 mockito 확장
+ */
 @ExtendWith(MockitoExtension.class)
 class StoreControllerTest {
 	@InjectMocks
 	private StoreController storeController;
 	@Mock
-	private StoreUpdateService storeUpdateService;
-	@Mock
-	private StoreRemoveService storeRemoveService;
+	private StoreService storeService;
 	private MockMvc mockMvc;
+
 	private ObjectMapper objectMapper;
 
 	@BeforeEach
 	void init() {
 		mockMvc = MockMvcBuilders.standaloneSetup(storeController).build();
 		objectMapper = new ObjectMapper();
+	}
+
+	@Test
+	@DisplayName("올바른 정보로 식당등록을 요청하면 성공적으로 수행된다.")
+	void addStoreSuccess() throws Exception {
+		//given
+		EasyRandomParameters conditions = getStoreDtoConditions();
+		EasyRandom easyRandom = new EasyRandom(conditions);
+
+		StoreAddDto.Request requestDto = easyRandom.nextObject(StoreAddDto.Request.class);
+		String requestJson = objectMapper.writeValueAsString(requestDto);
+
+		StoreAddDto.Response responseDto = easyRandom.nextObject(StoreAddDto.Response.class);
+		String responseJson = objectMapper.writeValueAsString(responseDto);
+
+		doReturn(responseDto).when(storeService)
+			.add(any(StoreAddDto.Request.class), eq(1L));
+
+		//expected
+		mockMvc.perform(MockMvcRequestBuilders.post("/stores")
+				.contentType(MediaType.APPLICATION_JSON)
+				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+				.content(requestJson)
+			)
+			.andExpect(MockMvcResultMatchers.status().isCreated())
+			.andExpect(MockMvcResultMatchers.content().json(responseJson));
 	}
 
 	@Test
@@ -54,7 +83,7 @@ class StoreControllerTest {
 		StoreUpdateDto.Response storeUpdateResponse = easyRandom.nextObject(StoreUpdateDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(storeUpdateResponse);
 
-		doReturn(storeUpdateResponse).when(storeUpdateService).update(any(StoreUpdateDto.Request.class), eq(1L));
+		doReturn(storeUpdateResponse).when(storeService).update(any(StoreUpdateDto.Request.class), eq(1L));
 
 		//when
 		mockMvc.perform(MockMvcRequestBuilders.put("/stores/{id}", 2L)

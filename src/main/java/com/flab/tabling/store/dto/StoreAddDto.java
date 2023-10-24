@@ -8,18 +8,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class StoreUpdateDto {
-
+public class StoreAddDto {
 	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@NoArgsConstructor
 	public static class Request {
-		@NotNull
-		private Long id;
 		@NotBlank
 		@Size(min = 1, max = 30)
 		private String name;
@@ -32,8 +28,7 @@ public class StoreUpdateDto {
 		private Integer maxWaitingCount;
 
 		@Builder
-		public Request(Long id, String name, Category category, String description, Integer maxWaitingCount) {
-			this.id = id;
+		public Request(String name, Category category, String description, Integer maxWaitingCount) {
 			this.name = name;
 			this.category = category;
 			this.description = description;
@@ -42,7 +37,6 @@ public class StoreUpdateDto {
 	}
 
 	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class Response {
 		@NotNull
 		private Long id;
