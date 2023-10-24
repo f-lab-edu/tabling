@@ -53,6 +53,14 @@ public class StoreService {
 		storeRepository.delete(findStore);
 	}
 
+	@Transactional(readOnly = true)
+	public void validationAuth(Store findStore, Long memberId) {
+		Member seller = findStore.getMember();
+		if (seller.getId() != memberId) {
+			throw new RuntimeException("요청한 사용자와 수정 대상인 가게의 주인이 일치하지 않는다."); // TODO: 2023-10-13 커스텀 예외로 수정 필요
+		}
+	}
+
 	private Member getMember(Long memberId) {
 		return memberRepository.findById(memberId)
 			.orElseThrow(RuntimeException::new); // TODO: 2023-10-03 커스텀 예외로 수정 필요
@@ -64,18 +72,11 @@ public class StoreService {
 	}
 
 	private void updateStore(Store findStore, StoreUpdateDto.Request storeUpdateRequest) {
-		findStore.updateStore(
+		findStore.update(
 			storeUpdateRequest.getName(),
 			storeUpdateRequest.getCategory(),
 			storeUpdateRequest.getDescription(),
 			storeUpdateRequest.getMaxWaitingCount()
 		);
-	}
-
-	private void validationAuth(Store findStore, Long memberId) {
-		Member seller = findStore.getMember();
-		if (seller.getId() != memberId) {
-			throw new RuntimeException("요청한 사용자와 수정 대상인 가게의 주인이 일치하지 않는다."); // TODO: 2023-10-13 커스텀 예외로 수정 필요
-		}
 	}
 }
