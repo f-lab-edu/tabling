@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.tabling.global.exception.BusinessException;
 import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.exception.ErrorResponse;
 import com.flab.tabling.member.exception.AuthenticationException;
@@ -30,19 +31,18 @@ public class ExceptionHandlerFilter implements Filter {
 		try {
 			chain.doFilter(request, response);
 		} catch (AuthenticationException e) {
-			setErrorResponse(response, e.getErrorCode());
+			setErrorResponse(response, e);
 		} catch (Exception e) {
 			log.warn(e.getMessage(), e);
 			throw e;
 		}
 	}
 
-	private void setErrorResponse(ServletResponse response, ErrorCode errorCode) {
-
+	private void setErrorResponse(ServletResponse response, BusinessException ex) {
 		HttpServletResponse httpResponse = (HttpServletResponse)response;
-		httpResponse.setStatus(errorCode.getStatus());
+		httpResponse.setStatus(ex.getErrorCode().getStatus());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		ErrorResponse errorResponse = new ErrorResponse(errorCode);
+		ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
 		try {
 			response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
 		} catch (IOException e) {
