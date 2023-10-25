@@ -108,7 +108,7 @@ class MemberControllerTest {
 			.email(email)
 			.roleType(roleType)
 			.build();
-		ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_PARAMETER);
+		ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_PARAMETER, ErrorCode.INVALID_PARAMETER.getDescription());
 
 		//when
 		ResultActions resultActions = mvc.perform(

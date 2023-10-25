@@ -9,11 +9,12 @@ public enum ErrorCode {
 	MEMBER_NOT_FOUND("member not found", 404),
 	INVALID_PARAMETER("parameter is invalid", 400),
 	AUTHENTICATION_FAILED("authentication failed", 401);
-	private final String message;
+
+	private final String description;
 	private final int status;
 
-	ErrorCode(String message, int status) {
-		this.message = message;
+	ErrorCode(String description, int status) {
+		this.description = description;
 		this.status = status;
 	}
 }
