@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
+import org.jeasy.random.randomizers.range.IntegerRangeRandomizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.service.StoreService;
 
@@ -49,8 +53,33 @@ class StoreControllerTest {
 		objectMapper = new ObjectMapper();
 	}
 
+	@DisplayName("식당 등록 요청이 성공하면 등록한 식당에 대한 응답과 상태코드를 반환한다.")
+	void addStoreSuccess() throws Exception {
+		//given
+		EasyRandomParameters conditions = getStoreDtoConditions();
+		EasyRandom easyRandom = new EasyRandom(conditions);
+
+		StoreAddDto.Request requestDto = easyRandom.nextObject(StoreAddDto.Request.class);
+		String requestJson = objectMapper.writeValueAsString(requestDto);
+
+		StoreAddDto.Response responseDto = easyRandom.nextObject(StoreAddDto.Response.class);
+		String responseJson = objectMapper.writeValueAsString(responseDto);
+
+		doReturn(responseDto).when(storeService)
+			.add(any(StoreAddDto.Request.class), eq(1L));
+
+		//expected
+		mockMvc.perform(MockMvcRequestBuilders.post("/stores")
+				.contentType(MediaType.APPLICATION_JSON)
+				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+				.content(requestJson)
+			)
+			.andExpect(MockMvcResultMatchers.status().isCreated())
+			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
 	@Test
-	@DisplayName("식당 조회에 성공하면 식당 정보와 응답코드를 반환한다.")
+	@DisplayName("식당 조회 요청이 성공하면 식당 정보와 상태코드를 반환한다.")
 	void findStoreSuccess() throws Exception {
 		//given
 		StoreFindDto.Response responseDto = easyRandom.nextObject(StoreFindDto.Response.class);
@@ -67,7 +96,7 @@ class StoreControllerTest {
 	}
 
 	@Test
-	@DisplayName("식당 페이지 조회에 성공하면 페이지와 응답코드를 반환한다.")
+	@DisplayName("식당 페이지 조회 요청이 성공하면 페이지와 상태코드를 반환한다.")
 	void findStorePageSuccess() throws Exception {
 		//given
 		List<StoreFindDto.Response> storeFindResponseList = getStoreFindResponseList();
@@ -83,6 +112,13 @@ class StoreControllerTest {
 			)
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
+	private EasyRandomParameters getStoreDtoConditions() {
+		return new EasyRandomParameters()
+			.stringLengthRange(2, 20)
+			.randomize(FieldPredicates.named("id"), () -> 2L)
+			.randomize(FieldPredicates.named("maxWaitingCount"), new IntegerRangeRandomizer(1, 50));
 	}
 
 	private List<StoreFindDto.Response> getStoreFindResponseList() {

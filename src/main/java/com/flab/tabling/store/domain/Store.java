@@ -3,6 +3,8 @@ package com.flab.tabling.store.domain;
 import com.flab.tabling.member.domain.Member;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,12 +31,13 @@ public class Store {
 	@JoinColumn(name = "member_id")
 	private Member member;
 	private String name;
-	private String category;
+	@Enumerated(value = EnumType.STRING)
+	private Category category;
 	private String description;
 	private Integer maxWaitingCount;
 
 	@Builder
-	public Store(Member member, String name, String category, String description, Integer maxWaitingCount) {
+	public Store(Member member, String name, Category category, String description, Integer maxWaitingCount) {
 		this.member = member;
 		this.name = name;
 		this.category = category;

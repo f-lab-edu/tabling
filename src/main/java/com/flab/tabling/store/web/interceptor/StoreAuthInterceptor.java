@@ -22,7 +22,6 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 		if (httpMethod.equals(HttpMethod.GET.name())) {
 			return true;
 		}
-
 		HttpSession session = request.getSession();
 		loginValidation(session);
 		memberRoleTypeValidation(session);
