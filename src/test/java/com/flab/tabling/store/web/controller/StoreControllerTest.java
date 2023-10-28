@@ -53,6 +53,7 @@ class StoreControllerTest {
 		objectMapper = new ObjectMapper();
 	}
 
+	@Test
 	@DisplayName("식당 등록 요청이 성공하면 등록한 식당에 대한 응답과 상태코드를 반환한다.")
 	void addStoreSuccess() throws Exception {
 		//given
