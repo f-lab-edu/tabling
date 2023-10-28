@@ -19,10 +19,10 @@ import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.repository.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)
-class RoleTypeCheckServiceTest {
+class MemberServiceTest {
 
 	@InjectMocks
-	private RoleTypeCheckService roleTypeCheckService;
+	private MemberService memberService;
 
 	@Mock
 	private MemberRepository memberRepository;
@@ -37,7 +37,7 @@ class RoleTypeCheckServiceTest {
 			.findById(1L);
 
 		//when
-		boolean result = roleTypeCheckService.isSeller(1L);
+		boolean result = memberService.isSeller(1L);
 
 		//then
 		Assertions.assertThat(result).isTrue();
@@ -53,7 +53,7 @@ class RoleTypeCheckServiceTest {
 			.findById(1L);
 
 		//when
-		boolean result = roleTypeCheckService.isSeller(1L);
+		boolean result = memberService.isSeller(1L);
 
 		//then
 		Assertions.assertThat(result).isFalse();
