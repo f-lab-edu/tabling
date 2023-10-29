@@ -1,9 +1,12 @@
 package com.flab.tabling.global.auth;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-import org.assertj.core.api.Assertions;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,59 +14,89 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
+import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
+import org.springframework.http.HttpMethod;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flab.tabling.global.exception.ErrorCode;
-import com.flab.tabling.global.exception.ErrorResponse;
-import com.flab.tabling.member.controller.MemberController;
+import com.flab.tabling.global.env.SecurityProperties;
+import com.flab.tabling.global.session.SessionConstant;
+import com.flab.tabling.member.exception.AuthenticationException;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationFilterTest {
 	@InjectMocks
 	private AuthenticationFilter authenticationFilter;
-
-	@InjectMocks
-	private ExceptionHandlerFilter exceptionHandlerFilter;
+	@Mock
+	private SecurityProperties securityProperties = new SecurityProperties();
+	@Mock
+	private H2ConsoleProperties h2ConsoleProperties = new H2ConsoleProperties();
 
 	@Mock
-	private MemberController memberController;
+	private FilterChain filterChain;
 
-	ObjectMapper objectMapper = new ObjectMapper();
-
-	private MockMvc mvc;
+	MockMvc mockMvc;
 
 	@BeforeEach
 	void init() {
-		mvc = MockMvcBuilders.standaloneSetup(memberController)
-			.addFilter(exceptionHandlerFilter)
-			.addFilter(authenticationFilter)
-			.build();
+		securityProperties.setSecurity(new ConcurrentHashMap<String, String>());
+		doReturn("/login").when(securityProperties).getLoginPath();
+		doReturn(HttpMethod.POST).when(securityProperties).getLoginMethod();
+		doReturn("/members").when(securityProperties).getMemberAddPath();
+		doReturn(HttpMethod.POST).when(securityProperties).getMemberAddMethod();
+		doReturn("/h2-console").when(h2ConsoleProperties).getPath();
+		// authenticationFilter = new AuthenticationFilter(securityProperties, h2ConsoleProperties);
 	}
 
-	@DisplayName("인증해야 하는 URI 접근 테스트 : 상태코드 401")
+	@DisplayName("인증 필요 없는 요청 테스트")
 	@Test
-	void failWithUnAuthenticated() throws Exception {
-		//given
-		ErrorResponse errorResponse = ErrorResponse
-			.builder()
-			.code(ErrorCode.AUTHENTICATION_FAILED)
-			.message(ErrorCode.AUTHENTICATION_FAILED.getMessage())
-			.build();
-
-		//when
-		ResultActions resultActions = mvc.perform(
-			delete("/logout")
-				.contentType(MediaType.APPLICATION_JSON));
-		//then
-		MockHttpServletResponse response = resultActions.andExpect(status().is(401))
-			.andReturn().getResponse();
-		ErrorResponse memberResponseDtoResult = objectMapper.readValue(response.getContentAsString(),
-			ErrorResponse.class);
-		Assertions.assertThat(memberResponseDtoResult).usingRecursiveComparison().isEqualTo(errorResponse);
+	void checkUnAuthenticatedRequest() throws ServletException, IOException {
+		List<String> requestURIs = List.of("/login", "/members", "/h2-console", "/h2-console/test");
+		List<String> httpMethods = List.of(HttpMethod.POST.name(), HttpMethod.POST.name(), HttpMethod.GET.name(),
+			HttpMethod.PUT.name());
+		for (int index = 0; index < requestURIs.size(); index++) {
+			HttpServletRequest request = new MockHttpServletRequest(httpMethods.get(index), requestURIs.get(index));
+			HttpServletResponse response = new MockHttpServletResponse();
+			authenticationFilter.doFilter(request, response, filterChain);
+		}
+		verify(filterChain, times(requestURIs.size())).doFilter(any(), any());
 	}
+
+	@DisplayName("인증 필요한 요청 예외 발생 테스트")
+	@Test
+	void checkAuthenticatedRequestFailure() throws ServletException, IOException {
+		List<String> requestURIs = List.of("/loginl", "/members", "/h2-consolel", "/members");
+		List<String> httpMethods = List.of(HttpMethod.POST.name(), HttpMethod.GET.name(), HttpMethod.PUT.name(),
+			HttpMethod.PUT.name());
+		for (int index = 0; index < requestURIs.size(); index++) {
+			HttpServletRequest request = new MockHttpServletRequest(httpMethods.get(index), requestURIs.get(index));
+			HttpServletResponse response = new MockHttpServletResponse();
+			assertThrows(AuthenticationException.class,
+				() -> authenticationFilter.doFilter(request, response, filterChain));
+		}
+	}
+
+	@DisplayName("인증 필요한 요청 정상 처리 테스트")
+	@Test
+	void checkAuthenticatedRequestSuccess() throws ServletException, IOException {
+		List<String> requestURIs = List.of("/loginl", "/members", "/h2-consolel", "/members");
+		List<String> httpMethods = List.of(HttpMethod.POST.name(), HttpMethod.GET.name(), HttpMethod.PUT.name(),
+			HttpMethod.PUT.name());
+		for (int index = 0; index < requestURIs.size(); index++) {
+			HttpServletRequest request = new MockHttpServletRequest(httpMethods.get(index), requestURIs.get(index));
+			HttpSession session = request.getSession();
+			session.setAttribute(SessionConstant.MEMBER_ID.name(), 1L);
+			HttpServletResponse response = new MockHttpServletResponse();
+			authenticationFilter.doFilter(request, response, filterChain);
+		}
+		verify(filterChain, times(requestURIs.size())).doFilter(any(), any());
+	}
+
 }
