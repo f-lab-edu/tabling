@@ -35,6 +35,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-autoconfigure-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // easy-random: 랜덤 테스트 데이터 생성 라이브러리
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
@@ -91,3 +92,4 @@ jacocoTestCoverageVerification {
         }
     }
 }
+
