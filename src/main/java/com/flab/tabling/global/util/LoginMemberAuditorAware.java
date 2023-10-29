@@ -8,8 +8,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.flab.tabling.global.env.SecurityProperties;
+import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.member.repository.MemberRepository;
-import com.flab.tabling.service.SessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

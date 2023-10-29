@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.util.LoginMemberArgumentResolver;
-import com.flab.tabling.service.SessionService;
 
 import lombok.RequiredArgsConstructor;
 

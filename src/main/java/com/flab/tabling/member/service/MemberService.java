@@ -4,12 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.config.CipherService;
+import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.exception.MemberDuplicatedException;
 import com.flab.tabling.member.repository.MemberRepository;
-import com.flab.tabling.service.SessionService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
