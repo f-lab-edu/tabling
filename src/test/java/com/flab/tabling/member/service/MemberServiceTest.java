@@ -18,22 +18,22 @@ import org.springframework.mock.web.MockHttpSession;
 import com.flab.tabling.global.config.OneWayCipherService;
 import com.flab.tabling.global.config.StringGenerateFixture;
 import com.flab.tabling.global.config.TwoWayCipherService;
+import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.exception.MemberDuplicatedException;
 import com.flab.tabling.member.repository.MemberRepository;
-import com.flab.tabling.service.SessionService;
 
 /**
  * @InjectMocks : @Mock이 붙은 Mock 객체를 @InjectMocks이 붙은 객체에 주입
  * @Mock : Mock 객체 생성
  */
 @ExtendWith(MockitoExtension.class)
-class MemberRegisterServiceTest {
+class MemberServiceTest {
 	@InjectMocks
-	MemberRegisterService memberRegisterService;
+	MemberService memberService;
 
 	@Mock
 	OneWayCipherService oneWayCipherService;
@@ -69,7 +69,7 @@ class MemberRegisterServiceTest {
 		session = new MockHttpSession();
 
 		//when
-		MemberAddDto.Response response = memberRegisterService.addMember(memberRequestDto, session);
+		MemberAddDto.Response response = memberService.addMember(memberRequestDto, session);
 
 		//then
 		verify(sessionService).add(any(), eq(SessionConstant.MEMBER_NAME), eq(memberRequestDto.getName()));
@@ -93,7 +93,7 @@ class MemberRegisterServiceTest {
 
 		//when, then
 		Assertions.assertThrows(MemberDuplicatedException.class,
-			() -> memberRegisterService.addMember(memberRequestDto, session));
+			() -> memberService.addMember(memberRequestDto, session));
 	}
 
 }

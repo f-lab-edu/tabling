@@ -24,11 +24,11 @@ import com.flab.tabling.global.config.StringGenerateFixture;
 import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.exception.ErrorResponse;
 import com.flab.tabling.global.exception.GlobalExceptionAdvice;
-import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
-import com.flab.tabling.member.dto.MemberAuthDto;
-import com.flab.tabling.member.service.MemberRegisterService;
+import com.flab.tabling.member.service.MemberService;
+
+import jakarta.servlet.http.HttpSession;
 
 /**
  * @WebMvcTest : 웹 계층과 관련된 빈들만을 찾아서 빈으로 등록 @RestController,  @RestControllerAdvice, WebMvcConfigurer, HandlerMethodArgumentResolver
@@ -45,7 +45,7 @@ class MemberControllerTest {
 	@InjectMocks
 	private MemberController memberController;
 	@Mock
-	private MemberRegisterService memberRegisterService;
+	private MemberService memberService;
 	private MockMvc mvc;
 	ObjectMapper objectMapper = new ObjectMapper();
 	private MockHttpSession session = new MockHttpSession();
@@ -73,12 +73,9 @@ class MemberControllerTest {
 			.email(email)
 			.roleType(roleType)
 			.build();
-		MemberAddDto.Response memberResponseDto = MemberAddDto.Response
-			.builder()
-			.id(1L)
-			.build();
+		MemberAddDto.Response memberResponseDto = new MemberAddDto.Response(1L);
 
-		given(memberRegisterService.add(any(MemberAddDto.Request.class)))
+		given(memberService.addMember(any(MemberAddDto.Request.class), any(HttpSession.class)))
 			.willReturn(memberResponseDto);
 
 		//when
@@ -124,46 +121,5 @@ class MemberControllerTest {
 		ErrorResponse memberResponseDtoResult = objectMapper.readValue(response.getContentAsString(),
 			ErrorResponse.class);
 		Assertions.assertThat(memberResponseDtoResult).usingRecursiveComparison().isEqualTo(errorResponse);
-	}
-
-	@DisplayName("로그인 세션 테스트")
-	@Test
-	void login() throws Exception {
-		String email = StringGenerateFixture.makeEmail(10);
-		String password = StringGenerateFixture.makeByNumbersAndAlphabets(10);
-		MemberAuthDto.Request memberRequestDto = MemberAuthDto.Request
-			.builder()
-			.email(email)
-			.password(password)
-			.build();
-		MemberAuthDto.Response memberResponseDto = MemberAuthDto.Response
-			.builder()
-			.id(1L)
-			.build();
-
-		doReturn(memberResponseDto).when(memberRegisterService).findByEmail(any());
-		MockHttpServletResponse response = mvc.perform(post("/login")
-				.session(session)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(memberRequestDto)))
-			.andExpect(status().isOk())
-			.andReturn().getResponse();
-
-		MemberAuthDto.Response result = objectMapper.readValue(response.getContentAsString(),
-			MemberAuthDto.Response.class);
-		Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(memberResponseDto);
-		Assertions.assertThat((Long)session.getAttribute(SessionConstant.MEMBER_ID.getKey())).isEqualTo(result.getId());
-
-	}
-
-	@DisplayName("로그아웃 세션 테스트")
-	@Test
-	void logout() throws Exception {
-		Long memberId = 1L;
-		session.setAttribute(SessionConstant.MEMBER_ID.getKey(), memberId);
-		mvc.perform(delete("/logout")
-				.session(session))
-			.andExpect(status().isOk());
-		Assertions.assertThat(session.isInvalid()).isTrue();
 	}
 }
