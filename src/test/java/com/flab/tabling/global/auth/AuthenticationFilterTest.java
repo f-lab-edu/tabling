@@ -52,7 +52,6 @@ class AuthenticationFilterTest {
 		doReturn("/members").when(securityProperties).getMemberAddPath();
 		doReturn(HttpMethod.POST).when(securityProperties).getMemberAddMethod();
 		doReturn("/h2-console").when(h2ConsoleProperties).getPath();
-		// authenticationFilter = new AuthenticationFilter(securityProperties, h2ConsoleProperties);
 	}
 
 	@DisplayName("인증 필요 없는 요청 테스트")
