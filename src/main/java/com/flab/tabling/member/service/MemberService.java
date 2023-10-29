@@ -7,6 +7,7 @@ import com.flab.tabling.global.config.CipherService;
 import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.Member;
+import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.exception.MemberDuplicatedException;
 import com.flab.tabling.member.repository.MemberRepository;
@@ -14,9 +15,6 @@ import com.flab.tabling.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-/**
- * @Service : @Component + service 계층임을 나타냄
- */
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -42,5 +40,16 @@ public class MemberService {
 		memberRepository.save(member);
 		sessionService.invalidate(session);
 		return new MemberAddDto.Response(member.getId());
+	}
+
+	@Transactional(readOnly = true)
+	public boolean isSeller(Long memberId) {
+		Member targetMember = getMember(memberId);
+		return targetMember.getRoleType().equals(RoleType.SELLER); // TODO: 2023-10-09 Member 엔티티 내부에서 처리
+	}
+
+	private Member getMember(Long memberId) {
+		return memberRepository.findById(memberId)
+			.orElseThrow(RuntimeException::new); // TODO: 2023-10-04 커스텀 예외로 변경 필요
 	}
 }
