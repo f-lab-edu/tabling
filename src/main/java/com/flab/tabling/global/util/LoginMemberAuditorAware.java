@@ -7,9 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.flab.tabling.global.env.SecurityProperties;
 import com.flab.tabling.global.service.SessionService;
-import com.flab.tabling.member.repository.MemberRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -18,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class LoginMemberAuditorAware implements AuditorAware<String> {
-	private final MemberRepository memberRepository;
 	private final SessionService sessionService;
-	private final SecurityProperties securityProperties;
 
 	@Override
 	public Optional<String> getCurrentAuditor() {

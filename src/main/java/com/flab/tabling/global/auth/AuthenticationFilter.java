@@ -29,7 +29,6 @@ public class AuthenticationFilter implements Filter {
 		IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest)request;
 		HttpSession session = httpRequest.getSession(false);
-
 		if (isAuthenticationRequired(httpRequest)) {
 			if (session == null || session.getAttribute(SessionConstant.MEMBER_ID.name()) == null) {
 				throw new AuthenticationException();
