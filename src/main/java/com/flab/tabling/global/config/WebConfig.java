@@ -7,11 +7,17 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.flab.tabling.global.util.LoginMemberArgumentResolver;
+import com.flab.tabling.service.SessionService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+	private final SessionService sessionService;
+
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new LoginMemberArgumentResolver());
+		resolvers.add(new LoginMemberArgumentResolver(sessionService));
 	}
 }
