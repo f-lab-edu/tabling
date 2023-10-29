@@ -4,14 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.config.CipherService;
+import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAddDto;
-import com.flab.tabling.member.dto.MemberAuthDto;
-import com.flab.tabling.member.exception.AuthenticationException;
 import com.flab.tabling.member.exception.MemberDuplicatedException;
-import com.flab.tabling.member.exception.MemberNotFoundException;
 import com.flab.tabling.member.repository.MemberRepository;
+import com.flab.tabling.service.SessionService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -19,18 +19,20 @@ import lombok.RequiredArgsConstructor;
  */
 @Service
 @RequiredArgsConstructor
-public class MemberRegisterService {
+public class MemberService {
 	private final MemberRepository memberRepository;
+	private final SessionService sessionService;
 	private final CipherService oneWayCipherService;
 	private final CipherService twoWayCipherService;
 
 	@Transactional
-	public MemberAddDto.Response add(MemberAddDto.Request memberRequestDto) {
+	public MemberAddDto.Response addMember(MemberAddDto.Request memberRequestDto, HttpSession session) {
 		String encryptedPassword = oneWayCipherService.encrypt(memberRequestDto.getPassword());
 		String encryptedEmail = twoWayCipherService.encrypt(memberRequestDto.getEmail());
 		if (memberRepository.findByEmail(encryptedEmail).isPresent()) {
 			throw new MemberDuplicatedException();
 		}
+		sessionService.add(session, SessionConstant.MEMBER_NAME, memberRequestDto.getName());
 		Member member = Member.builder()
 			.name(memberRequestDto.getName())
 			.email(encryptedEmail)
@@ -38,18 +40,7 @@ public class MemberRegisterService {
 			.roleType(memberRequestDto.getRoleType())
 			.build();
 		memberRepository.save(member);
+		sessionService.invalidate(session);
 		return new MemberAddDto.Response(member.getId());
 	}
-
-	@Transactional(readOnly = true)
-	public MemberAuthDto.Response findByEmail(MemberAuthDto.Request memberRequestDto) {
-		String encryptedEmail = twoWayCipherService.encrypt(memberRequestDto.getEmail());
-		Member member = memberRepository.findByEmail(encryptedEmail).orElseThrow(MemberNotFoundException::new);
-		boolean isValid = oneWayCipherService.match(memberRequestDto.getPassword(), member.getPassword());
-		if (!isValid) {
-			throw new AuthenticationException();
-		}
-		return new MemberAuthDto.Response(member.getId());
-	}
-
 }

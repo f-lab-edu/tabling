@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 public class MemberAddDto {
 	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Request {
 		@NotNull
 		@Size(min = 1, max = 30)
@@ -36,11 +36,10 @@ public class MemberAddDto {
 	}
 
 	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Response {
 		private Long id;
 
-		@Builder
 		public Response(Long id) {
 			this.id = id;
 		}
