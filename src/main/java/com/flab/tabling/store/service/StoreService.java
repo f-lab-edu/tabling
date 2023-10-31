@@ -34,15 +34,13 @@ public class StoreService {
 			.build();
 
 		Store savedStore = storeRepository.save(newStore);
-		return StoreAddDto.Response.builder()
-			.id(savedStore.getId())
-			.build();
+		return new StoreAddDto.Response(savedStore.getId());
 	}
 
 	@Transactional(readOnly = true)
 	public StoreFindDto.Response find(Long storeId) {
-		Store findStore = getStore(storeId);
-		return new StoreFindDto.Response(findStore);
+		Store queriedStore = getStore(storeId);
+		return new StoreFindDto.Response(queriedStore);
 	}
 
 	@Transactional(readOnly = true)
@@ -52,24 +50,22 @@ public class StoreService {
 
 	@Transactional
 	public StoreUpdateDto.Response update(StoreUpdateDto.Request storeUpdateRequest, Long sessionMemberId) {
-		Store findStore = getStore(storeUpdateRequest.getId());
-		validationAuth(findStore, sessionMemberId);
-		updateStore(findStore, storeUpdateRequest);
-		return StoreUpdateDto.Response.builder()
-			.id(storeUpdateRequest.getId())
-			.build();
+		Store targetStore = getStore(storeUpdateRequest.getId());
+		validationAuth(targetStore, sessionMemberId);
+		updateStore(targetStore, storeUpdateRequest);
+		return new StoreUpdateDto.Response(storeUpdateRequest.getId());
 	}
 
 	@Transactional
 	public void delete(Long storeId, Long sessionMemberId) {
-		Store findStore = getStore(storeId);
-		validationAuth(findStore, sessionMemberId);
-		storeRepository.delete(findStore);
+		Store targetStore = getStore(storeId);
+		validationAuth(targetStore, sessionMemberId);
+		storeRepository.delete(targetStore);
 	}
 
 	@Transactional(readOnly = true)
-	public void validationAuth(Store findStore, Long memberId) {
-		Member seller = findStore.getMember();
+	public void validationAuth(Store targetStore, Long memberId) {
+		Member seller = targetStore.getMember();
 		if (seller.getId() != memberId) {
 			throw new RuntimeException("요청한 사용자와 수정 대상인 가게의 주인이 일치하지 않는다."); // TODO: 2023-10-13 커스텀 예외로 수정 필요
 		}
@@ -85,8 +81,8 @@ public class StoreService {
 			.orElseThrow(RuntimeException::new); // TODO: 2023-10-13 커스텀 예외로 수정 필요
 	}
 
-	private void updateStore(Store findStore, StoreUpdateDto.Request storeUpdateRequest) {
-		findStore.update(
+	private void updateStore(Store targetStore, StoreUpdateDto.Request storeUpdateRequest) {
+		targetStore.update(
 			storeUpdateRequest.getName(),
 			storeUpdateRequest.getCategory(),
 			storeUpdateRequest.getDescription(),

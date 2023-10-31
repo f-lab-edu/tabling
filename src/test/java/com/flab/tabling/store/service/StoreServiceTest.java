@@ -144,10 +144,10 @@ class StoreServiceTest {
 	@DisplayName("식당이 존재하고, 요청한 사용자가 식당 주인이 맞다면, 성공적으로 수정되고 응답을 반환한다.")
 	void updateStoreSuccess() {
 		//given
-		Store findStore = getStoreWithFixedMember();
+		Store targetStore = getStoreWithFixedMember();
 		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
 
-		doReturn(Optional.ofNullable(findStore)).when(storeRepository).findById(storeUpdateRequest.getId());
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(storeUpdateRequest.getId());
 
 		//when
 		StoreUpdateDto.Response result = storeService.update(storeUpdateRequest, 1L);
@@ -172,10 +172,10 @@ class StoreServiceTest {
 	@DisplayName("요청한 사용자가 식당 주인이 아니라면, 수정은 실패하고 예외가 발생한다.")
 	void updateStoreFailWithNoAuth() {
 		//given
-		Store findStore = getStoreWithFixedMember();
+		Store targetStore = getStoreWithFixedMember();
 		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
 
-		doReturn(Optional.ofNullable(findStore)).when(storeRepository).findById(storeUpdateRequest.getId());
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(storeUpdateRequest.getId());
 
 		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
 		assertThrows(RuntimeException.class, () -> storeService.update(storeUpdateRequest, 10L));
@@ -185,9 +185,9 @@ class StoreServiceTest {
 	@DisplayName("식당이 존재하고, 요청자가 식당 주인이라면, 식당은 성공적으로 삭제되고 아무것도 반환하지 않는다.")
 	void deleteStoreSuccess() {
 		//given
-		Store findStore = getStoreWithFixedMember();
+		Store targetStore = getStoreWithFixedMember();
 
-		doReturn(Optional.ofNullable(findStore)).when(storeRepository).findById(2L);
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(2L);
 
 		//when
 		storeService.delete(2L, 1L);
@@ -209,9 +209,9 @@ class StoreServiceTest {
 	@Test
 	@DisplayName("요청자가 식당 주인이 아니라면, 삭제는 실패하고 예외가 발생한다.")
 	void deleteStoreFailWithNoAuth() {
-		Store findStore = getStoreWithFixedMember();
+		Store targetStore = getStoreWithFixedMember();
 
-		doReturn(Optional.ofNullable(findStore)).when(storeRepository).findById(2L);
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(2L);
 
 		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
 		assertThrows(RuntimeException.class, () -> storeService.delete(2L, 10L));
