@@ -28,7 +28,7 @@ public class MemberController {
 	@PostMapping("/members")
 	private ResponseEntity<MemberAddDto.Response> add(HttpSession session,
 		@Valid @RequestBody MemberAddDto.Request memberRequestDto) {
-		MemberAddDto.Response memberResponseDto = memberService.addMember(memberRequestDto, session);
+		MemberAddDto.Response memberResponseDto = memberService.add(memberRequestDto, session);
 		return ResponseEntity
 			.status(HttpStatus.CREATED)
 			.body(memberResponseDto);

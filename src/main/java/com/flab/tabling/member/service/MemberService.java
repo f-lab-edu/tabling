@@ -24,7 +24,7 @@ public class MemberService {
 	private final CipherService twoWayCipherService;
 
 	@Transactional
-	public MemberAddDto.Response addMember(MemberAddDto.Request memberRequestDto, HttpSession session) {
+	public MemberAddDto.Response add(MemberAddDto.Request memberRequestDto, HttpSession session) {
 		String encryptedPassword = oneWayCipherService.encrypt(memberRequestDto.getPassword());
 		String encryptedEmail = twoWayCipherService.encrypt(memberRequestDto.getEmail());
 		if (memberRepository.findByEmail(encryptedEmail).isPresent()) {
