@@ -21,5 +21,12 @@ spring:
       schema-locations: classpath:h2/schema.sql
       data-locations: classpath:h2/data.sql
 
-bytes-encryptor-password: "This is a password!"
-bytes-encryptor-salt: "0123456f"
+tabling:
+  security-credentials:
+    login-path: "/login"
+    login-method: "POST"
+    member-add-path: "/members"
+    member-add-method: "POST"
+    bytes-encryptor-password: "This is a password!"
+    bytes-encryptor-salt: "0123456f"
+

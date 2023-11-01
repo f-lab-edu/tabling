@@ -1,13 +1,22 @@
 package com.flab.tabling.global.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.tabling.global.auth.AuthenticationFilter;
+import com.flab.tabling.global.auth.ExceptionHandlerFilter;
+import com.flab.tabling.global.env.TablingProperties;
+
+import jakarta.servlet.Filter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @Configuration : 빈 정의와 런타임 때 빈에 대한 서비스 요청을 생성하기 위해
@@ -17,13 +26,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @Value : 외부 변수의 값을 읽어 온다.
  */
 
-@PropertySource("classpath:application.yml")
 @Configuration
+@RequiredArgsConstructor
+@EnableConfigurationProperties({H2ConsoleProperties.class, TablingProperties.class})
 public class SecurityConfig {
-	@Value("${bytes-encryptor-password}")
-	private String encryptorPassword;
-	@Value("${bytes-encryptor-salt}")
-	private String encryptorSalt;
+	private final TablingProperties tablingProperties;
+	private final H2ConsoleProperties h2ConsoleProperties;
+	private final ObjectMapper objectMapper;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -35,6 +44,22 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public BytesEncryptor bytesEncryptor() {
-		return Encryptors.stronger(encryptorPassword, encryptorSalt);
+		return new AesBytesEncryptor(tablingProperties.getEncryptorPassword(), tablingProperties.getEncryptorSalt());
+	}
+
+	@Bean
+	public FilterRegistrationBean<Filter> authenticationFilter() {
+		FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
+		bean.setFilter(new AuthenticationFilter(tablingProperties, h2ConsoleProperties));
+		bean.setOrder(2);
+		return bean;
+	}
+
+	@Bean
+	public FilterRegistrationBean<Filter> exceptionHandlerFilter() {
+		FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
+		bean.setFilter(new ExceptionHandlerFilter(objectMapper));
+		bean.setOrder(1);
+		return bean;
 	}
 }

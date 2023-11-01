@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -25,7 +26,9 @@ import com.flab.tabling.global.exception.ErrorResponse;
 import com.flab.tabling.global.exception.GlobalExceptionAdvice;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
-import com.flab.tabling.member.service.MemberRegisterService;
+import com.flab.tabling.member.service.MemberService;
+
+import jakarta.servlet.http.HttpSession;
 
 /**
  * @WebMvcTest : 웹 계층과 관련된 빈들만을 찾아서 빈으로 등록 @RestController,  @RestControllerAdvice, WebMvcConfigurer, HandlerMethodArgumentResolver
@@ -42,9 +45,10 @@ class MemberControllerTest {
 	@InjectMocks
 	private MemberController memberController;
 	@Mock
-	private MemberRegisterService memberRegisterService;
+	private MemberService memberService;
 	private MockMvc mvc;
 	ObjectMapper objectMapper = new ObjectMapper();
+	private MockHttpSession session = new MockHttpSession();
 
 	@BeforeEach
 	void init() {
@@ -69,12 +73,9 @@ class MemberControllerTest {
 			.email(email)
 			.roleType(roleType)
 			.build();
-		MemberAddDto.Response memberResponseDto = MemberAddDto.Response
-			.builder()
-			.id(1L)
-			.build();
+		MemberAddDto.Response memberResponseDto = new MemberAddDto.Response(1L);
 
-		given(memberRegisterService.add(any(MemberAddDto.Request.class)))
+		given(memberService.add(any(MemberAddDto.Request.class), any(HttpSession.class)))
 			.willReturn(memberResponseDto);
 
 		//when
