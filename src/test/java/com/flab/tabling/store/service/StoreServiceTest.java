@@ -217,17 +217,37 @@ class StoreServiceTest {
 		assertThrows(RuntimeException.class, () -> storeService.delete(2L, 10L));
 	}
 
+	@Test
+	@DisplayName("요청자가 식당 주인이 맞다면, 검증은 성공하고 아무것도 반환하지 않는다.")
+	void validationSuccess() {
+		//given
+		Store targetStore = getStoreWithFixedMember();
+
+		//expected
+		assertDoesNotThrow(() -> storeService.validateAuth(targetStore, 1L));
+	}
+
+	@Test
+	@DisplayName("요청자가 식당 주인이 아니라면, 검증은 실패하고 예외가 발생한다.")
+	void validationFailWithNoAuth() {
+		//given
+		Store targetStore = getStoreWithFixedMember();
+
+		//expected TODO: 2023-11-01 커스텀 예외로 수정 필요
+		assertThrows(RuntimeException.class, () -> storeService.validateAuth(targetStore, 10L));
+	}
+
 	private Store getStoreWithFixedMember() {
 		EasyRandomParameters storeConditions = new EasyRandomParameters()
-			.randomize(Member.class, this::getMemberWithFixedId)
+			.randomize(Member.class, () -> getMemberWithFixedId(1L))
 			.randomize(FieldPredicates.named("id"), () -> 2L);
 		EasyRandom storeRandom = new EasyRandom(storeConditions);
 		return storeRandom.nextObject(Store.class);
 	}
 
-	private Member getMemberWithFixedId() {
+	private Member getMemberWithFixedId(Long id) {
 		EasyRandomParameters memberConditions = new EasyRandomParameters()
-			.randomize(FieldPredicates.named("id"), () -> 1L);
+			.randomize(FieldPredicates.named("id"), () -> id);
 		EasyRandom memberRandom = new EasyRandom(memberConditions);
 		return memberRandom.nextObject(Member.class);
 	}
