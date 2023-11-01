@@ -1,6 +1,6 @@
 package com.flab.tabling.member.domain;
 
-import com.flab.tabling.global.util.BaseTime;
+import com.flab.tabling.global.audit.BaseTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

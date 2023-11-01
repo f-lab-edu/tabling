@@ -1,4 +1,4 @@
-package com.flab.tabling.global.config;
+package com.flab.tabling.global.service;
 
 import java.util.Random;
 

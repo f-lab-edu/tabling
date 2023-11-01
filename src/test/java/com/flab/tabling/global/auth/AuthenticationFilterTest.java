@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.flab.tabling.global.env.SecurityCredentials;
 import com.flab.tabling.global.env.TablingProperties;
-import com.flab.tabling.global.session.SessionConstant;
+import com.flab.tabling.global.util.SessionConstant;
 import com.flab.tabling.member.exception.AuthenticationException;
 
 import jakarta.servlet.FilterChain;

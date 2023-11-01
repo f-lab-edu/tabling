@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.flab.tabling.global.config.CipherService;
-import com.flab.tabling.global.config.StringGenerateFixture;
+import com.flab.tabling.global.service.CipherService;
+import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.exception.MemberNotFoundException;
 import com.flab.tabling.member.repository.MemberRepository;

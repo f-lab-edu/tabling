@@ -1,4 +1,4 @@
-package com.flab.tabling.global.config;
+package com.flab.tabling.global.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

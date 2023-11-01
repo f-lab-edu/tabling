@@ -8,7 +8,7 @@ import org.springframework.util.PatternMatchUtils;
 
 import com.flab.tabling.global.env.TablingProperties;
 import com.flab.tabling.global.exception.ErrorCode;
-import com.flab.tabling.global.session.SessionConstant;
+import com.flab.tabling.global.util.SessionConstant;
 import com.flab.tabling.member.exception.AuthenticationException;
 
 import jakarta.servlet.Filter;
