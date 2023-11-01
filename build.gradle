@@ -94,7 +94,7 @@ jacocoTestCoverageVerification {
                     'com.flab.tabling.**.util.**',
                     'com.flab.tabling.global.audit.**',
                     'com.flab.tabling.global.env.**',
-                    'com.flab.tabling.global.ExceptionHandlerFilter'
+                    'com.flab.tabling.global.auth.ExceptionHandlerFilter'
             ]
         }
     }
