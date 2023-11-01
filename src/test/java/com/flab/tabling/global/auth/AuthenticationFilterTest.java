@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.flab.tabling.global.env.SecurityProperties;
+import com.flab.tabling.global.env.SecurityCredentials;
+import com.flab.tabling.global.env.TablingProperties;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.exception.AuthenticationException;
 
@@ -35,7 +35,7 @@ class AuthenticationFilterTest {
 	@InjectMocks
 	private AuthenticationFilter authenticationFilter;
 	@Mock
-	private SecurityProperties securityProperties = new SecurityProperties();
+	private TablingProperties tablingProperties = new TablingProperties();
 	@Mock
 	private H2ConsoleProperties h2ConsoleProperties = new H2ConsoleProperties();
 
@@ -46,11 +46,11 @@ class AuthenticationFilterTest {
 
 	@BeforeEach
 	void init() {
-		securityProperties.setSecurity(new ConcurrentHashMap<String, String>());
-		doReturn("/login").when(securityProperties).getLoginPath();
-		doReturn(HttpMethod.POST).when(securityProperties).getLoginMethod();
-		doReturn("/members").when(securityProperties).getMemberAddPath();
-		doReturn(HttpMethod.POST).when(securityProperties).getMemberAddMethod();
+		tablingProperties.setSecurityCredentials(new SecurityCredentials());
+		doReturn("/login").when(tablingProperties).getLoginPath();
+		doReturn(HttpMethod.POST).when(tablingProperties).getLoginMethod();
+		doReturn("/members").when(tablingProperties).getMemberAddPath();
+		doReturn(HttpMethod.POST).when(tablingProperties).getMemberAddMethod();
 		doReturn("/h2-console").when(h2ConsoleProperties).getPath();
 	}
 

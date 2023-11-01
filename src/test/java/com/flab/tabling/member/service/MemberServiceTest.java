@@ -72,7 +72,7 @@ class MemberServiceTest {
 		session = new MockHttpSession();
 
 		//when
-		MemberAddDto.Response response = memberService.addMember(memberRequestDto, session);
+		MemberAddDto.Response response = memberService.add(memberRequestDto, session);
 
 		//then
 		verify(sessionService).add(any(), eq(SessionConstant.MEMBER_NAME), eq(memberRequestDto.getName()));
@@ -96,7 +96,7 @@ class MemberServiceTest {
 
 		//when, then
 		assertThrows(MemberDuplicatedException.class,
-			() -> memberService.addMember(memberRequestDto, session));
+			() -> memberService.add(memberRequestDto, session));
 	}
 
 	@Test

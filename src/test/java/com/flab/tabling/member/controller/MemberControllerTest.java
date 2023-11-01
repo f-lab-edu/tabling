@@ -75,7 +75,7 @@ class MemberControllerTest {
 			.build();
 		MemberAddDto.Response memberResponseDto = new MemberAddDto.Response(1L);
 
-		given(memberService.addMember(any(MemberAddDto.Request.class), any(HttpSession.class)))
+		given(memberService.add(any(MemberAddDto.Request.class), any(HttpSession.class)))
 			.willReturn(memberResponseDto);
 
 		//when
