@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.PatternMatchUtils;
 
-import com.flab.tabling.global.env.SecurityProperties;
+import com.flab.tabling.global.env.TablingProperties;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.exception.AuthenticationException;
 
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class AuthenticationFilter implements Filter {
-	private final SecurityProperties securityProperties;
+	private final TablingProperties tablingProperties;
 	private final H2ConsoleProperties h2ConsoleProperties;
 
 	@Override
@@ -39,9 +39,9 @@ public class AuthenticationFilter implements Filter {
 
 	private boolean isAuthenticationRequired(HttpServletRequest request) {
 		boolean isH2ConsolePath = startsWith(request, h2ConsoleProperties.getPath());
-		boolean isLogin = matches(request, securityProperties.getLoginMethod(), securityProperties.getLoginPath());
-		boolean isMemberCreation = matches(request, securityProperties.getMemberAddMethod(),
-			securityProperties.getMemberAddPath());
+		boolean isLogin = matches(request, tablingProperties.getLoginMethod(), tablingProperties.getLoginPath());
+		boolean isMemberCreation = matches(request, tablingProperties.getMemberAddMethod(),
+			tablingProperties.getMemberAddPath());
 		return !(isH2ConsolePath || isLogin || isMemberCreation);
 	}
 

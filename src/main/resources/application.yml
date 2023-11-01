@@ -21,8 +21,8 @@ spring:
       schema-locations: classpath:h2/schema.sql
       data-locations: classpath:h2/data.sql
 
-info:
-  security:
+tabling:
+  security-credentials:
     login-path: "/login"
     login-method: "POST"
     member-add-path: "/members"

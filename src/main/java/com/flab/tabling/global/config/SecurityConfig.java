@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.tabling.global.auth.AuthenticationFilter;
 import com.flab.tabling.global.auth.ExceptionHandlerFilter;
-import com.flab.tabling.global.env.SecurityProperties;
+import com.flab.tabling.global.env.TablingProperties;
 
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,9 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableConfigurationProperties({H2ConsoleProperties.class, SecurityProperties.class})
+@EnableConfigurationProperties({H2ConsoleProperties.class, TablingProperties.class})
 public class SecurityConfig {
-	private final SecurityProperties securityProperties;
+	private final TablingProperties tablingProperties;
 	private final H2ConsoleProperties h2ConsoleProperties;
 	private final ObjectMapper objectMapper;
 
@@ -44,13 +44,13 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public BytesEncryptor bytesEncryptor() {
-		return new AesBytesEncryptor(securityProperties.getEncryptorPassword(), securityProperties.getEncryptorSalt());
+		return new AesBytesEncryptor(tablingProperties.getEncryptorPassword(), tablingProperties.getEncryptorSalt());
 	}
 
 	@Bean
 	public FilterRegistrationBean<Filter> authenticationFilter() {
 		FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
-		bean.setFilter(new AuthenticationFilter(securityProperties, h2ConsoleProperties));
+		bean.setFilter(new AuthenticationFilter(tablingProperties, h2ConsoleProperties));
 		bean.setOrder(2);
 		return bean;
 	}
