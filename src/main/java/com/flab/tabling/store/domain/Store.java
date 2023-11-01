@@ -44,4 +44,11 @@ public class Store {
 		this.description = description;
 		this.maxWaitingCount = maxWaitingCount;
 	}
+
+	public void update(String name, Category category, String description, Integer maxWaitingCount) {
+		this.name = name;
+		this.category = category;
+		this.description = description;
+		this.maxWaitingCount = maxWaitingCount;
+	}
 }

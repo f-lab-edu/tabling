@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.flab.tabling.member.dto.MemberAddDto;
-import com.flab.tabling.member.service.MemberRegisterService;
+import com.flab.tabling.member.service.MemberService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -22,13 +23,15 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-	private final MemberRegisterService memberRegisterService;
+	private final MemberService memberService;
 
 	@PostMapping("/members")
-	private ResponseEntity<MemberAddDto.Response> add(@Valid @RequestBody MemberAddDto.Request memberRequestDto) {
-		MemberAddDto.Response memberResponseDto = memberRegisterService.add(memberRequestDto);
+	private ResponseEntity<MemberAddDto.Response> add(HttpSession session,
+		@Valid @RequestBody MemberAddDto.Request memberRequestDto) {
+		MemberAddDto.Response memberResponseDto = memberService.add(memberRequestDto, session);
 		return ResponseEntity
 			.status(HttpStatus.CREATED)
 			.body(memberResponseDto);
 	}
+
 }

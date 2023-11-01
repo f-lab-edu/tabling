@@ -2,9 +2,8 @@ package com.flab.tabling.global.exception;
 
 import lombok.Getter;
 
+@Getter
 public class BusinessException extends RuntimeException {
-
-	@Getter
 	private final ErrorCode errorCode;
 
 	public BusinessException(ErrorCode errorCode, String message) {
