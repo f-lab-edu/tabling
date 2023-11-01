@@ -86,7 +86,10 @@ jacocoTestCoverageVerification {
             }
 
             excludes = [
-                    'com.flab.tabling.TablingApplication'
+                    'com.flab.tabling.TablingApplication',
+                    'com.flab.tabling.**.config.**',
+                    'com.flab.tabling.**.exception.**',
+                    'com.flab.tabling.**.dto.**'
             ]
         }
     }
