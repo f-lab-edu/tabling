@@ -51,7 +51,7 @@ public class StoreService {
 	@Transactional
 	public StoreUpdateDto.Response update(StoreUpdateDto.Request storeUpdateRequest, Long sessionMemberId) {
 		Store targetStore = getStore(storeUpdateRequest.getId());
-		validationAuth(targetStore, sessionMemberId);
+		validateAuth(targetStore, sessionMemberId);
 		updateStore(targetStore, storeUpdateRequest);
 		return new StoreUpdateDto.Response(storeUpdateRequest.getId());
 	}
@@ -59,12 +59,12 @@ public class StoreService {
 	@Transactional
 	public void delete(Long storeId, Long sessionMemberId) {
 		Store targetStore = getStore(storeId);
-		validationAuth(targetStore, sessionMemberId);
+		validateAuth(targetStore, sessionMemberId);
 		storeRepository.delete(targetStore);
 	}
 
 	@Transactional(readOnly = true)
-	public void validationAuth(Store targetStore, Long memberId) {
+	public void validateAuth(Store targetStore, Long memberId) {
 		Member seller = targetStore.getMember();
 		if (seller.getId() != memberId) {
 			throw new RuntimeException("요청한 사용자와 수정 대상인 가게의 주인이 일치하지 않는다."); // TODO: 2023-10-13 커스텀 예외로 수정 필요
