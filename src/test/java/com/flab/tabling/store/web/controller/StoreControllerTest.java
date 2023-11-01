@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
+import com.flab.tabling.store.dto.StoreUpdateDto;
 import com.flab.tabling.store.service.StoreService;
 
 /*
@@ -113,6 +114,42 @@ class StoreControllerTest {
 			)
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
+	@Test
+	@DisplayName("수정 요청이 성공적으로 수행되면, 상태코드와 함께 응답을 반환한다.")
+	void updateStoreSuccess() throws Exception {
+		//given
+		EasyRandomParameters conditions = getStoreDtoConditions();
+		EasyRandom easyRandom = new EasyRandom(conditions);
+
+		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
+		String requestJson = objectMapper.writeValueAsString(storeUpdateRequest);
+
+		StoreUpdateDto.Response storeUpdateResponse = easyRandom.nextObject(StoreUpdateDto.Response.class);
+		String responseJson = objectMapper.writeValueAsString(storeUpdateResponse);
+
+		doReturn(storeUpdateResponse).when(storeService).update(any(StoreUpdateDto.Request.class), eq(1L));
+
+		//when
+		mockMvc.perform(MockMvcRequestBuilders.put("/stores/{id}", 2L)
+				.contentType(MediaType.APPLICATION_JSON)
+				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-13 세션 이름 변경 필요
+				.content(requestJson)
+			)
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
+	@Test
+	@DisplayName("삭제 요청이 성공적으로 수행되면, 상태코드를 반환한다.")
+	void deleteStoreSuccess() throws Exception {
+		//expected
+		mockMvc.perform(MockMvcRequestBuilders.delete("/stores/{id}", 2L)
+				.contentType(MediaType.APPLICATION_JSON)
+				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-13 세션 이름 변경 필요
+			)
+			.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
 	private EasyRandomParameters getStoreDtoConditions() {

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +28,7 @@ import com.flab.tabling.member.repository.MemberRepository;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
+import com.flab.tabling.store.dto.StoreUpdateDto;
 import com.flab.tabling.store.repository.StoreRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -135,5 +138,117 @@ class StoreServiceTest {
 		//then
 		List<StoreFindDto.Response> pageContent = storeFindRespnosePage.getContent();
 		assertThat(pageContent.size()).isEqualTo(0);
+	}
+
+	@Test
+	@DisplayName("식당이 존재하고, 요청한 사용자가 식당 주인이 맞다면, 성공적으로 수정되고 응답을 반환한다.")
+	void updateStoreSuccess() {
+		//given
+		Store targetStore = getStoreWithFixedMember();
+		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
+
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(storeUpdateRequest.getId());
+
+		//when
+		StoreUpdateDto.Response result = storeService.update(storeUpdateRequest, 1L);
+
+		//then
+		assertThat(result.getId()).isEqualTo(storeUpdateRequest.getId());
+	}
+
+	@Test
+	@DisplayName("수정 대상 식당이 존재하지 않으면, 수정은 실패하고 예외가 발생한다.")
+	void updateStoreFailWithNotFoundStore() {
+		//given
+		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
+
+		doReturn(Optional.empty()).when(storeRepository).findById(storeUpdateRequest.getId());
+
+		//expected // TODO: 2023-10-10 커스텀 예외로 수정 필요
+		assertThrows(RuntimeException.class, () -> storeService.update(storeUpdateRequest, 1L));
+	}
+
+	@Test
+	@DisplayName("요청한 사용자가 식당 주인이 아니라면, 수정은 실패하고 예외가 발생한다.")
+	void updateStoreFailWithNoAuth() {
+		//given
+		Store targetStore = getStoreWithFixedMember();
+		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
+
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(storeUpdateRequest.getId());
+
+		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
+		assertThrows(RuntimeException.class, () -> storeService.update(storeUpdateRequest, 10L));
+	}
+
+	@Test
+	@DisplayName("식당이 존재하고, 요청자가 식당 주인이라면, 식당은 성공적으로 삭제되고 아무것도 반환하지 않는다.")
+	void deleteStoreSuccess() {
+		//given
+		Store targetStore = getStoreWithFixedMember();
+
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(2L);
+
+		//when
+		storeService.delete(2L, 1L);
+
+		//then
+		verify(storeRepository, times(1)).delete(any(Store.class));
+	}
+
+	@Test
+	@DisplayName("삭제 대상 식당이 존재하지 않으면, 삭제는 실패하고 예외가 발생한다.")
+	void deleteStoreFailWithNotFoundStore() {
+		//given
+		doReturn(Optional.empty()).when(storeRepository).findById(2L);
+
+		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
+		assertThrows(RuntimeException.class, () -> storeService.delete(2L, 1L));
+	}
+
+	@Test
+	@DisplayName("요청자가 식당 주인이 아니라면, 삭제는 실패하고 예외가 발생한다.")
+	void deleteStoreFailWithNoAuth() {
+		Store targetStore = getStoreWithFixedMember();
+
+		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(2L);
+
+		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
+		assertThrows(RuntimeException.class, () -> storeService.delete(2L, 10L));
+	}
+
+	@Test
+	@DisplayName("요청자가 식당 주인이 맞다면, 검증은 성공하고 아무것도 반환하지 않는다.")
+	void validationSuccess() {
+		//given
+		Store targetStore = getStoreWithFixedMember();
+
+		//expected
+		assertDoesNotThrow(() -> storeService.validateAuth(targetStore, 1L));
+	}
+
+	@Test
+	@DisplayName("요청자가 식당 주인이 아니라면, 검증은 실패하고 예외가 발생한다.")
+	void validationFailWithNoAuth() {
+		//given
+		Store targetStore = getStoreWithFixedMember();
+
+		//expected TODO: 2023-11-01 커스텀 예외로 수정 필요
+		assertThrows(RuntimeException.class, () -> storeService.validateAuth(targetStore, 10L));
+	}
+
+	private Store getStoreWithFixedMember() {
+		EasyRandomParameters storeConditions = new EasyRandomParameters()
+			.randomize(Member.class, () -> getMemberWithFixedId(1L))
+			.randomize(FieldPredicates.named("id"), () -> 2L);
+		EasyRandom storeRandom = new EasyRandom(storeConditions);
+		return storeRandom.nextObject(Store.class);
+	}
+
+	private Member getMemberWithFixedId(Long id) {
+		EasyRandomParameters memberConditions = new EasyRandomParameters()
+			.randomize(FieldPredicates.named("id"), () -> id);
+		EasyRandom memberRandom = new EasyRandom(memberConditions);
+		return memberRandom.nextObject(Member.class);
 	}
 }

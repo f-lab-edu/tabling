@@ -10,6 +10,7 @@ import com.flab.tabling.member.repository.MemberRepository;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
+import com.flab.tabling.store.dto.StoreUpdateDto;
 import com.flab.tabling.store.repository.StoreRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -33,15 +34,13 @@ public class StoreService {
 			.build();
 
 		Store savedStore = storeRepository.save(newStore);
-		return StoreAddDto.Response.builder()
-			.id(savedStore.getId())
-			.build();
+		return new StoreAddDto.Response(savedStore.getId());
 	}
 
 	@Transactional(readOnly = true)
 	public StoreFindDto.Response find(Long storeId) {
-		Store findStore = getStore(storeId);
-		return new StoreFindDto.Response(findStore);
+		Store queriedStore = getStore(storeId);
+		return new StoreFindDto.Response(queriedStore);
 	}
 
 	@Transactional(readOnly = true)
@@ -49,13 +48,45 @@ public class StoreService {
 		return storeRepository.findAll(pageable).map(StoreFindDto.Response::new);
 	}
 
-	private Store getStore(Long storeId) {
-		return storeRepository.findById(storeId)
-			.orElseThrow(RuntimeException::new); // TODO: 2023-10-08 커스텀 예외로 교체 필요
+	@Transactional
+	public StoreUpdateDto.Response update(StoreUpdateDto.Request storeUpdateRequest, Long sessionMemberId) {
+		Store targetStore = getStore(storeUpdateRequest.getId());
+		validateAuth(targetStore, sessionMemberId);
+		updateStore(targetStore, storeUpdateRequest);
+		return new StoreUpdateDto.Response(storeUpdateRequest.getId());
+	}
+
+	@Transactional
+	public void delete(Long storeId, Long sessionMemberId) {
+		Store targetStore = getStore(storeId);
+		validateAuth(targetStore, sessionMemberId);
+		storeRepository.delete(targetStore);
+	}
+
+	@Transactional(readOnly = true)
+	public void validateAuth(Store targetStore, Long memberId) {
+		Member seller = targetStore.getMember();
+		if (seller.getId() != memberId) {
+			throw new RuntimeException("요청한 사용자와 수정 대상인 가게의 주인이 일치하지 않는다."); // TODO: 2023-10-13 커스텀 예외로 수정 필요
+		}
 	}
 
 	private Member getMember(Long memberId) {
 		return memberRepository.findById(memberId)
 			.orElseThrow(RuntimeException::new); // TODO: 2023-10-03 커스텀 예외로 수정 필요
+	}
+
+	private Store getStore(Long storeId) {
+		return storeRepository.findById(storeId)
+			.orElseThrow(RuntimeException::new); // TODO: 2023-10-13 커스텀 예외로 수정 필요
+	}
+
+	private void updateStore(Store targetStore, StoreUpdateDto.Request storeUpdateRequest) {
+		targetStore.update(
+			storeUpdateRequest.getName(),
+			storeUpdateRequest.getCategory(),
+			storeUpdateRequest.getDescription(),
+			storeUpdateRequest.getMaxWaitingCount()
+		);
 	}
 }

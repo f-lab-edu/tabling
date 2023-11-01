@@ -12,10 +12,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class StoreAddDto {
+public class StoreUpdateDto {
+
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Request {
+		@NotNull
+		private Long id;
 		@NotBlank
 		@Size(min = 1, max = 30)
 		private String name;
