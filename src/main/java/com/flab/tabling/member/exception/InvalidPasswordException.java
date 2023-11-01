@@ -1,5 +1,10 @@
 package com.flab.tabling.member.exception;
 
-public class InvalidPasswordException extends RuntimeException {
-	//TODO: 예외 처리 수정
+import com.flab.tabling.global.exception.BusinessException;
+import com.flab.tabling.global.exception.ErrorCode;
+
+public class InvalidPasswordException extends BusinessException {
+	public InvalidPasswordException(ErrorCode errorCode, String message) {
+		super(errorCode, message);
+	}
 }

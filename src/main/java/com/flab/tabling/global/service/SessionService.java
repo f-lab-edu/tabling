@@ -2,6 +2,7 @@ package com.flab.tabling.global.service;
 
 import org.springframework.stereotype.Service;
 
+import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.exception.SessionNotFoundException;
 import com.flab.tabling.global.session.SessionConstant;
 
@@ -24,11 +25,11 @@ public class SessionService {
 
 	private Object getValue(HttpSession session, SessionConstant key) {
 		if (session == null) {
-			throw new SessionNotFoundException();
+			throw new SessionNotFoundException(ErrorCode.INVALID_SESSION, "session is not found");
 		}
 		Object value = session.getAttribute(key.name());
 		if (value == null) {
-			throw new SessionNotFoundException();
+			throw new SessionNotFoundException(ErrorCode.INVALID_SESSION, "the value of key is not found");
 		}
 		return value;
 	}
