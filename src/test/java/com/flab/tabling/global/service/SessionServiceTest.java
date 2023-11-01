@@ -73,4 +73,12 @@ class SessionServiceTest {
 		Assertions.assertThat(session.isInvalid()).isTrue();
 	}
 
+	@Test
+	@DisplayName("세션 키에 값 추가")
+	void addKeyAndValue() {
+		MockHttpSession session = new MockHttpSession();
+		sessionService.add(session, SessionConstant.MEMBER_ID, 1L);
+		Assertions.assertThat((Long)session.getAttribute(SessionConstant.MEMBER_ID.name())).isEqualTo(1L);
+	}
+
 }
