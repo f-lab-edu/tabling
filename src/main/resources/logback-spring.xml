@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="console-appender.xml"/>
+    <include resource="file-appender.xml"/>
+
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5level) %clr([%t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} - %msg%n"/>
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5level ${PID:- } -&#45;&#45; [%15.15t] %-40.40logger{39} : %msg%n"/>
+    <property name="LOG_PATH" value="./logs"/>
+
+    <!--local-->
+    <springProfile name="default">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <logger name="com.flab.tabling" level="DEBUG"/>
+    </springProfile>
+
+    <!--prod-->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
+</configuration>
