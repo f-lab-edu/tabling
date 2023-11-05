@@ -108,8 +108,6 @@ class MemberControllerTest {
 			.email(email)
 			.roleType(roleType)
 			.build();
-		ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_PARAMETER);
-
 		//when
 		ResultActions resultActions = mvc.perform(
 			post(postURI)
@@ -120,6 +118,6 @@ class MemberControllerTest {
 			.andReturn().getResponse();
 		ErrorResponse memberResponseDtoResult = objectMapper.readValue(response.getContentAsString(),
 			ErrorResponse.class);
-		Assertions.assertThat(memberResponseDtoResult).usingRecursiveComparison().isEqualTo(errorResponse);
+		Assertions.assertThat(memberResponseDtoResult.getCode()).isEqualTo(ErrorCode.INVALID_PARAMETER);
 	}
 }

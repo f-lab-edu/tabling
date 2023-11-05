@@ -23,12 +23,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.flab.tabling.global.exception.AuthorizationException;
 import com.flab.tabling.member.domain.Member;
+import com.flab.tabling.member.exception.MemberNotFoundException;
 import com.flab.tabling.member.repository.MemberRepository;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
+import com.flab.tabling.store.exception.StoreNotFoundException;
 import com.flab.tabling.store.repository.StoreRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,9 +69,8 @@ class StoreServiceTest {
 		StoreAddDto.Request storeRequestDto = easyRandom.nextObject(StoreAddDto.Request.class);
 
 		doReturn(Optional.empty()).when(memberRepository).findById(1L);
-		// TODO: 2023-10-04 커스텀 예외로 수정 필요
 		//expected
-		assertThrows(RuntimeException.class, () -> storeService.add(storeRequestDto, 1L));
+		assertThrows(MemberNotFoundException.class, () -> storeService.add(storeRequestDto, 1L));
 	}
 
 	@Test
@@ -92,8 +94,8 @@ class StoreServiceTest {
 		//given
 		doReturn(Optional.empty()).when(storeRepository).findById(2L);
 
-		//expected TODO: 2023-10-08 커스텀 예외로 교체 필요
-		assertThrows(RuntimeException.class, () -> storeService.find(2L));
+		//expected
+		assertThrows(StoreNotFoundException.class, () -> storeService.find(2L));
 	}
 
 	@Test
@@ -164,8 +166,8 @@ class StoreServiceTest {
 
 		doReturn(Optional.empty()).when(storeRepository).findById(storeUpdateRequest.getId());
 
-		//expected // TODO: 2023-10-10 커스텀 예외로 수정 필요
-		assertThrows(RuntimeException.class, () -> storeService.update(storeUpdateRequest, 1L));
+		//expected
+		assertThrows(StoreNotFoundException.class, () -> storeService.update(storeUpdateRequest, 1L));
 	}
 
 	@Test
@@ -177,8 +179,8 @@ class StoreServiceTest {
 
 		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(storeUpdateRequest.getId());
 
-		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
-		assertThrows(RuntimeException.class, () -> storeService.update(storeUpdateRequest, 10L));
+		//expected
+		assertThrows(AuthorizationException.class, () -> storeService.update(storeUpdateRequest, 10L));
 	}
 
 	@Test
@@ -202,8 +204,8 @@ class StoreServiceTest {
 		//given
 		doReturn(Optional.empty()).when(storeRepository).findById(2L);
 
-		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
-		assertThrows(RuntimeException.class, () -> storeService.delete(2L, 1L));
+		//expected
+		assertThrows(StoreNotFoundException.class, () -> storeService.delete(2L, 1L));
 	}
 
 	@Test
@@ -213,8 +215,8 @@ class StoreServiceTest {
 
 		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(2L);
 
-		//expected // TODO: 2023-10-13 커스텀 예외로 수정 필요
-		assertThrows(RuntimeException.class, () -> storeService.delete(2L, 10L));
+		//expected
+		assertThrows(AuthorizationException.class, () -> storeService.delete(2L, 10L));
 	}
 
 	@Test
@@ -233,8 +235,8 @@ class StoreServiceTest {
 		//given
 		Store targetStore = getStoreWithFixedMember();
 
-		//expected TODO: 2023-11-01 커스텀 예외로 수정 필요
-		assertThrows(RuntimeException.class, () -> storeService.validateAuth(targetStore, 10L));
+		//expected
+		assertThrows(AuthorizationException.class, () -> storeService.validateAuth(targetStore, 10L));
 	}
 
 	private Store getStoreWithFixedMember() {

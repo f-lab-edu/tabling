@@ -7,13 +7,17 @@ public enum ErrorCode {
 
 	MEMBER_DUPLICATED("member already exists", 400),
 	MEMBER_NOT_FOUND("member not found", 404),
+	STORE_NOT_FOUND("store not found", 404),
+	INVALID_SESSION("session is invalid", 400),
 	INVALID_PARAMETER("parameter is invalid", 400),
-	AUTHENTICATION_FAILED("authentication failed", 401);
-	private final String message;
+	AUTHENTICATION_FAILED("authentication failed", 401),
+	AUTHORIZATION_FAILED("authorization failed", 403);
+
+	private final String description;
 	private final int status;
 
-	ErrorCode(String message, int status) {
-		this.message = message;
+	ErrorCode(String description, int status) {
+		this.description = description;
 		this.status = status;
 	}
 }

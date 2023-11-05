@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.config.CipherService;
+import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.Member;
@@ -28,7 +29,7 @@ public class MemberService {
 		String encryptedPassword = oneWayCipherService.encrypt(memberRequestDto.getPassword());
 		String encryptedEmail = twoWayCipherService.encrypt(memberRequestDto.getEmail());
 		if (memberRepository.findByEmail(encryptedEmail).isPresent()) {
-			throw new MemberDuplicatedException();
+			throw new MemberDuplicatedException(ErrorCode.MEMBER_DUPLICATED, "member with this email already exists");
 		}
 		sessionService.add(session, SessionConstant.MEMBER_NAME, memberRequestDto.getName());
 		Member member = Member.builder()

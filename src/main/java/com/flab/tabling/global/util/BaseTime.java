@@ -34,7 +34,6 @@ public class BaseTime {
 	@LastModifiedDate
 	@Column(name = "modified_at")
 	private LocalDateTime modifiedAt;
-	// TODO 2023/09/29 인증 기능 추가한 다음에 추가
 	@Column(name = "created_by")
 	@CreatedBy
 	private String createdBy;

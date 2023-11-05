@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.PatternMatchUtils;
 
 import com.flab.tabling.global.env.TablingProperties;
+import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.exception.AuthenticationException;
 
@@ -31,7 +32,7 @@ public class AuthenticationFilter implements Filter {
 		HttpSession session = httpRequest.getSession(false);
 		if (isAuthenticationRequired(httpRequest)) {
 			if (session == null || session.getAttribute(SessionConstant.MEMBER_ID.name()) == null) {
-				throw new AuthenticationException();
+				throw new AuthenticationException(ErrorCode.AUTHENTICATION_FAILED, "authentication is failed");
 			}
 		}
 		chain.doFilter(request, response);

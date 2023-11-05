@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.config.CipherService;
+import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.session.SessionConstant;
 import com.flab.tabling.member.domain.Member;
@@ -25,7 +26,7 @@ public class AuthService {
 		Member member = memberQueryService.findByEmail(memberRequestDto.getEmail());
 		boolean isValid = oneWayCipherService.match(memberRequestDto.getPassword(), member.getPassword());
 		if (!isValid) {
-			throw new InvalidPasswordException();
+			throw new InvalidPasswordException(ErrorCode.AUTHENTICATION_FAILED, "password is invalid");
 		}
 		sessionService.add(session, SessionConstant.MEMBER_NAME, member.getName());
 		sessionService.add(session, SessionConstant.MEMBER_ID, member.getId());
