@@ -70,7 +70,7 @@ public class StoreService {
 	@Transactional(readOnly = true)
 	public void validateAuth(Store targetStore, Long memberId) {
 		Member seller = targetStore.getMember();
-		if (seller.getId() != memberId) {
+		if (!seller.getId().equals(memberId)) {
 			throw new AuthorizationException(ErrorCode.AUTHORIZATION_FAILED, " is not the owner of the store");
 		}
 	}

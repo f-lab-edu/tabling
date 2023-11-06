@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.flab.tabling.global.session.SessionConstant;
+import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.service.AuthService;
 

@@ -12,34 +12,34 @@ import org.springframework.http.HttpMethod;
 @ConfigurationProperties(prefix = "tabling")
 public class TablingProperties {
 	@NestedConfigurationProperty
-	private SecurityCredentials securityCredentials;
+	private SecurityProperties securityProperties;
 
-	public void setSecurityCredentials(SecurityCredentials securityCredentials) {
-		this.securityCredentials = securityCredentials;
+	public void setSecurityCredentials(SecurityProperties securityProperties) {
+		this.securityProperties = securityProperties;
 	}
 
 	public String getLoginPath() {
-		return securityCredentials.getLoginPath();
+		return securityProperties.getLoginPath();
 	}
 
 	public HttpMethod getLoginMethod() {
-		return securityCredentials.getLoginMethod();
+		return securityProperties.getLoginMethod();
 	}
 
 	public String getMemberAddPath() {
-		return securityCredentials.getMemberAddPath();
+		return securityProperties.getMemberAddPath();
 	}
 
 	public HttpMethod getMemberAddMethod() {
-		return securityCredentials.getMemberAddMethod();
+		return securityProperties.getMemberAddMethod();
 	}
 
 	public String getEncryptorPassword() {
-		return securityCredentials.getBytesEncryptorPassword();
+		return securityProperties.getBytesEncryptorPassword();
 	}
 
 	public String getEncryptorSalt() {
-		return securityCredentials.getBytesEncryptorSalt();
+		return securityProperties.getBytesEncryptorSalt();
 	}
 
 }

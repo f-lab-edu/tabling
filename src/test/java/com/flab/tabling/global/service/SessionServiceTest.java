@@ -13,7 +13,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import com.flab.tabling.global.exception.SessionNotFoundException;
-import com.flab.tabling.global.session.SessionConstant;
+import com.flab.tabling.global.constant.SessionConstant;
 
 import jakarta.servlet.http.HttpSession;
 

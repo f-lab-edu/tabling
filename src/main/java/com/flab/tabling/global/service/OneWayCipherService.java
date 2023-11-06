@@ -1,4 +1,4 @@
-package com.flab.tabling.global.config;
+package com.flab.tabling.global.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

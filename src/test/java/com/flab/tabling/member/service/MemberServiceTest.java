@@ -18,11 +18,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpSession;
 
-import com.flab.tabling.global.config.OneWayCipherService;
-import com.flab.tabling.global.config.StringGenerateFixture;
-import com.flab.tabling.global.config.TwoWayCipherService;
+import com.flab.tabling.global.service.OneWayCipherService;
+import com.flab.tabling.global.service.StringGenerateFixture;
+import com.flab.tabling.global.service.TwoWayCipherService;
 import com.flab.tabling.global.service.SessionService;
-import com.flab.tabling.global.session.SessionConstant;
+import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;

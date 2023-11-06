@@ -1,4 +1,4 @@
-package com.flab.tabling.global.util;
+package com.flab.tabling.global.audit;
 
 import java.util.Optional;
 
