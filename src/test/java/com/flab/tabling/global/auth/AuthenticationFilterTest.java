@@ -46,7 +46,6 @@ class AuthenticationFilterTest {
 
 	@BeforeEach
 	void init() {
-		tablingProperties.setSecurityCredentials(new SecurityProperties());
 		doReturn("/login").when(tablingProperties).getLoginPath();
 		doReturn(HttpMethod.POST).when(tablingProperties).getLoginMethod();
 		doReturn("/members").when(tablingProperties).getMemberAddPath();
