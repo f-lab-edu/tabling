@@ -37,6 +37,11 @@ management:
     health:
       show-details: always
 
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
 tabling:
   security-credentials:
     login-path: "/login"
