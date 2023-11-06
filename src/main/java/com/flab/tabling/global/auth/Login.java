@@ -1,4 +1,4 @@
-package com.flab.tabling.global.util;
+package com.flab.tabling.global.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

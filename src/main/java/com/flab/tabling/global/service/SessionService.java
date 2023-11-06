@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.exception.SessionNotFoundException;
-import com.flab.tabling.global.util.SessionConstant;
+import com.flab.tabling.global.constant.SessionConstant;
 
 import jakarta.servlet.http.HttpSession;
 

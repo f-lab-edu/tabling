@@ -23,7 +23,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.tabling.global.service.StringGenerateFixture;
-import com.flab.tabling.global.util.SessionConstant;
+import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.service.AuthService;
 

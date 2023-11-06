@@ -1,4 +1,4 @@
-package com.flab.tabling.global.util;
+package com.flab.tabling.global.auth;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -6,7 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.flab.tabling.global.dto.MemberSessionDto;
+import com.flab.tabling.member.dto.MemberSession;
 import com.flab.tabling.global.service.SessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
-		boolean hasMemberInfoType = MemberSessionDto.class.isAssignableFrom(parameter.getParameterType());
+		boolean hasMemberInfoType = MemberSession.class.isAssignableFrom(parameter.getParameterType());
 		return hasLoginAnnotation && hasMemberInfoType;
 	}
 
@@ -31,6 +31,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 		HttpSession session = request.getSession(false);
 		Long id = sessionService.getId(session);
 		String name = sessionService.getName(session);
-		return new MemberSessionDto(id, name);
+		return new MemberSession(id, name);
 	}
 }

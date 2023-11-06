@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SecurityCredentials {
+public class SecurityProperties {
 	private String loginPath;
 	private HttpMethod loginMethod;
 	private String memberAddPath;

@@ -17,7 +17,7 @@ import org.springframework.mock.web.MockHttpSession;
 import com.flab.tabling.global.service.CipherService;
 import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.global.service.SessionService;
-import com.flab.tabling.global.util.SessionConstant;
+import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.exception.InvalidPasswordException;

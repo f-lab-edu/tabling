@@ -1,4 +1,4 @@
-package com.flab.tabling.global.util;
+package com.flab.tabling.global.constant;
 
 import lombok.Getter;
 
