@@ -7,7 +7,7 @@ plugins {
 }
 
 configurations {
-    asciidoctorExt // asciidoctorExt에 대한 선언
+    asciidoctorExtensions // asciidoctorExt에 대한 선언
 }
 
 group = 'com.flab'
@@ -46,7 +46,7 @@ dependencies {
     // easy-random: 랜덤 테스트 데이터 생성 라이브러리
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     //rest-docs
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
@@ -57,13 +57,14 @@ ext {
 tasks.named('test') {
     outputs.dir snippetsDir // 스니펫이 생성되는 디렉터리를 설정
     useJUnitPlatform()
+    finalizedBy 'asciidoctor'
 }
 
 asciidoctor { // Gradle이 asciidoctor Task를 수행하는 설정 (함수 선언)
-    configurations 'asciidoctorExt' // asciidoctor 확장 설정
+    dependsOn test // Gradle의 test Task 이후 asciidoctor를 수행
+    configurations 'asciidoctorExtensions' // asciidoctor 확장 설정
     baseDirFollowsSourceFile() // .adoc 파일을 include 하면서 사용하기 위한 설정
     inputs.dir snippetsDir // 스니펫을 불러올 위치 설정
-    dependsOn test // Gradle의 test Task 이후 asciidoctor를 수행
 }
 
 asciidoctor.doFirst { // asciidoctor Task가 수행될 때 가장 먼저 수행
