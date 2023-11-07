@@ -51,7 +51,7 @@ dependencies {
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets') // (5)
+    snippetsDir = file('build/generated-snippets/') // (5)
 }
 
 tasks.named('test') {
