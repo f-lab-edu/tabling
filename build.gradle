@@ -68,11 +68,6 @@ task copyDocument(type: Copy) { // (12)
     into file("src/main/resources/static/docs")
 }
 
-build {
-    dependsOn copyDocument
-}
-
-
 tasks.register('testCoverage', Test) {
     group 'verification'
     description 'Runs the unit tests with coverage'
