@@ -56,7 +56,6 @@ ext {
 
 tasks.named('test') {
     outputs.dir snippetsDir // 스니펫이 생성되는 디렉터리를 설정
-    useJUnitPlatform()
     finalizedBy 'asciidoctor'
 }
 
