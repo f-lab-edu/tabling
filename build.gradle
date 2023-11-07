@@ -59,7 +59,20 @@ tasks.named('test') {
     outputs.dir snippetsDir // (6)
 }
 
+task createDirectoryIfNotExists(type: Exec) {
+    def directoryPath = 'build/generated-snippets/'// Replace this with your desired directory path
+    onlyIf {
+        !file(directoryPath).isDirectory()
+    }
+
+    doFirst {
+        println "Creating directory: $directoryPath"
+        mkdir directoryPath
+    }
+}
+
 asciidoctor {
+    dependsOn createDirectoryIfNotExists
     configurations 'asciidoctorExt' // (7)
     baseDirFollowsSourceFile() // (8)
     inputs.dir snippetsDir // (9)
