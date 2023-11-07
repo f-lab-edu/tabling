@@ -72,7 +72,7 @@ asciidoctor.doFirst {
 
 task copyDocument(type: Copy) { // (12)
     dependsOn asciidoctor
-    from file("build/docs/asciidoc")
+    from file("build/asciidoc/html5/")
     into file("src/main/resources/static/docs")
 }
 
