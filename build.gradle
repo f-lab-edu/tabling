@@ -51,10 +51,11 @@ dependencies {
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets') // 스니펫이 생성되는 디렉터리 경로를 설정
+    snippetsDir = file('$buildDir/generated-snippets') // 스니펫이 생성되는 디렉터리 경로를 설정
 }
 
 tasks.named('test') {
+    systemProperty("org.springframework.restdocs.outputDir", snippetsDir)
     outputs.dir snippetsDir // 스니펫이 생성되는 디렉터리를 설정
     finalizedBy 'asciidoctor'
 }
