@@ -6,10 +6,6 @@ plugins {
     id "org.asciidoctor.jvm.convert" version '3.3.2' //rest-docs
 }
 
-configurations {
-    asciidoctorExt // rest-docs
-}
-
 group = 'com.flab'
 version = '0.0.1-SNAPSHOT'
 
@@ -26,7 +22,6 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-    asciidoctorExt
 }
 
 repositories {
@@ -46,12 +41,11 @@ dependencies {
     // easy-random: 랜덤 테스트 데이터 생성 라이브러리
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     //rest-docs
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets/') // (5)
+    snippetsDir = file('./build/generated-snippets') // (5)
 }
 
 tasks.named('test') {
@@ -60,22 +54,12 @@ tasks.named('test') {
 }
 
 asciidoctor {
-    configurations 'asciidoctorExt' // (7)
-    baseDirFollowsSourceFile() // (8)
     inputs.dir snippetsDir // (9)
     dependsOn test // (10)
 }
 
 asciidoctor.doFirst {
     delete file('src/main/resources/static/docs')  // (11)
-}
-
-bootJar {
-    dependsOn asciidoctor
-    copy {
-        from "${asciidoctor.outputDir}"
-        into 'BOOT-INF/classes/static/docs'
-    }
 }
 
 task copyDocument(type: Copy) { // (12)

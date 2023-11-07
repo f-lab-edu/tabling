@@ -1,10 +1,10 @@
 = Spring REST Docs Test
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
 :doctype: book
 :source-highlighter: highlightjs
 :toc: left
 :toclevels: 2
 :seclinks:
-ifndef::snippets[]
-:snippets: ./build/generated-snippets
-endif::[]
 include::test.adoc[]
