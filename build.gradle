@@ -90,14 +90,6 @@ task copyDocument(type: Copy) {
     into file("src/main/resources/static/docs")
 }
 
-//build의 bootJar 시 asciidoctor에 의존하여 /static/docs에 index.html이 생성된다.
-bootJar {
-    dependsOn asciidoctor
-    from("${asciidoctor.outputDir}") {
-        into 'static/docs'
-    }
-}
-
 tasks.register('testCoverage', Test) {
     group 'verification'
     description 'Runs the unit tests with coverage'
