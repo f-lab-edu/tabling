@@ -19,6 +19,7 @@ jacoco {
 }
 
 configurations {
+    asciidoctorExtensions
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -41,31 +42,60 @@ dependencies {
     // easy-random: 랜덤 테스트 데이터 생성 라이브러리
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
     //rest-docs
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+tasks.named('test') {
+    useJUnitPlatform()
 }
 
 ext {
-    snippetsDir = file('./build/generated-snippets') // (5)
+    // 아래서 사용할 변수 선언
+    snippetsDir = file('build/generated-snippets')
 }
 
-tasks.named('test') {
+
+test {
+    // 위에서 작성한 snippetsDir 디렉토리를 test의 output으로 구성하는 설정 -> 스니펫 조각들이 build/generated-snippets로 출력
+    outputs.dir snippetsDir
     useJUnitPlatform()
-    outputs.dir snippetsDir // (6)
 }
 
+// asciidoctor 설정
 asciidoctor {
-    inputs.dir snippetsDir // (9)
-    dependsOn test // (10)
+    dependsOn test // test 작업 이후에 작동하도록 하는 설정
+    configurations 'asciidoctorExtensions' // 위에서 작성한 configuration 적용
+    inputs.dir snippetsDir // snippetsDir 를 입력으로 구성
+
+    // source가 없으면 .adoc파일을 전부 html로 만들어버림
+    // source 지정시 특정 adoc만 HTML로 만든다.
+    sources{
+        include("**/index.adoc","**/common/*.adoc")
+    }
+
+    // 특정 .adoc에 다른 adoc 파일을 가져와서(include) 사용하고 싶을 경우 경로를 baseDir로 맞춰주는 설정입니다.
+    // 개별 adoc으로 운영한다면 필요 없는 옵션입니다.
+    baseDirFollowsSourceFile()
 }
 
+// asciidoctor가 실행될 때 static/docs 폴더 비우기
 asciidoctor.doFirst {
-    delete file('src/main/resources/static/docs')  // (11)
+    delete file('src/main/resources/static/docs')
 }
 
-task copyDocument(type: Copy) { // (12)
+// asccidoctor 작업 이후 생성된 HTML 파일을 static/docs 로 copy
+task copyDocument(type: Copy) {
     dependsOn asciidoctor
     from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
+}
+
+//build의 bootJar 시 asciidoctor에 의존하여 /static/docs에 index.html이 생성된다.
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
 }
 
 tasks.register('testCoverage', Test) {

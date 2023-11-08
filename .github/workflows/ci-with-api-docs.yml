@@ -22,8 +22,8 @@ jobs:
         run: chmod +x gradlew
       - name : auto configure spring rest docs
         run: |
+          ./gradlew build -x test
           ./gradlew copyDocument
-          cat src/main/resources/static/docs/index.html
       - name : upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
