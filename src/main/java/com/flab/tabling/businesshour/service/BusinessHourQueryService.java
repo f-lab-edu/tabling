@@ -1,4 +1,4 @@
-package com.flab.tabling.businesshour;
+package com.flab.tabling.businesshour.service;
 
 import java.time.LocalDateTime;
 
