@@ -1,0 +1,10 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+= Tabling API
+:doctype: book
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:seclinks:
+include::test.adoc[]

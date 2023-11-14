@@ -35,6 +35,10 @@ jobs:
       - name: Build without test
         run: ./gradlew build -x test
 
+      - name : auto configure spring rest docs
+        run: |
+          ./gradlew copyDocument
+
       - name: Runs the unit tests with coverage
         run: ./gradlew testCoverage
 

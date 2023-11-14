@@ -1,0 +1,18 @@
+tabling API 명세서입니다.
+
+== 로그인 성공
+operation::auth-controller-rest-docs-test/login-success[snippets="http-request,http-response"]
+== 로그아웃 성공
+operation::auth-controller-rest-docs-test/logout-success[snippets="http-request,http-response"]
+== 회원가입 성공
+operation::member-controller-rest-docs-test/add-user[snippets="http-request,http-response"]
+== 가게 등록 성공
+operation::store-controller-rest-docs-test/add-store-success[snippets="http-request,http-response"]
+== 가게 삭제 성공
+operation::store-controller-rest-docs-test/delete-store-success[snippets="http-request,http-response"]
+== 가게 정보 변경 성공
+operation::store-controller-rest-docs-test/update-store-success[snippets="http-request,http-response"]
+== 가게 페이지 조회 성공
+operation::store-controller-rest-docs-test/find-store-page-success[snippets="http-request,http-response"]
+== 가게 상세 조회 성공
+operation::store-controller-rest-docs-test/find-store-page-success[snippets="http-request,http-response"]
