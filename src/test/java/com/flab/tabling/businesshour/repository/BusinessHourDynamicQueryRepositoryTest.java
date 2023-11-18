@@ -39,7 +39,7 @@ class BusinessHourDynamicQueryRepositoryTest {
 		Pageable pageable = PageRequest.of(0, 10);
 
 		//when
-		Page<BusinessHour> businessHours = dynamicQueryRepository.findBusinessHours(2L, requestDayOfWeek, pageable);
+		Page<BusinessHour> businessHours = dynamicQueryRepository.findPage(2L, requestDayOfWeek, pageable);
 
 		//then
 		assertThat(businessHours.getContent().size()).isEqualTo(2);
@@ -52,7 +52,7 @@ class BusinessHourDynamicQueryRepositoryTest {
 		Pageable pageable = PageRequest.of(0, 10);
 
 		//when
-		Page<BusinessHour> businessHours = dynamicQueryRepository.findBusinessHours(3L, null, pageable);
+		Page<BusinessHour> businessHours = dynamicQueryRepository.findPage(3L, null, pageable);
 
 		//then
 		assertThat(businessHours.getContent().size()).isEqualTo(2);
@@ -66,7 +66,7 @@ class BusinessHourDynamicQueryRepositoryTest {
 		Pageable pageable = PageRequest.of(0, 10);
 
 		//when
-		Page<BusinessHour> businessHours = dynamicQueryRepository.findBusinessHours(null, requestDayOfWeek, pageable);
+		Page<BusinessHour> businessHours = dynamicQueryRepository.findPage(null, requestDayOfWeek, pageable);
 
 		//then
 		assertThat(businessHours.getContent().size()).isEqualTo(4);
@@ -79,7 +79,7 @@ class BusinessHourDynamicQueryRepositoryTest {
 		Pageable pageable = PageRequest.of(0, 10);
 
 		//when
-		Page<BusinessHour> businessHours = dynamicQueryRepository.findBusinessHours(null, null, pageable);
+		Page<BusinessHour> businessHours = dynamicQueryRepository.findPage(null, null, pageable);
 
 		//then
 		assertThat(businessHours.getContent().size()).isEqualTo(6);

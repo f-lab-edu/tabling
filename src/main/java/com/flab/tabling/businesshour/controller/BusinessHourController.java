@@ -23,14 +23,14 @@ public class BusinessHourController {
 
 	@GetMapping("/business-hours/{id}")
 	public ResponseEntity<BusinessHourFindDto.Response> find(@PathVariable Long id) {
-		BusinessHourFindDto.Response businessHourFindResponse = businessHourQueryService.findBusinessHour(id);
+		BusinessHourFindDto.Response businessHourFindResponse = businessHourQueryService.find(id);
 		return ResponseEntity.status(HttpStatus.OK).body(businessHourFindResponse);
 	}
 
 	@GetMapping("/business-hours")
 	public ResponseEntity<Page<BusinessHourFindDto.Response>> findPage(
 		@ModelAttribute BusinessHourFindDto.Request businessHourFindRequest, @PageableDefault Pageable pageable) {
-		Page<BusinessHourFindDto.Response> businessHourFindResonsePage = businessHourQueryService.findBusinessHours(
+		Page<BusinessHourFindDto.Response> businessHourFindResonsePage = businessHourQueryService.findPage(
 			businessHourFindRequest, pageable);
 		return ResponseEntity.status(HttpStatus.OK).body(businessHourFindResonsePage);
 	}

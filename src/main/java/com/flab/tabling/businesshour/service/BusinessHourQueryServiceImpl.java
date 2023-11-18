@@ -26,7 +26,7 @@ public class BusinessHourQueryServiceImpl implements BusinessHourQueryService {
 	private final BusinessHourDynamicQueryRepository businessHourDynamicQueryRepository;
 
 	@Override
-	public BusinessHourFindDto.Response findBusinessHour(Long id) {
+	public BusinessHourFindDto.Response find(Long id) {
 		BusinessHour queriedBusinessHour = businessHourRepository.findById(id)
 			.orElseThrow(() -> new BusinessHourNotFoundException(ErrorCode.BUSINESS_HOUR_NOT_FOUND,
 				"business hour with this id is not found"));
@@ -34,9 +34,9 @@ public class BusinessHourQueryServiceImpl implements BusinessHourQueryService {
 	}
 
 	@Override
-	public Page<BusinessHourFindDto.Response> findBusinessHours(BusinessHourFindDto.Request businessHourFindRequest,
+	public Page<BusinessHourFindDto.Response> findPage(BusinessHourFindDto.Request businessHourFindRequest,
 		Pageable pageable) {
-		return businessHourDynamicQueryRepository.findBusinessHours(businessHourFindRequest.getStoreId(),
+		return businessHourDynamicQueryRepository.findPage(businessHourFindRequest.getStoreId(),
 			businessHourFindRequest.getDayOfWeek(), pageable).map(BusinessHourFindDto.Response::new);
 	}
 
@@ -44,7 +44,7 @@ public class BusinessHourQueryServiceImpl implements BusinessHourQueryService {
 	public boolean isBusinessHour(Long storeId, LocalDateTime requestDateTime) {
 		DayOfWeek requestDayOfWeek = requestDateTime.getDayOfWeek();
 		LocalTime requestTime = requestDateTime.toLocalTime();
-		List<BusinessHour> targetBusinessHours = businessHourRepository.findBusinessHours(storeId, requestDayOfWeek);
+		List<BusinessHour> targetBusinessHours = businessHourRepository.findList(storeId, requestDayOfWeek);
 		return checkBusinessHour(targetBusinessHours, requestTime);
 	}
 

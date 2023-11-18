@@ -11,5 +11,5 @@ import com.flab.tabling.businesshour.domain.BusinessHour;
 public interface BusinessHourRepository extends JpaRepository<BusinessHour, Long> {
 
 	@Query("select b from BusinessHour b where b.store.id = :storeId and b.dayOfWeek = :dayOfWeek")
-	List<BusinessHour> findBusinessHours(Long storeId, DayOfWeek dayOfWeek);
+	List<BusinessHour> findList(Long storeId, DayOfWeek dayOfWeek);
 }

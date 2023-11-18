@@ -25,7 +25,7 @@ public class BusinessHourDynamicQueryRepository {
 		this.queryFactory = new JPAQueryFactory(entityManager);
 	}
 
-	public Page<BusinessHour> findBusinessHours(Long storeId, DayOfWeek dayOfWeek, Pageable pageable) {
+	public Page<BusinessHour> findPage(Long storeId, DayOfWeek dayOfWeek, Pageable pageable) {
 		QueryResults<BusinessHour> queriedResults = queryFactory.selectFrom(businessHour)
 			.where(storeIdEq(storeId), dayOfWeekEq(dayOfWeek))
 			.offset(pageable.getOffset())

@@ -46,7 +46,7 @@ class BusinessHourQueryServiceImplTest {
 		doReturn(Optional.ofNullable(businessHour)).when(businessHourRepository).findById(targetId);
 
 		//when
-		BusinessHourFindDto.Response businessHourFindResponse = businessHourQueryServiceImpl.findBusinessHour(targetId);
+		BusinessHourFindDto.Response businessHourFindResponse = businessHourQueryServiceImpl.find(targetId);
 
 		//then
 		assertThat(businessHourFindResponse).usingRecursiveComparison().isEqualTo(
@@ -60,7 +60,7 @@ class BusinessHourQueryServiceImplTest {
 		doReturn(Optional.empty()).when(businessHourRepository).findById(2L);
 
 		//expected
-		assertThrows(BusinessHourNotFoundException.class, () -> businessHourQueryServiceImpl.findBusinessHour(2L));
+		assertThrows(BusinessHourNotFoundException.class, () -> businessHourQueryServiceImpl.find(2L));
 	}
 
 	@Test
@@ -73,11 +73,11 @@ class BusinessHourQueryServiceImplTest {
 		Pageable requestPageable = businessHourPage.getPageable();
 
 		doReturn(businessHourPage).when(businessHourDynamicQueryRepository)
-			.findBusinessHours(2L, requestDayOfWeek, requestPageable);
+			.findPage(2L, requestDayOfWeek, requestPageable);
 
 		//when
 		Page<BusinessHourFindDto.Response> businessHourFindResponsePage = businessHourQueryServiceImpl
-			.findBusinessHours(businessHourFindRequest, requestPageable);
+			.findPage(businessHourFindRequest, requestPageable);
 
 		//then
 		verifyFindResponsePage(businessHourFindResponsePage, businessHourPage);
@@ -91,7 +91,7 @@ class BusinessHourQueryServiceImplTest {
 		List<BusinessHour> targetBusinessHours = businessHourFixture.getBusinessHoursWithOneStore(2L, 8, 15, 18, 22);
 
 		doReturn(targetBusinessHours).when(businessHourRepository)
-			.findBusinessHours(2L, requestDateTime.getDayOfWeek());
+			.findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
 		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
@@ -108,7 +108,7 @@ class BusinessHourQueryServiceImplTest {
 		List<BusinessHour> targetBusinessHours = businessHourFixture.getBusinessHoursWithOneStore(2L, 8, 15, 18, 22);
 
 		doReturn(targetBusinessHours).when(businessHourRepository)
-			.findBusinessHours(2L, requestDateTime.getDayOfWeek());
+			.findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
 		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
@@ -123,7 +123,7 @@ class BusinessHourQueryServiceImplTest {
 		//given
 		LocalDateTime requestDateTime = businessHourFixture.getLocalDateTime(12);
 
-		doReturn(List.of()).when(businessHourRepository).findBusinessHours(2L, requestDateTime.getDayOfWeek());
+		doReturn(List.of()).when(businessHourRepository).findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
 		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);

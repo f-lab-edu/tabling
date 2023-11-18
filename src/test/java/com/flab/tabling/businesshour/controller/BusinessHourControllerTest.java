@@ -56,7 +56,7 @@ class BusinessHourControllerTest {
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
 			.writeValueAsString(businessHourFindResponse);
 
-		doReturn(businessHourFindResponse).when(businessHourQueryService).findBusinessHour(3L);
+		doReturn(businessHourFindResponse).when(businessHourQueryService).find(3L);
 
 		//expected
 		mockMvc.perform(get("/business-hours/{id}", 3L)
@@ -74,7 +74,7 @@ class BusinessHourControllerTest {
 			.writeValueAsString(businessHourFindResponsePage);
 
 		doReturn(businessHourFindResponsePage).when(businessHourQueryService)
-			.findBusinessHours(any(BusinessHourFindDto.Request.class), any(Pageable.class));
+			.findPage(any(BusinessHourFindDto.Request.class), any(Pageable.class));
 
 		//expected
 		mockMvc.perform(get("/business-hours")
