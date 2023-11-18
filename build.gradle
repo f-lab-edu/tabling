@@ -39,6 +39,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // easy-random: 랜덤 테스트 데이터 생성 라이브러리
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    //Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 tasks.named('test') {
@@ -95,9 +100,15 @@ jacocoTestCoverageVerification {
                     'com.flab.tabling.global.env.**',
                     'com.flab.tabling.global.constant.**',
                     'com.flab.tabling.global.auth.ExceptionHandlerFilter',
-                    'com.flab.tabling.global.auth.Login*'
+                    'com.flab.tabling.global.auth.Login*',
+                    'com.flab.tabling.**.domain.Q*',
+                    'com.flab.tabling.businesshour.domain.**' // 운영 시간 등록 기능 추가 후 제거
             ]
         }
     }
+}
+
+clean {
+    delete file('src/main/generated')
 }
 
