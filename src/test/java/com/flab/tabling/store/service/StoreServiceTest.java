@@ -120,9 +120,11 @@ class StoreServiceTest {
 		//then
 		List<StoreFindDto.Response> pageContent = storeFindResponsePage.getContent();
 		StoreFindDto.Response storeAFindResponse = pageContent.get(0);
+		StoreFindDto.Response storeBFindResponse = pageContent.get(1);
 
 		assertThat(pageContent.size()).isEqualTo(2);
-		assertThat(storeAFindResponse.getName()).isEqualTo(storeA.getName());
+		assertThat(storeAFindResponse).usingRecursiveComparison().isEqualTo(new StoreFindDto.Response(storeA));
+		assertThat(storeBFindResponse).usingRecursiveComparison().isEqualTo(new StoreFindDto.Response(storeB));
 	}
 
 	@Test
@@ -146,7 +148,7 @@ class StoreServiceTest {
 	@DisplayName("식당이 존재하고, 요청한 사용자가 식당 주인이 맞다면, 성공적으로 수정되고 응답을 반환한다.")
 	void updateStoreSuccess() {
 		//given
-		Store targetStore = getStoreWithFixedMember();
+		Store targetStore = getStore(2L);
 		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
 
 		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(storeUpdateRequest.getId());
@@ -174,7 +176,7 @@ class StoreServiceTest {
 	@DisplayName("요청한 사용자가 식당 주인이 아니라면, 수정은 실패하고 예외가 발생한다.")
 	void updateStoreFailWithNoAuth() {
 		//given
-		Store targetStore = getStoreWithFixedMember();
+		Store targetStore = getStore(2L);
 		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
 
 		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(storeUpdateRequest.getId());
@@ -187,7 +189,7 @@ class StoreServiceTest {
 	@DisplayName("식당이 존재하고, 요청자가 식당 주인이라면, 식당은 성공적으로 삭제되고 아무것도 반환하지 않는다.")
 	void deleteStoreSuccess() {
 		//given
-		Store targetStore = getStoreWithFixedMember();
+		Store targetStore = getStore(2L);
 
 		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(2L);
 
@@ -211,7 +213,7 @@ class StoreServiceTest {
 	@Test
 	@DisplayName("요청자가 식당 주인이 아니라면, 삭제는 실패하고 예외가 발생한다.")
 	void deleteStoreFailWithNoAuth() {
-		Store targetStore = getStoreWithFixedMember();
+		Store targetStore = getStore(2L);
 
 		doReturn(Optional.ofNullable(targetStore)).when(storeRepository).findById(2L);
 
@@ -223,7 +225,7 @@ class StoreServiceTest {
 	@DisplayName("요청자가 식당 주인이 맞다면, 검증은 성공하고 아무것도 반환하지 않는다.")
 	void validationSuccess() {
 		//given
-		Store targetStore = getStoreWithFixedMember();
+		Store targetStore = getStore(2L);
 
 		//expected
 		assertDoesNotThrow(() -> storeService.validateAuth(targetStore, 1L));
@@ -233,21 +235,21 @@ class StoreServiceTest {
 	@DisplayName("요청자가 식당 주인이 아니라면, 검증은 실패하고 예외가 발생한다.")
 	void validationFailWithNoAuth() {
 		//given
-		Store targetStore = getStoreWithFixedMember();
+		Store targetStore = getStore(2L);
 
 		//expected
 		assertThrows(AuthorizationException.class, () -> storeService.validateAuth(targetStore, 10L));
 	}
 
-	private Store getStoreWithFixedMember() {
+	private Store getStore(Long id) {
 		EasyRandomParameters storeConditions = new EasyRandomParameters()
-			.randomize(Member.class, () -> getMemberWithFixedId(1L))
-			.randomize(FieldPredicates.named("id"), () -> 2L);
+			.randomize(Member.class, () -> getMember(1L))
+			.randomize(FieldPredicates.named("id"), () -> id);
 		EasyRandom storeRandom = new EasyRandom(storeConditions);
 		return storeRandom.nextObject(Store.class);
 	}
 
-	private Member getMemberWithFixedId(Long id) {
+	private Member getMember(Long id) {
 		EasyRandomParameters memberConditions = new EasyRandomParameters()
 			.randomize(FieldPredicates.named("id"), () -> id);
 		EasyRandom memberRandom = new EasyRandom(memberConditions);
