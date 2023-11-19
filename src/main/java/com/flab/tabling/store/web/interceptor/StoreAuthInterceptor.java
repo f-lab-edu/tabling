@@ -29,7 +29,7 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 	}
 
 	private void loginValidation(HttpSession session) {
-		if (session == null || session.getAttribute("LOGIN_SESSION") == null) { // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		if (session == null || session.getAttribute("MEMBER_ID") == null) { // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
 			throw new RuntimeException("NO_SESSION"); // TODO: 2023-10-04 커스텀 인증 예외로 교체 필요
 		}
 	}
@@ -43,11 +43,11 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 	}
 
 	private Long getSessionMemberId(HttpSession session) {
-		Object sessionMemberId = session.getAttribute("LOGIN_SESSION");
+		Object sessionMemberId = session.getAttribute("MEMBER_ID");
 		boolean isLongType = sessionMemberId instanceof Long;
 		if (!isLongType) {
 			throw new ClassCastException("Can not cast from " + sessionMemberId + " to Long.class");
 		}
-		return (Long)session.getAttribute("LOGIN_SESSION");
+		return (Long)session.getAttribute("MEMBER_ID");
 	}
 }

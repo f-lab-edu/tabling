@@ -1,6 +1,7 @@
 package com.flab.tabling.businesshour.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.businesshour.domain.BusinessHour;
 import com.flab.tabling.businesshour.dto.BusinessHourAddDto;
@@ -23,6 +24,7 @@ public class BusinessHourService {
 	private final StoreRepository storeRepository;
 	private final StoreService storeService;
 
+	@Transactional
 	public BusinessHourAddDto.Response add(BusinessHourAddDto.Request request, Long memberId) {
 		Store targetStore = getStore(request.getStoreId());
 		storeService.validateAuth(targetStore, memberId);
@@ -36,6 +38,7 @@ public class BusinessHourService {
 		return new BusinessHourAddDto.Response(savedBusinessHour.getId());
 	}
 
+	@Transactional
 	public BusinessHourUpdateDto.Response update(BusinessHourUpdateDto.Request request, Long memberId) {
 		BusinessHour businessHour = getBusinessHour(request.getId());
 		storeService.validateAuth(businessHour.getStore(), memberId);
@@ -47,6 +50,7 @@ public class BusinessHourService {
 		return new BusinessHourUpdateDto.Response(businessHour.getId());
 	}
 
+	@Transactional
 	public void delete(Long id, Long memberId) {
 		BusinessHour businessHour = getBusinessHour(id);
 		storeService.validateAuth(businessHour.getStore(), memberId);
