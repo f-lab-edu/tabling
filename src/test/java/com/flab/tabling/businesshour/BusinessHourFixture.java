@@ -39,6 +39,13 @@ public class BusinessHourFixture {
 		return businessHourRandom.nextObject(BusinessHour.class);
 	}
 
+	public BusinessHour getBusinessHour(Long id, Long storeId, Long memberId) {
+		Store targetStore = storeFixture.getStore(storeId, memberId);
+		EasyRandomParameters parameters = getCustomParameters(id, targetStore, getDayOfWeek(), START_TIME, END_TIME);
+		EasyRandom businessHourRandom = new EasyRandom(parameters);
+		return businessHourRandom.nextObject(BusinessHour.class);
+	}
+
 	public BusinessHour getBusinessHour(Long storeId, int startTime, int endTime) {
 		Store targetStore = storeFixture.getStore(storeId);
 		EasyRandomParameters parameters = getCustomParameters(ID, targetStore, getDayOfWeek(), startTime, endTime);

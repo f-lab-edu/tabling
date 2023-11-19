@@ -16,13 +16,13 @@ operation::member-controller-rest-docs-test/add-user[snippets="http-request,http
 
 operation::store-controller-rest-docs-test/add-store-success[snippets="http-request,http-response"]
 
+== 가게 수정 성공
+
+operation::store-controller-rest-docs-test/update-store-success[snippets="http-request,http-response"]
+
 == 가게 삭제 성공
 
 operation::store-controller-rest-docs-test/delete-store-success[snippets="http-request,http-response"]
-
-== 가게 정보 변경 성공
-
-operation::store-controller-rest-docs-test/update-store-success[snippets="http-request,http-response"]
 
 == 가게 단건 조회 성공
 
@@ -31,6 +31,18 @@ operation::store-controller-rest-docs-test/find-store-success[snippets="http-req
 == 가게 페이지 조회 성공
 
 operation::store-controller-rest-docs-test/find-store-page-success[snippets="http-request,http-response"]
+
+== 운영 시간 등록 성공
+
+operation::business-hour-controller-rest-docs-test/success-add[snippets="http-request,http-response"]
+
+== 운영 시간 수정 성공
+
+operation::business-hour-controller-rest-docs-test/success-update[snippets="http-request,http-response"]
+
+== 운영 시간 삭제 성공
+
+operation::business-hour-controller-rest-docs-test/success-delete[snippets="http-request,http-response"]
 
 == 운영 시간 단건 조회 성공
 

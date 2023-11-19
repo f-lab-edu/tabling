@@ -150,7 +150,6 @@ jacocoTestCoverageVerification {
                     'com.flab.tabling.global.auth.ExceptionHandlerFilter',
                     'com.flab.tabling.global.auth.Login*',
                     'com.flab.tabling.**.domain.Q*',
-                    'com.flab.tabling.businesshour.domain.**' // 운영 시간 등록 기능 추가 후 제거
             ]
         }
     }
