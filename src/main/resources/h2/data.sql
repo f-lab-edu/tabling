@@ -175,48 +175,48 @@ VALUES (6, 2, 2, '2023-09-27', null, null, null);
 -- 웨이팅
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (1, 1, 4, 3, '2023-09-28', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (1, 1, 4, 3, '2023-09-28', null, null, null, '1:2023-09-28');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (2, 1, 5, 4, '2023-09-28', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (2, 1, 5, 4, '2023-09-28', null, null, null, '5:2023-09-28');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (3, 1, 6, 6, '2023-09-28', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (3, 1, 6, 6, '2023-09-28', null, null, null, '6:2023-09-28');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (4, 2, 7, 2, '2023-09-28', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (4, 2, 7, 2, '2023-09-28', null, null, null, '7:2023-09-28');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (5, 2, 8, 1, '2023-09-28', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (5, 2, 8, 1, '2023-09-28', null, null, null, '8:2023-09-28');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (6, 3, 9, 4, '2023-09-28', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (6, 3, 9, 4, '2023-09-28', null, null, null, '9:2023-09-28');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (7, 3, 10, 2, '2023-09-28', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (7, 3, 10, 2, '2023-09-28', null, null, null, '10:2023-09-28');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (8, 1, 7, 2, '2023-09-29', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (8, 1, 7, 2, '2023-10-20 15:30:00', null, null, null, '7:2023-10-20');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (9, 3, 4, 2, '2023-09-29', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (9, 3, 4, 2, '2023-10-20 15:30:00', null, null, null, '4:2023-10-20');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (10, 3, 5, 4, '2023-09-29', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (10, 3, 5, 4, '2023-10-20 15:30:00', null, null, null, '5:2023-10-20');
 INSERT
 INTO waiting
-(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by)
-VALUES (11, 3, 6, 2, '2023-09-29', null, null, null);
+(id, store_id, member_id, head_count, created_at, modified_at, created_by, modified_by, unique_key)
+VALUES (11, 3, 6, 2, '2023-10-20 15:30:00', null, null, null, '6:2023-10-20');
 
 -- 공지사항
 INSERT
