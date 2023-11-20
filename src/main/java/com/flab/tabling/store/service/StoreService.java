@@ -80,7 +80,7 @@ public class StoreService {
 			.orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "member is not found"));
 	}
 
-	private Store getStore(Long storeId) {
+	public Store getStore(Long storeId) {
 		return storeRepository.findById(storeId)
 			.orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND, "store is not found"));
 	}

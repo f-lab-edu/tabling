@@ -16,6 +16,7 @@ public class StoreWebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(storeAuthInterceptor)
+			.excludePathPatterns("/stores/*/waiting/**")
 			.addPathPatterns("/stores/**");
 	}
 }
