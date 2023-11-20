@@ -13,6 +13,7 @@ import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.waiting.domain.Status;
 import com.flab.tabling.waiting.domain.Waiting;
 import com.flab.tabling.waiting.exception.WaitingDuplicatedException;
+import com.flab.tabling.waiting.exception.WaitingExceededException;
 import com.flab.tabling.waiting.exception.WaitingNotFoundException;
 import com.flab.tabling.waiting.repository.WaitingRepository;
 
@@ -65,7 +66,7 @@ public class WaitingService {
 	private void checkWaitingQueueFull(Store store) {
 		Integer count = waitingRepository.countWithPessimisticLockByStoreAndStatus(store, Status.WAITING);
 		if (count >= store.getMaxWaitingCount()) {
-			throw new WaitingDuplicatedException(ErrorCode.INVALID_PARAMETER, "waiting queue is full");
+			throw new WaitingExceededException(ErrorCode.INVALID_PARAMETER, "waiting queue is full");
 		}
 	}
 }
