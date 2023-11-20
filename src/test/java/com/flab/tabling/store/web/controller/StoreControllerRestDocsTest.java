@@ -18,10 +18,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.flab.tabling.global.config.AbstractRestDocsTest;
+import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
@@ -49,11 +51,10 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 
 		doReturn(responseDto).when(storeService)
 			.add(any(StoreAddDto.Request.class), eq(1L));
-
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.post("/stores")
 				.contentType(MediaType.APPLICATION_JSON)
-				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+				.sessionAttr(SessionConstant.MEMBER_ID.name(), 1L)
 				.content(requestJson)
 			)
 			.andExpect(MockMvcResultMatchers.status().isCreated())
@@ -114,7 +115,7 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 		//when
 		mockMvc.perform(MockMvcRequestBuilders.put("/stores/{id}", 2L)
 				.contentType(MediaType.APPLICATION_JSON)
-				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-13 세션 이름 변경 필요
+				.sessionAttr(SessionConstant.MEMBER_ID.name(), 1L)
 				.content(requestJson)
 			)
 			.andExpect(MockMvcResultMatchers.status().isOk())

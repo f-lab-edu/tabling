@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
@@ -73,7 +74,7 @@ class StoreControllerTest {
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.post("/stores")
 				.contentType(MediaType.APPLICATION_JSON)
-				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+				.sessionAttr(SessionConstant.MEMBER_ID.name(), 1L)
 				.content(requestJson)
 			)
 			.andExpect(MockMvcResultMatchers.status().isCreated())
@@ -134,7 +135,7 @@ class StoreControllerTest {
 		//when
 		mockMvc.perform(MockMvcRequestBuilders.put("/stores/{id}", 2L)
 				.contentType(MediaType.APPLICATION_JSON)
-				.sessionAttr("LOGIN_SESSION", 1L) // TODO: 2023-10-13 세션 이름 변경 필요
+				.sessionAttr(SessionConstant.MEMBER_ID.name(), 1L)
 				.content(requestJson)
 			)
 			.andExpect(MockMvcResultMatchers.status().isOk())
