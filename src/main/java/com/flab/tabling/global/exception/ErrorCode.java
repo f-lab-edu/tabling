@@ -11,7 +11,9 @@ public enum ErrorCode {
 	INVALID_SESSION("session is invalid", 400),
 	INVALID_PARAMETER("parameter is invalid", 400),
 	AUTHENTICATION_FAILED("authentication failed", 401),
-	AUTHORIZATION_FAILED("authorization failed", 403);
+	AUTHORIZATION_FAILED("authorization failed", 403),
+	PARAMETER_DUPLICATED("given parameter already exists", 400),
+	PARAMETER_NOT_FOUND("given parameter not found", 404);
 
 	private final String description;
 	private final int status;
