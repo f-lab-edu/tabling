@@ -20,11 +20,13 @@ import jakarta.persistence.LockModeType;
 
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 	Optional<Waiting> findByMemberAndStoreAndStatus(Member member, Store store, Status status);
+
 	Optional<Waiting> findFirstByStoreAndStatus(Store store, Status status);
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("select w from Waiting w where w.status=:status and w.store=:store")
 	Optional<Waiting> findFirstByStoreAndStatusByPessimisticLock(Store store, Status status);
+
 	@Lock(LockModeType.PESSIMISTIC_READ)
 	Integer countWithPessimisticLockByStoreAndStatus(Store store, Status status);
 

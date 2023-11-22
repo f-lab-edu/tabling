@@ -1,4 +1,5 @@
 package com.flab.tabling.waiting.facade;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,23 +31,24 @@ public class WaitingFacade {
 	}
 
 	@Transactional
-	public void cancelByMySelf(Long storeId, Long memberId) {
+	public void cancelMember(Long storeId, Long memberId) {
 		Store store = storeService.getStore(storeId);
 		Member member = memberService.getMember(memberId);
-		waitingService.cancelMemberOfStore(store, member);
-	}
-	@Transactional
-	public void cancelByStore(Long sellerId, Long storeId) {
-		Store store = storeService.getStore(storeId);
-		storeService.validateAuth(store, sellerId);
-		waitingService.cancelFirstOfStore(store);
+		waitingService.cancelMember(store, member);
 	}
 
 	@Transactional
-	public void acceptByStore(Long sellerId, Long storeId) {
+	public void cancelFirst(Long sellerId, Long storeId) {
 		Store store = storeService.getStore(storeId);
 		storeService.validateAuth(store, sellerId);
-		waitingService.acceptFirstOfStore(store);
+		waitingService.cancelFirst(store);
+	}
+
+	@Transactional
+	public void acceptFirst(Long sellerId, Long storeId) {
+		Store store = storeService.getStore(storeId);
+		storeService.validateAuth(store, sellerId);
+		waitingService.acceptFirst(store);
 	}
 
 }

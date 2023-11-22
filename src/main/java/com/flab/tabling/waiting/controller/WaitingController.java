@@ -33,21 +33,21 @@ public class WaitingController {
 	@DeleteMapping("/stores/{storeId}/waiting")
 	public ResponseEntity<Void> cancelMyself(@Login MemberSession memberSession,
 		@PathVariable Long storeId) {
-		waitingFacade.cancelByMySelf(storeId, memberSession.getId());
+		waitingFacade.cancelMember(storeId, memberSession.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@PostMapping("/stores/{storeId}/orders")
-	public ResponseEntity<Void> acceptFirstOfStore(@Login MemberSession memberSession,
+	public ResponseEntity<Void> acceptFirstByStore(@Login MemberSession memberSession,
 		@PathVariable Long storeId) {
-		waitingFacade.acceptByStore(memberSession.getId(), storeId);
+		waitingFacade.acceptFirst(memberSession.getId(), storeId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@DeleteMapping("/stores/{storeId}/orders")
-	public ResponseEntity<Void> cancelFirstOfStore(@Login MemberSession memberSession,
+	public ResponseEntity<Void> cancelFirstByStore(@Login MemberSession memberSession,
 		@PathVariable Long storeId) {
-		waitingFacade.cancelByStore(memberSession.getId(), storeId);
+		waitingFacade.cancelFirst(memberSession.getId(), storeId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

@@ -16,8 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +40,6 @@ public class Waiting extends BaseTime {
 	private Member member;
 	private Integer headCount;
 	private String uniqueKey;
-
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
 
@@ -56,7 +53,7 @@ public class Waiting extends BaseTime {
 
 	@PrePersist
 	public void generateUniqueKey() {
-		this.uniqueKey = store.getId().toString() + CONJUNCTION + member.getId() + CONJUNCTION + LocalDateTime.now().toLocalDate().toString();
+		this.uniqueKey = store.getId() + CONJUNCTION + member.getId() + CONJUNCTION + LocalDateTime.now().toLocalDate();
 	}
 
 	public void accept() {
