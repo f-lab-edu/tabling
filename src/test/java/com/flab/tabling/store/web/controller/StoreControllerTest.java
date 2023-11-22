@@ -69,7 +69,7 @@ class StoreControllerTest {
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
 		doReturn(responseDto).when(storeService)
-			.add(any(StoreAddDto.Request.class), eq(1L));
+			.add(any(), any());
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.post("/stores")
@@ -130,7 +130,7 @@ class StoreControllerTest {
 		StoreUpdateDto.Response storeUpdateResponse = easyRandom.nextObject(StoreUpdateDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(storeUpdateResponse);
 
-		doReturn(storeUpdateResponse).when(storeService).update(any(StoreUpdateDto.Request.class), eq(1L));
+		doReturn(storeUpdateResponse).when(storeService).update(any(), any());
 
 		//when
 		mockMvc.perform(MockMvcRequestBuilders.put("/stores/{id}", 2L)
