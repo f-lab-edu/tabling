@@ -13,11 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.waiting.domain.Status;
 import com.flab.tabling.waiting.domain.Waiting;
+import com.flab.tabling.waiting.exception.WaitingDuplicatedException;
 import com.flab.tabling.waiting.exception.WaitingExceededException;
 import com.flab.tabling.waiting.exception.WaitingNotFoundException;
 import com.flab.tabling.waiting.fixture.WaitingFixture;
@@ -31,7 +33,6 @@ class WaitingServiceTest {
 
 	@Mock
 	WaitingRepository waitingRepository;
-
 
 	@Test
 	@DisplayName("대기열 멤버 추가 성공")
@@ -47,8 +48,36 @@ class WaitingServiceTest {
 		Waiting result = waitingService.add(store, member, waiting.getHeadCount());
 		//then
 		Assertions.assertThat(List.of(waiting.getMember(), waiting.getStore(), waiting.getHeadCount()))
-				.isEqualTo(List.of(result.getMember(), result.getStore(), result.getHeadCount()));
+			.isEqualTo(List.of(result.getMember(), result.getStore(), result.getHeadCount()));
 		verify(waitingRepository).save(any(Waiting.class));
+	}
+
+	@Test
+	@DisplayName("대기열 멤버 추가 실패 : 동일 데이터 생성 시")
+	void failAddMemberBySameWaiting() {
+		//given
+		Member member = WaitingFixture.getMember();
+		Member seller = WaitingFixture.getMember();
+		Store store = WaitingFixture.getStore(seller);
+		Waiting waiting = WaitingFixture.getWaiting(store, member);
+		doReturn(Optional.of(waiting)).when(waitingRepository)
+			.findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+		// //when
+		assertThrows(WaitingDuplicatedException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
+	}
+
+	@Test
+	@DisplayName("대기열 멤버 추가 실패 : 유니크 키가 같은 데이터 생성 시")
+	void failAddMemberBySameUniqueKey() {
+		//given
+		Member member = WaitingFixture.getMember();
+		Member seller = WaitingFixture.getMember();
+		Store store = WaitingFixture.getStore(seller);
+		Waiting waiting = WaitingFixture.getWaiting(store, member);
+		doReturn(Optional.empty()).when(waitingRepository).findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+		doThrow(DataIntegrityViolationException.class).when(waitingRepository).save(any(Waiting.class));
+		//when
+		assertThrows(WaitingDuplicatedException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
 	}
 
 	@Test
@@ -59,7 +88,8 @@ class WaitingServiceTest {
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
-		doReturn(store.getMaxWaitingCount() + 10).when(waitingRepository).countWithPessimisticLockByStoreAndStatus(store, Status.WAITING);
+		doReturn(store.getMaxWaitingCount() + 10).when(waitingRepository)
+			.countWithPessimisticLockByStoreAndStatus(store, Status.WAITING);
 		//when, then
 		assertThrows(WaitingExceededException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
 	}
@@ -72,7 +102,8 @@ class WaitingServiceTest {
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
-		doReturn(Optional.of(waiting)).when(waitingRepository).findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+		doReturn(Optional.of(waiting)).when(waitingRepository)
+			.findByMemberAndStoreAndStatus(member, store, Status.WAITING);
 
 		//when
 		waitingService.cancelMember(store, member);
@@ -129,7 +160,8 @@ class WaitingServiceTest {
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
-		doReturn(Optional.of(waiting)).when(waitingRepository).findFirstByStoreAndStatusByPessimisticLock(store, Status.WAITING);
+		doReturn(Optional.of(waiting)).when(waitingRepository)
+			.findFirstByStoreAndStatusByPessimisticLock(store, Status.WAITING);
 
 		//when
 		waitingService.acceptFirst(store);
@@ -144,7 +176,8 @@ class WaitingServiceTest {
 		//given
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
-		doReturn(Optional.empty()).when(waitingRepository).findFirstByStoreAndStatusByPessimisticLock(store, Status.WAITING);
+		doReturn(Optional.empty()).when(waitingRepository)
+			.findFirstByStoreAndStatusByPessimisticLock(store, Status.WAITING);
 
 		//when, then
 		assertThrows(WaitingNotFoundException.class, () -> waitingService.acceptFirst(store));
