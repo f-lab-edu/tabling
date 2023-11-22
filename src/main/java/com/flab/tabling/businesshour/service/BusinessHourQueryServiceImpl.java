@@ -29,7 +29,7 @@ public class BusinessHourQueryServiceImpl implements BusinessHourQueryService {
 	public BusinessHourFindDto.Response find(Long id) {
 		BusinessHour queriedBusinessHour = businessHourRepository.findById(id)
 			.orElseThrow(() -> new BusinessHourNotFoundException(ErrorCode.BUSINESS_HOUR_NOT_FOUND,
-				"business hour with this id is not found"));
+				"business hour with this id(" + id + ") is not found"));
 		return new BusinessHourFindDto.Response(queriedBusinessHour);
 	}
 

@@ -15,23 +15,26 @@ import com.flab.tabling.businesshour.service.BusinessHourQueryService;
 
 import lombok.RequiredArgsConstructor;
 
+/*
+@ModelAttribute: 전달된 요청 파라미터를 생성자 또는 Setter/Getter로 주입해서 객체를 자동 생성한다.
+ */
 @RestController
 @RequiredArgsConstructor
 public class BusinessHourController {
 
 	public final BusinessHourQueryService businessHourQueryService;
 
-	@GetMapping("/business-hours/{id}")
+	@GetMapping("/stores/business-hours/{id}")
 	public ResponseEntity<BusinessHourFindDto.Response> find(@PathVariable Long id) {
 		BusinessHourFindDto.Response businessHourFindResponse = businessHourQueryService.find(id);
 		return ResponseEntity.status(HttpStatus.OK).body(businessHourFindResponse);
 	}
 
-	@GetMapping("/business-hours")
+	@GetMapping("/stores/business-hours")
 	public ResponseEntity<Page<BusinessHourFindDto.Response>> findPage(
 		@ModelAttribute BusinessHourFindDto.Request businessHourFindRequest, @PageableDefault Pageable pageable) {
-		Page<BusinessHourFindDto.Response> businessHourFindResonsePage = businessHourQueryService.findPage(
+		Page<BusinessHourFindDto.Response> businessHourFindResponsePage = businessHourQueryService.findPage(
 			businessHourFindRequest, pageable);
-		return ResponseEntity.status(HttpStatus.OK).body(businessHourFindResonsePage);
+		return ResponseEntity.status(HttpStatus.OK).body(businessHourFindResponsePage);
 	}
 }
