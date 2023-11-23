@@ -1,6 +1,5 @@
 package com.flab.tabling.businesshour.controller;
 
-import static com.flab.tabling.global.constant.SessionConstant.*;
 import static org.jeasy.random.FieldPredicates.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -16,16 +15,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.flab.tabling.FixtureFactory;
 import com.flab.tabling.businesshour.BusinessHourFixture;
-import com.flab.tabling.businesshour.domain.BusinessHour;
 import com.flab.tabling.businesshour.dto.BusinessHourAddDto;
 import com.flab.tabling.businesshour.dto.BusinessHourFindDto;
 import com.flab.tabling.businesshour.dto.BusinessHourUpdateDto;
@@ -42,60 +36,18 @@ class BusinessHourControllerRestDocsTest extends AbstractRestDocsTest {
 	private BusinessHourFixture businessHourFixture = FixtureFactory.businessHourFixture();
 
 	@Test
-	@DisplayName("운영 시간 등록에 성공하면 상태코드와 응답을 반환한다.")
-	void successAdd() throws Exception {
-		//given
-		BusinessHourAddDto.Request businessHourAddRequest = getBusinessHourAddRequest();
-		BusinessHourAddDto.Response businessHourAddResponse = new BusinessHourAddDto.Response(3L);
-		String requestJson = objectMapper.registerModule(new JavaTimeModule())
-			.writeValueAsString(businessHourAddRequest);
-		String responseJson = objectMapper.registerModule(new JavaTimeModule())
-			.writeValueAsString(businessHourAddResponse);
-
-		doReturn(businessHourAddResponse).when(businessHourService).add(any(BusinessHourAddDto.Request.class), eq(1L));
-
-		//expected
-		mockMvc.perform(post("/business-hours")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestJson)
-				.sessionAttr(MEMBER_ID.name(), 1L)
-			).andExpect(status().isCreated())
-			.andExpect(content().json(responseJson));
-	}
-
-	@Test
-	@DisplayName("운영 시간 단건 조회에 성공하면 상태코드와 응답을 반환한다.")
-	void successFind() throws Exception {
-		//given
-		BusinessHourFindDto.Response businessHourFindResponse = getBusinessHourFindResponse(3L);
-		String responseJson = objectMapper.registerModule(new JavaTimeModule())
-			.writeValueAsString(businessHourFindResponse);
-
-		doReturn(businessHourFindResponse).when(businessHourQueryService).find(3L);
-
-		//expected
-		mockMvc.perform(get("/business-hours/{id}", 3L)
-				.contentType(MediaType.APPLICATION_JSON)
-			).andExpect(status().isOk())
-			.andExpect(content().json(responseJson));
-	}
-
-	@Test
-	@DisplayName("운영 시간 페이지 조회에 성공하면 상태코드와 응답을 반환한다.")
+	@DisplayName("특정 식당의 운영 시간 조회에 성공하면 상태코드와 응답을 반환한다.")
 	void successFindPage() throws Exception {
 		//given
-		Page<BusinessHourFindDto.Response> businessHourFindResponsePage = getBusinessHourFindResponsePage();
+		List<BusinessHourFindDto.Response> businessHourFindResponses = getBusinessHourFindResponses();
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
-			.writeValueAsString(businessHourFindResponsePage);
+			.writeValueAsString(businessHourFindResponses);
 
-		doReturn(businessHourFindResponsePage).when(businessHourQueryService)
-			.findPage(any(BusinessHourFindDto.Request.class), any(Pageable.class));
+		doReturn(businessHourFindResponses).when(businessHourQueryService).find(2L);
 
 		//expected
-		mockMvc.perform(get("/business-hours")
+		mockMvc.perform(get("/stores/{storeId}/business-hours", 2L)
 				.contentType(MediaType.APPLICATION_JSON)
-				.queryParam("storeId", "2")
-				.queryParam("dayOfWeek", "TUESDAY")
 			).andExpect(status().isOk())
 			.andExpect(content().json(responseJson));
 	}
@@ -142,13 +94,10 @@ class BusinessHourControllerRestDocsTest extends AbstractRestDocsTest {
 		return new EasyRandom(requestParameters).nextObject(BusinessHourAddDto.Request.class);
 	}
 
-	private BusinessHourFindDto.Response getBusinessHourFindResponse(Long id) {
-		return new BusinessHourFindDto.Response(businessHourFixture.getBusinessHour(id, 2L));
-	}
-
-	private Page<BusinessHourFindDto.Response> getBusinessHourFindResponsePage() {
-		List<BusinessHour> businessHourList = businessHourFixture.getBusinessHoursWithOneStore(2L, 8, 15, 18, 22);
-		return new PageImpl<>(businessHourList, PageRequest.of(0, 10), 1).map(BusinessHourFindDto.Response::new);
+	private List<BusinessHourFindDto.Response> getBusinessHourFindResponses() {
+		return businessHourFixture.getBusinessHoursWithBreakTime(2L, 8, 15, 18, 22).stream()
+			.map(BusinessHourFindDto.Response::new)
+			.toList();
 	}
 
 	private BusinessHourUpdateDto.Request getBusinessHourUpdateRequest() {

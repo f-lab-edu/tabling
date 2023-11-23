@@ -11,9 +11,6 @@ import java.util.List;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import com.flab.tabling.FixtureFactory;
 import com.flab.tabling.businesshour.domain.BusinessHour;
@@ -53,18 +50,13 @@ public class BusinessHourFixture {
 		return businessHourRandom.nextObject(BusinessHour.class);
 	}
 
-	public List<BusinessHour> getBusinessHoursWithOneStore(Long storeId, int startTime, int breakStartTime,
+	public List<BusinessHour> getBusinessHoursWithBreakTime(Long storeId, int startTime, int breakStartTime,
 		int breakEndTime,
 		int endTime) {
 		List<BusinessHour> businessHours = new ArrayList<>();
 		businessHours.add(getBusinessHour(storeId, startTime, breakStartTime));
 		businessHours.add(getBusinessHour(storeId, breakEndTime, endTime));
 		return businessHours;
-	}
-
-	public Page<BusinessHour> getBusinessHourPageWithOneStore(Long storeId) {
-		List<BusinessHour> targetBusinessHours = getBusinessHoursWithOneStore(storeId, 8, 15, 18, 22);
-		return new PageImpl<>(targetBusinessHours, PageRequest.of(0, 10), 1);
 	}
 
 	public LocalDateTime getLocalDateTime(int targetTime) {
