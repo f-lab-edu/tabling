@@ -11,9 +11,6 @@ import java.util.List;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import com.flab.tabling.FixtureFactory;
 import com.flab.tabling.businesshour.domain.BusinessHour;
@@ -26,18 +23,9 @@ public class BusinessHourFixture {
 	private static final int YEAR = 2023;
 	private static final int MONTH = 9;
 	private static final int DAY_OF_MONTH = 19;
-	private static final int START_TIME = 9;
-	private static final int END_TIME = 15;
 	private static final int MINUTE = 0;
 
 	private StoreFixture storeFixture = FixtureFactory.storeFixture();
-
-	public BusinessHour getBusinessHour(Long id, Long storeId) {
-		Store targetStore = storeFixture.getStore(storeId);
-		EasyRandomParameters parameters = getCustomParameters(id, targetStore, getDayOfWeek(), START_TIME, END_TIME);
-		EasyRandom businessHourRandom = new EasyRandom(parameters);
-		return businessHourRandom.nextObject(BusinessHour.class);
-	}
 
 	public BusinessHour getBusinessHour(Long storeId, int startTime, int endTime) {
 		Store targetStore = storeFixture.getStore(storeId);
@@ -46,18 +34,13 @@ public class BusinessHourFixture {
 		return businessHourRandom.nextObject(BusinessHour.class);
 	}
 
-	public List<BusinessHour> getBusinessHoursWithOneStore(Long storeId, int startTime, int breakStartTime,
+	public List<BusinessHour> getBusinessHoursWithBreakTime(Long storeId, int startTime, int breakStartTime,
 		int breakEndTime,
 		int endTime) {
 		List<BusinessHour> businessHours = new ArrayList<>();
 		businessHours.add(getBusinessHour(storeId, startTime, breakStartTime));
 		businessHours.add(getBusinessHour(storeId, breakEndTime, endTime));
 		return businessHours;
-	}
-
-	public Page<BusinessHour> getBusinessHourPageWithOneStore(Long storeId) {
-		List<BusinessHour> targetBusinessHours = getBusinessHoursWithOneStore(storeId, 8, 15, 18, 22);
-		return new PageImpl<>(targetBusinessHours, PageRequest.of(0, 10), 1);
 	}
 
 	public LocalDateTime getLocalDateTime(int targetTime) {

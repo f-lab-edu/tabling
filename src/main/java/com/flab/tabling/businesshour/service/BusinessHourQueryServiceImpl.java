@@ -5,16 +5,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.flab.tabling.businesshour.domain.BusinessHour;
 import com.flab.tabling.businesshour.dto.BusinessHourFindDto;
-import com.flab.tabling.businesshour.exception.BusinessHourNotFoundException;
-import com.flab.tabling.businesshour.repository.BusinessHourDynamicQueryRepository;
 import com.flab.tabling.businesshour.repository.BusinessHourRepository;
-import com.flab.tabling.global.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,21 +18,12 @@ import lombok.RequiredArgsConstructor;
 public class BusinessHourQueryServiceImpl implements BusinessHourQueryService {
 
 	private final BusinessHourRepository businessHourRepository;
-	private final BusinessHourDynamicQueryRepository businessHourDynamicQueryRepository;
 
 	@Override
-	public BusinessHourFindDto.Response find(Long id) {
-		BusinessHour queriedBusinessHour = businessHourRepository.findById(id)
-			.orElseThrow(() -> new BusinessHourNotFoundException(ErrorCode.BUSINESS_HOUR_NOT_FOUND,
-				"business hour with this id(" + id + ") is not found"));
-		return new BusinessHourFindDto.Response(queriedBusinessHour);
-	}
-
-	@Override
-	public Page<BusinessHourFindDto.Response> findPage(BusinessHourFindDto.Request businessHourFindRequest,
-		Pageable pageable) {
-		return businessHourDynamicQueryRepository.findPage(businessHourFindRequest.getStoreId(),
-			businessHourFindRequest.getDayOfWeek(), pageable).map(BusinessHourFindDto.Response::new);
+	public List<BusinessHourFindDto.Response> find(Long storeId) {
+		return businessHourRepository.findList(storeId).stream()
+			.map(BusinessHourFindDto.Response::new)
+			.toList();
 	}
 
 	@Override
