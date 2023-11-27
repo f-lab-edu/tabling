@@ -74,24 +74,28 @@ VALUES (3, 2, 'WESTERN_FOOD', '식당C', 'xx해변에 위치한 레스토랑 입
 -- 영업 시간
 INSERT
 INTO business_hour
-(id, store_id, start_time, end_time, created_at, modified_at, created_by, modified_by)
-VALUES (1, 1, '08:00:00', '21:00:00', '2023-09-18', null, null, null);
+(id, store_id, day_of_week, start_time, end_time, created_at, modified_at, created_by, modified_by)
+VALUES (1, 1, 'MONDAY', '08:00:00', '21:00:00', '2023-09-18', null, null, null);
 INSERT
 INTO business_hour
-(id, store_id, start_time, end_time, created_at, modified_at, created_by, modified_by)
-VALUES (2, 2, '09:00:00', '15:00:00', '2023-09-19', null, null, null);
+(id, store_id, day_of_week, start_time, end_time, created_at, modified_at, created_by, modified_by)
+VALUES (2, 2, 'TUESDAY', '09:00:00', '15:00:00', '2023-09-19', null, null, null);
 INSERT
 INTO business_hour
-(id, store_id, start_time, end_time, created_at, modified_at, created_by, modified_by)
-VALUES (3, 2, '18:00:00', '01:00:00', '2023-09-19', null, null, null);
+(id, store_id, day_of_week, start_time, end_time, created_at, modified_at, created_by, modified_by)
+VALUES (3, 2, 'TUESDAY', '18:00:00', '23:59:59.999999', '2023-09-19', null, null, null);
 INSERT
 INTO business_hour
-(id, store_id, start_time, end_time, created_at, modified_at, created_by, modified_by)
-VALUES (4, 3, '11:00:00', '16:00:00', '2023-09-19', null, null, null);
+(id, store_id, day_of_week, start_time, end_time, created_at, modified_at, created_by, modified_by)
+VALUES (4, 2, 'WEDNESDAY', '00:00:00', '01:00:00', '2023-09-19', null, null, null);
 INSERT
 INTO business_hour
-(id, store_id, start_time, end_time, created_at, modified_at, created_by, modified_by)
-VALUES (5, 3, '18:00:00', '23:00:00', '2023-09-19', null, null, null);
+(id, store_id, day_of_week, start_time, end_time, created_at, modified_at, created_by, modified_by)
+VALUES (5, 3, 'TUESDAY', '11:00:00', '16:00:00', '2023-09-19', null, null, null);
+INSERT
+INTO business_hour
+(id, store_id, day_of_week, start_time, end_time, created_at, modified_at, created_by, modified_by)
+VALUES (6, 3, 'TUESDAY', '18:00:00', '23:00:00', '2023-09-19', null, null, null);
 
 -- 메뉴
 INSERT
