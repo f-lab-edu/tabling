@@ -55,7 +55,7 @@ class BusinessHourServiceTest {
 		doReturn(businessHour).when(businessHourRepository).save(any(BusinessHour.class));
 
 		//when
-		BusinessHourAddDto.Response businessHourAddResponse = businessHourService.add(businessHourAddRequest, 1L);
+		BusinessHourAddDto.Response businessHourAddResponse = businessHourService.add(1L, businessHourAddRequest);
 
 		//then
 		assertThat(businessHourAddResponse.getId()).isEqualTo(3L);
@@ -70,7 +70,7 @@ class BusinessHourServiceTest {
 		doReturn(Optional.empty()).when(storeRepository).findById(2L);
 
 		//expected
-		assertThrows(StoreNotFoundException.class, () -> businessHourService.add(businessHourAddRequest, 1L));
+		assertThrows(StoreNotFoundException.class, () -> businessHourService.add(1L, businessHourAddRequest));
 	}
 
 	@Test
@@ -83,8 +83,8 @@ class BusinessHourServiceTest {
 		doReturn(Optional.ofNullable(businessHour)).when(businessHourRepository).findById(3L);
 
 		//when
-		BusinessHourUpdateDto.Response businessHourUpdateResponse = businessHourService.update(
-			businessHourUpdateRequest, 1L);
+		BusinessHourUpdateDto.Response businessHourUpdateResponse = businessHourService.update(3L, 1L,
+			businessHourUpdateRequest);
 
 		//then
 		assertThat(businessHourUpdateResponse.getId()).isEqualTo(3L);
@@ -100,7 +100,7 @@ class BusinessHourServiceTest {
 
 		//expected
 		assertThrows(BusinessHourNotFoundException.class,
-			() -> businessHourService.update(businessHourUpdateRequest, 1L));
+			() -> businessHourService.update(3L, 1L, businessHourUpdateRequest));
 	}
 
 	@Test

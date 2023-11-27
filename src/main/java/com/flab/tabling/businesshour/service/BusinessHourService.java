@@ -25,7 +25,7 @@ public class BusinessHourService {
 	private final StoreService storeService;
 
 	@Transactional
-	public BusinessHourAddDto.Response add(BusinessHourAddDto.Request request, Long memberId) {
+	public BusinessHourAddDto.Response add(Long memberId, BusinessHourAddDto.Request request) {
 		Store targetStore = getStore(request.getStoreId());
 		storeService.validateAuth(targetStore, memberId);
 		BusinessHour businessHour = BusinessHour.builder()
@@ -39,8 +39,8 @@ public class BusinessHourService {
 	}
 
 	@Transactional
-	public BusinessHourUpdateDto.Response update(BusinessHourUpdateDto.Request request, Long memberId) {
-		BusinessHour businessHour = getBusinessHour(request.getId());
+	public BusinessHourUpdateDto.Response update(Long id, Long memberId, BusinessHourUpdateDto.Request request) {
+		BusinessHour businessHour = getBusinessHour(id);
 		storeService.validateAuth(businessHour.getStore(), memberId);
 		businessHour.update(
 			request.getDayOfWeek(),
@@ -59,12 +59,13 @@ public class BusinessHourService {
 
 	private Store getStore(Long id) { // TODO: 2023-11-19 서비스 계층에서만 접근할 수 있도록 인터페이스 도입 및 구분 고려
 		return storeRepository.findById(id)
-			.orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND, "store is not found"));
+			.orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND,
+				"store with this id " + id + " is not found"));
 	}
 
 	private BusinessHour getBusinessHour(Long id) {
 		return businessHourRepository.findById(id)
 			.orElseThrow(() -> new BusinessHourNotFoundException(ErrorCode.BUSINESS_HOUR_NOT_FOUND,
-				"business hour is not found"));
+				"business hour with this id " + id + " is not found"));
 	}
 }

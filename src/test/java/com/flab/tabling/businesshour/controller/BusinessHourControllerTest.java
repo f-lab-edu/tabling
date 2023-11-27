@@ -1,5 +1,6 @@
 package com.flab.tabling.businesshour.controller;
 
+import static com.flab.tabling.global.constant.SessionConstant.*;
 import static org.jeasy.random.FieldPredicates.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -54,6 +55,28 @@ class BusinessHourControllerTest {
 	}
 
 	@Test
+	@DisplayName("운영 시간 등록에 성공하면 상태코드와 응답을 반환한다.")
+	void successAdd() throws Exception {
+		//given
+		BusinessHourAddDto.Request businessHourAddRequest = getBusinessHourAddRequest();
+		BusinessHourAddDto.Response businessHourAddResponse = new BusinessHourAddDto.Response(3L);
+		String requestJson = objectMapper.registerModule(new JavaTimeModule())
+			.writeValueAsString(businessHourAddRequest);
+		String responseJson = objectMapper.registerModule(new JavaTimeModule())
+			.writeValueAsString(businessHourAddResponse);
+
+		doReturn(businessHourAddResponse).when(businessHourService).add(eq(1L), any(BusinessHourAddDto.Request.class));
+
+		//expected
+		mockMvc.perform(post("/stores/{storeId}/business-hours", 2L)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(requestJson)
+				.sessionAttr(MEMBER_ID.name(), 1L)
+			).andExpect(status().isCreated())
+			.andExpect(content().json(responseJson));
+	}
+
+	@Test
 	@DisplayName("특정 식당의 운영 시간 조회에 성공하면 상태코드와 응답을 반환한다.")
 	void successFindPage() throws Exception {
 		//given
@@ -82,10 +105,10 @@ class BusinessHourControllerTest {
 			.writeValueAsString(businessHourUpdateResponse);
 
 		doReturn(businessHourUpdateResponse).when(businessHourService)
-			.update(any(BusinessHourUpdateDto.Request.class), eq(1L));
+			.update(eq(3L), eq(1L), any(BusinessHourUpdateDto.Request.class));
 
 		//expected
-		mockMvc.perform(put("/business-hours")
+		mockMvc.perform(put("/stores/{storeId}/business-hours/{id}", 2L, 3L)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(requestJson)
 				.sessionAttr("MEMBER_ID", 1L)
@@ -97,7 +120,7 @@ class BusinessHourControllerTest {
 	@DisplayName("운영 시간 삭제에 성공하면 상태코드를 반환한다.")
 	void successDelete() throws Exception {
 		//expected
-		mockMvc.perform(delete("/business-hours/{id}", 3L)
+		mockMvc.perform(delete("/stores/{storeId}/business-hours/{id}", 2L, 3L)
 			.contentType(MediaType.APPLICATION_JSON)
 			.sessionAttr("MEMBER_ID", 1L)
 		).andExpect(status().isNoContent());
