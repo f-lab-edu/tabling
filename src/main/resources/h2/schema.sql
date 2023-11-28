@@ -68,12 +68,12 @@ CREATE TABLE `waiting`
     `member_id`   bigint  NOT NULL,
     `head_count`  integer NOT NULL COMMENT '예약하는 인원 수',
     `status`      varchar(20),
-    `unique_key`  varchar(50) NOT NULL COMMENT '{member_id}:{created_at}',
+    `code`  varchar(50) NOT NULL COMMENT '{store_id}:{member_id}:{created_at}',
     `created_at`  datetime(6),
     `modified_at` datetime(6),
     `created_by`  varchar(50),
     `modified_by` varchar(50),
-    unique(unique_key)
+    unique(code)
 );
 
 CREATE TABLE `notice`

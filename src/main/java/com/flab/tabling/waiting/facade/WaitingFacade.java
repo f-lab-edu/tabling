@@ -23,7 +23,7 @@ public class WaitingFacade {
 	//TODO: Business Hour 검증 로직 추가
 
 	@Transactional
-	public WaitingAddDto.Response addMember(Long storeId, Long memberId, Integer headCount) {
+	public WaitingAddDto.Response add(Long storeId, Long memberId, Integer headCount) {
 		Store store = storeService.getStore(storeId);
 		Member member = memberService.getMember(memberId);
 		Waiting waiting = waitingService.add(store, member, headCount);
@@ -31,10 +31,10 @@ public class WaitingFacade {
 	}
 
 	@Transactional
-	public void cancelMember(Long storeId, Long memberId) {
+	public void cancelMember(Long storeId, Long memberId, Long waitingId) {
 		Store store = storeService.getStore(storeId);
 		Member member = memberService.getMember(memberId);
-		waitingService.cancelMember(store, member);
+		waitingService.cancelMember(store, member, waitingId);
 	}
 
 	@Transactional

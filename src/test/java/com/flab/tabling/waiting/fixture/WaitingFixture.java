@@ -1,19 +1,16 @@
 package com.flab.tabling.waiting.fixture;
 
 import org.jeasy.random.EasyRandom;
-import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.randomizers.number.AtomicLongRandomizer;
 import org.jeasy.random.randomizers.range.IntegerRangeRandomizer;
 import org.jeasy.random.randomizers.range.LongRangeRandomizer;
 import org.jeasy.random.randomizers.text.StringRandomizer;
-import org.junit.jupiter.api.Test;
 
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.store.domain.Category;
 import com.flab.tabling.store.domain.Store;
-import com.flab.tabling.waiting.domain.Status;
 import com.flab.tabling.waiting.domain.Waiting;
+import com.flab.tabling.waiting.domain.WaitingStatus;
 
 public final class WaitingFixture {
 	private static EasyRandom easyRandom = new EasyRandom();
@@ -22,7 +19,7 @@ public final class WaitingFixture {
 	private static IntegerRangeRandomizer integerRangeRandomizer = new IntegerRangeRandomizer(1, 10);
 
 	public static Waiting getWaiting(Store store, Member member) {
-		return new MockWaiting(store, member, integerRangeRandomizer.getRandomValue(), Status.WAITING);
+		return new MockWaiting(store, member, integerRangeRandomizer.getRandomValue(), WaitingStatus.ONGOING);
 	}
 
 	public static Store getStore(Member member) {
@@ -35,9 +32,9 @@ public final class WaitingFixture {
 			stringRandomizer.getRandomValue(), easyRandom.nextObject(RoleType.class));
 	}
 
-
 	private static class MockStore extends Store {
 		private Long mockId = longRangeRandomizer.getRandomValue();
+
 		private MockStore(Member member, String name, Category category, String description,
 			Integer maxWaitingCount) {
 			super(member, name, category, description, maxWaitingCount);
@@ -51,6 +48,7 @@ public final class WaitingFixture {
 
 	private static class MockMember extends Member {
 		private Long mockId = longRangeRandomizer.getRandomValue();
+
 		private MockMember(String name, String email, String password, RoleType roleType) {
 			super(name, email, password, roleType);
 		}
@@ -63,7 +61,8 @@ public final class WaitingFixture {
 
 	private static class MockWaiting extends Waiting {
 		private Long mockId = longRangeRandomizer.getRandomValue();
-		public MockWaiting(Store store, Member member, Integer headCount, Status status) {
+
+		public MockWaiting(Store store, Member member, Integer headCount, WaitingStatus status) {
 			super(store, member, headCount, status);
 		}
 
@@ -72,6 +71,5 @@ public final class WaitingFixture {
 			return mockId;
 		}
 	}
-
 
 }

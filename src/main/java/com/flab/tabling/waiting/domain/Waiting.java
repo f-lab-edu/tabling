@@ -39,24 +39,24 @@ public class Waiting extends BaseTime {
 	@JoinColumn(name = "member_id")
 	private Member member;
 	private Integer headCount;
-	private String uniqueKey;
+	private String code;
 	@Enumerated(value = EnumType.STRING)
-	private Status status;
+	private WaitingStatus status;
 
 	@Builder
-	public Waiting(Store store, Member member, Integer headCount, Status status) {
+	public Waiting(Store store, Member member, Integer headCount, WaitingStatus waitingStatus) {
 		this.store = store;
 		this.member = member;
 		this.headCount = headCount;
-		this.status = status;
+		this.status = waitingStatus;
 	}
 
 	@PrePersist
 	public void generateUniqueKey() {
-		this.uniqueKey = store.getId() + CONJUNCTION + member.getId() + CONJUNCTION + LocalDateTime.now().toLocalDate();
+		this.code = store.getId() + CONJUNCTION + member.getId() + CONJUNCTION + LocalDateTime.now().toLocalDate();
 	}
 
 	public void accept() {
-		this.status = Status.ENTRANCE;
+		this.status = WaitingStatus.COMPLETED;
 	}
 }

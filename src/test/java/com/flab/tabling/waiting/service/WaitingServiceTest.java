@@ -17,8 +17,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.store.domain.Store;
-import com.flab.tabling.waiting.domain.Status;
 import com.flab.tabling.waiting.domain.Waiting;
+import com.flab.tabling.waiting.domain.WaitingStatus;
 import com.flab.tabling.waiting.exception.WaitingDuplicatedException;
 import com.flab.tabling.waiting.exception.WaitingExceededException;
 import com.flab.tabling.waiting.exception.WaitingNotFoundException;
@@ -42,7 +42,8 @@ class WaitingServiceTest {
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
-		doReturn(Optional.empty()).when(waitingRepository).findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+		doReturn(Optional.empty()).when(waitingRepository)
+			.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING);
 
 		//when
 		Waiting result = waitingService.add(store, member, waiting.getHeadCount());
@@ -61,7 +62,7 @@ class WaitingServiceTest {
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
 		doReturn(Optional.of(waiting)).when(waitingRepository)
-			.findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+			.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING);
 		// //when
 		assertThrows(WaitingDuplicatedException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
 	}
@@ -74,7 +75,8 @@ class WaitingServiceTest {
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
-		doReturn(Optional.empty()).when(waitingRepository).findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+		doReturn(Optional.empty()).when(waitingRepository)
+			.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING);
 		doThrow(DataIntegrityViolationException.class).when(waitingRepository).save(any(Waiting.class));
 		//when
 		assertThrows(WaitingDuplicatedException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
@@ -89,7 +91,7 @@ class WaitingServiceTest {
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
 		doReturn(store.getMaxWaitingCount() + 10).when(waitingRepository)
-			.countWithPessimisticLockByStoreAndStatus(store, Status.WAITING);
+			.countWithPessimisticLockByStoreAndStatus(store, WaitingStatus.ONGOING);
 		//when, then
 		assertThrows(WaitingExceededException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
 	}
@@ -103,10 +105,10 @@ class WaitingServiceTest {
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
 		doReturn(Optional.of(waiting)).when(waitingRepository)
-			.findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+			.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING);
 
 		//when
-		waitingService.cancelMember(store, member);
+		waitingService.cancelMember(store, member, waiting.getId());
 
 		//then
 		verify(waitingRepository).delete(any(Waiting.class));
@@ -119,10 +121,12 @@ class WaitingServiceTest {
 		Member member = WaitingFixture.getMember();
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
-		doReturn(Optional.empty()).when(waitingRepository).findByMemberAndStoreAndStatus(member, store, Status.WAITING);
+		Waiting waiting = WaitingFixture.getWaiting(store, member);
+		doReturn(Optional.empty()).when(waitingRepository)
+			.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING);
 
 		//when, then
-		assertThrows(WaitingNotFoundException.class, () -> waitingService.cancelMember(store, member));
+		assertThrows(WaitingNotFoundException.class, () -> waitingService.cancelMember(store, member, waiting.getId()));
 	}
 
 	@Test
@@ -133,7 +137,8 @@ class WaitingServiceTest {
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
-		doReturn(Optional.of(waiting)).when(waitingRepository).findFirstByStoreAndStatus(store, Status.WAITING);
+		doReturn(Optional.of(waiting)).when(waitingRepository)
+			.findFirstByStoreAndStatusOrderByCreatedAt(store, WaitingStatus.ONGOING);
 
 		waitingService.cancelFirst(store);
 		//when, then
@@ -146,7 +151,8 @@ class WaitingServiceTest {
 		//given
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
-		doReturn(Optional.empty()).when(waitingRepository).findFirstByStoreAndStatus(store, Status.WAITING);
+		doReturn(Optional.empty()).when(waitingRepository)
+			.findFirstByStoreAndStatusOrderByCreatedAt(store, WaitingStatus.ONGOING);
 
 		//when, then
 		assertThrows(WaitingNotFoundException.class, () -> waitingService.cancelFirst(store));
@@ -161,13 +167,13 @@ class WaitingServiceTest {
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
 		doReturn(Optional.of(waiting)).when(waitingRepository)
-			.findFirstByStoreAndStatusByPessimisticLock(store, Status.WAITING);
+			.findFirstByStoreAndStatus(store, WaitingStatus.ONGOING);
 
 		//when
 		waitingService.acceptFirst(store);
 
 		//then
-		Assertions.assertThat(waiting.getStatus()).isEqualTo(Status.ENTRANCE);
+		Assertions.assertThat(waiting.getStatus()).isEqualTo(WaitingStatus.COMPLETED);
 	}
 
 	@Test
@@ -177,7 +183,7 @@ class WaitingServiceTest {
 		Member seller = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(seller);
 		doReturn(Optional.empty()).when(waitingRepository)
-			.findFirstByStoreAndStatusByPessimisticLock(store, Status.WAITING);
+			.findFirstByStoreAndStatus(store, WaitingStatus.ONGOING);
 
 		//when, then
 		assertThrows(WaitingNotFoundException.class, () -> waitingService.acceptFirst(store));

@@ -35,7 +35,7 @@ class WaitingControllerTest extends AbstractRestDocsTest {
 
 		//when
 		WaitingAddDto.Response waitingResponseDto = new WaitingAddDto.Response(13L);
-		doReturn(waitingResponseDto).when(waitingFacade).addMember(any(), any(), any());
+		doReturn(waitingResponseDto).when(waitingFacade).add(any(), any(), any());
 		MockHttpServletResponse response = mockMvc.perform(post("/stores/1/waiting")
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -56,7 +56,7 @@ class WaitingControllerTest extends AbstractRestDocsTest {
 		session.setAttribute(SessionConstant.MEMBER_ID.name(), 3L);
 
 		//when, then
-		mockMvc.perform(delete("/stores/{id}/waiting", 2L)
+		mockMvc.perform(delete("/stores/{store_id}/waiting/{waiting_id}", 2L, 10L)
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNoContent());
@@ -69,8 +69,8 @@ class WaitingControllerTest extends AbstractRestDocsTest {
 
 		//when
 		WaitingAddDto.Response waitingResponseDto = new WaitingAddDto.Response(13L);
-		doReturn(waitingResponseDto).when(waitingFacade).addMember(any(), any(), any());
-		mockMvc.perform(post("/stores/{id}/orders", 2L)
+		doReturn(waitingResponseDto).when(waitingFacade).add(any(), any(), any());
+		mockMvc.perform(patch("/stores/{storeId}/waiting", 2L)
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNoContent())
@@ -84,8 +84,8 @@ class WaitingControllerTest extends AbstractRestDocsTest {
 
 		//when
 		WaitingAddDto.Response waitingResponseDto = new WaitingAddDto.Response(13L);
-		doReturn(waitingResponseDto).when(waitingFacade).addMember(any(), any(), any());
-		mockMvc.perform(delete("/stores/{id}/orders", 2L)
+		doReturn(waitingResponseDto).when(waitingFacade).add(any(), any(), any());
+		mockMvc.perform(delete("/stores/{storeId}/waiting", 2L)
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNoContent())

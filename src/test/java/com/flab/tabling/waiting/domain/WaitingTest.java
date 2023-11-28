@@ -23,7 +23,7 @@ class WaitingTest {
 		waiting.generateUniqueKey();
 
 		//then
-		Assertions.assertThat(waiting.getUniqueKey())
+		Assertions.assertThat(waiting.getCode())
 			.isEqualTo(store.getId() + CONJUNCTION + member.getId() + CONJUNCTION + LocalDateTime.now().toLocalDate());
 	}
 }

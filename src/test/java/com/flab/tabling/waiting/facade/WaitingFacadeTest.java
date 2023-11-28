@@ -50,7 +50,7 @@ class WaitingFacadeTest {
 		doReturn(waiting).when(waitingService).add(store, member, headCount);
 
 		//then
-		Assertions.assertThat(waitingFacade.addMember(storeId, memberId, headCount))
+		Assertions.assertThat(waitingFacade.add(storeId, memberId, headCount))
 			.usingRecursiveComparison().isEqualTo(new WaitingAddDto.Response(waiting.getId()));
 	}
 
@@ -60,14 +60,15 @@ class WaitingFacadeTest {
 		//given
 		Member member = WaitingFixture.getMember();
 		Store store = WaitingFixture.getStore(member);
+		Waiting waiting = WaitingFixture.getWaiting(store, member);
 
 		//when
-		waitingFacade.cancelMember(store.getId(), member.getId());
+		waitingFacade.cancelMember(store.getId(), member.getId(), waiting.getId());
 
 		//then
 		verify(storeService).getStore(anyLong());
 		verify(memberService).getMember(anyLong());
-		verify(waitingService).cancelMember(any(), any());
+		verify(waitingService).cancelMember(any(), any(), any());
 	}
 
 	@Test
