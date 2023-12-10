@@ -43,10 +43,10 @@ class StoreAuthInterceptorTest {
 
 	@Test
 	@DisplayName("로그인한 Member의 RoleType이 SELLER라면 true를 반환한다.")
-	void authSuccessWithSeller() throws Exception {
+	void authSuccessWithSeller() {
 		//given
 		MockHttpSession sessionMock = new MockHttpSession();
-		sessionMock.setAttribute("LOGIN_SESSION", 1L); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		sessionMock.setAttribute("MEMBER_ID", 1L); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
 
 		MockHttpServletRequest requestMock = new MockHttpServletRequest();
 		requestMock.setMethod(HttpMethod.POST.name());
@@ -62,15 +62,16 @@ class StoreAuthInterceptorTest {
 		assertThat(result).isTrue();
 	}
 
+	@Test
 	@DisplayName("로그인한 Member의 RoleType이 SELLER가 아니라면 false를 반환한다.")
-	void authFailWithNotSeller() throws Exception {
+	void authFailWithNotSeller() {
 		//given
-		HttpServletRequest requestMock = Mockito.mock(HttpServletRequest.class);
 		MockHttpSession sessionMock = new MockHttpSession();
-		sessionMock.setAttribute("LOGIN_SESSION", 1L); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		sessionMock.setAttribute("MEMBER_ID", 1L); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		MockHttpServletRequest requestMock = new MockHttpServletRequest();
+		requestMock.setSession(sessionMock);
+		requestMock.setMethod(HttpMethod.POST.name());
 
-		doReturn(sessionMock).when(requestMock)
-			.getSession();
 		doReturn(false).when(memberService)
 			.isSeller(1L);
 
@@ -83,7 +84,7 @@ class StoreAuthInterceptorTest {
 	void canNotCastSessionMemberId() {
 		//given
 		MockHttpSession sessionMock = new MockHttpSession();
-		sessionMock.setAttribute("LOGIN_SESSION", NOT_LONG_TYPE); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		sessionMock.setAttribute("MEMBER_ID", NOT_LONG_TYPE); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
 
 		MockHttpServletRequest requestMock = new MockHttpServletRequest();
 		requestMock.setMethod(HttpMethod.POST.name());
