@@ -80,7 +80,7 @@ public class StoreService {
 			.orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "member is not found"));
 	}
 
-	private Store getStore(Long storeId) { // TODO: 2023-11-19 서비스 계층에서만 접근할 수 있도록 인터페이스 도입 및 구분 고려
+	public Store getStore(Long storeId) { // TODO: 2023-11-19 서비스 계층에서만 접근할 수 있도록 인터페이스 도입 및 구분 고려
 		return storeRepository.findById(storeId)
 			.orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND, "store is not found"));
 	}

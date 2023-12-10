@@ -53,7 +53,7 @@ CREATE TABLE `menu`
 
 CREATE TABLE `favorite`
 (
-    `id`          long PRIMARY KEY,
+    `id`          long PRIMARY KEY AUTO_INCREMENT,
     `store_id`    long NOT NULL,
     `member_id`   long NOT NULL,
     `created_at`  datetime(6),
@@ -64,19 +64,22 @@ CREATE TABLE `favorite`
 
 CREATE TABLE `waiting`
 (
-    `id`          bigint PRIMARY KEY,
+    `id`          bigint PRIMARY KEY AUTO_INCREMENT,
     `store_id`    bigint  NOT NULL,
     `member_id`   bigint  NOT NULL,
     `head_count`  integer NOT NULL COMMENT '예약하는 인원 수',
+    `status`      varchar(20),
+    `code`  varchar(50) NOT NULL COMMENT '{store_id}:{member_id}:{created_at}',
     `created_at`  datetime(6),
     `modified_at` datetime(6),
     `created_by`  varchar(50),
-    `modified_by` varchar(50)
+    `modified_by` varchar(50),
+    unique(code)
 );
 
 CREATE TABLE `notice`
 (
-    `id`          bigint PRIMARY KEY,
+    `id`          bigint PRIMARY KEY AUTO_INCREMENT,
     `member_id`   bigint      NOT NULL,
     `title`       varchar(50) NOT NULL,
     `content`     text        NOT NULL,
@@ -89,7 +92,7 @@ CREATE TABLE `notice`
 
 CREATE TABLE `penalty`
 (
-    `id`          bigint PRIMARY KEY,
+    `id`          bigint PRIMARY KEY AUTO_INCREMENT,
     `member_id`   bigint      NOT NULL,
     `type`        varchar(20),
     `created_at`  datetime(6) NOT NULL,
@@ -100,7 +103,7 @@ CREATE TABLE `penalty`
 
 CREATE TABLE `point`
 (
-    `id`          bigint PRIMARY KEY,
+    `id`          bigint PRIMARY KEY AUTO_INCREMENT,
     `member_id`   bigint      NOT NULL,
     `amount`      integer     NOT NULL,
     `type`        varchar(20) NOT NULL,
@@ -112,7 +115,7 @@ CREATE TABLE `point`
 
 CREATE TABLE `address`
 (
-    `id`           bigint PRIMARY KEY,
+    `id`           bigint PRIMARY KEY AUTO_INCREMENT,
     `store_id`     bigint,
     `area1`        varchar(20) COMMENT '시도',
     `area2`        varchar(20) COMMENT '시군구',
@@ -128,7 +131,7 @@ CREATE TABLE `address`
 
 CREATE TABLE `history`
 (
-    `id`             bigint PRIMARY KEY,
+    `id`             bigint PRIMARY KEY AUTO_INCREMENT,
     `table_name`     varchar(30),
     `record_id`      bigint,
     `operation_type` varchar(20) COMMENT '상태값',

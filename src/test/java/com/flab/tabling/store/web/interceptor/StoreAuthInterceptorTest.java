@@ -15,6 +15,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
+import com.flab.tabling.global.constant.SessionConstant;
+import com.flab.tabling.member.exception.MemberNotFoundException;
 import com.flab.tabling.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +48,7 @@ class StoreAuthInterceptorTest {
 	void authSuccessWithSeller() {
 		//given
 		MockHttpSession sessionMock = new MockHttpSession();
-		sessionMock.setAttribute("MEMBER_ID", 1L); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		sessionMock.setAttribute(SessionConstant.MEMBER_ID.name(), 1L);
 
 		MockHttpServletRequest requestMock = new MockHttpServletRequest();
 		requestMock.setMethod(HttpMethod.POST.name());
@@ -67,7 +69,7 @@ class StoreAuthInterceptorTest {
 	void authFailWithNotSeller() {
 		//given
 		MockHttpSession sessionMock = new MockHttpSession();
-		sessionMock.setAttribute("MEMBER_ID", 1L); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		sessionMock.setAttribute(SessionConstant.MEMBER_ID.name(), 1L);
 		MockHttpServletRequest requestMock = new MockHttpServletRequest();
 		requestMock.setSession(sessionMock);
 		requestMock.setMethod(HttpMethod.POST.name());
@@ -84,14 +86,14 @@ class StoreAuthInterceptorTest {
 	void canNotCastSessionMemberId() {
 		//given
 		MockHttpSession sessionMock = new MockHttpSession();
-		sessionMock.setAttribute("MEMBER_ID", NOT_LONG_TYPE); // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
+		sessionMock.setAttribute(SessionConstant.MEMBER_ID.name(), NOT_LONG_TYPE);
 
 		MockHttpServletRequest requestMock = new MockHttpServletRequest();
 		requestMock.setMethod(HttpMethod.POST.name());
 		requestMock.setSession(sessionMock);
 
 		//expected
-		assertThrows(ClassCastException.class, () -> storeAuthInterceptor.preHandle(requestMock, null, null));
+		assertThrows(MemberNotFoundException.class, () -> storeAuthInterceptor.preHandle(requestMock, null, null));
 	}
 
 	@Test

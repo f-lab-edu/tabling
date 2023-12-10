@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.flab.tabling.global.auth.Login;
+import com.flab.tabling.member.dto.MemberSession;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
@@ -31,8 +33,8 @@ public class StoreController {
 
 	@PostMapping("/stores")
 	public ResponseEntity<StoreAddDto.Response> add(@Valid @RequestBody StoreAddDto.Request request,
-		@SessionAttribute(name = "LOGIN_SESSION") Long memberId) { // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
-		StoreAddDto.Response storeResponseDto = storeService.add(request, memberId);
+		@Login MemberSession memberSession) {
+		StoreAddDto.Response storeResponseDto = storeService.add(request, memberSession.getId());
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(storeResponseDto);
 	}
@@ -55,16 +57,16 @@ public class StoreController {
 	@PutMapping("/stores/{id}")
 	public ResponseEntity<StoreUpdateDto.Response> update(
 		@Valid @RequestBody StoreUpdateDto.Request storeUpdateRequest,
-		@SessionAttribute(name = "LOGIN_SESSION") Long sessionMemberId) { // TODO: 2023-10-13 세션 이름 변경 필요
-		StoreUpdateDto.Response storeUpdateResponse = storeService.update(storeUpdateRequest, sessionMemberId);
+		@Login MemberSession memberSession) {
+		StoreUpdateDto.Response storeUpdateResponse = storeService.update(storeUpdateRequest, memberSession.getId());
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(storeUpdateResponse);
 	}
 
 	@DeleteMapping("/stores/{id}")
 	public ResponseEntity<Void> delete(@PathVariable(name = "id") Long storeId,
-		@SessionAttribute(name = "LOGIN_SESSION") Long sessionMemberId) { // TODO: 2023-10-13 세션 이름 변경 필요
-		storeService.delete(storeId, sessionMemberId);
+		@Login MemberSession memberSession) {
+		storeService.delete(storeId, memberSession.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
 	}

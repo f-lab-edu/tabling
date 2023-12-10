@@ -4,6 +4,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.flab.tabling.global.constant.SessionConstant;
+import com.flab.tabling.global.exception.AuthorizationException;
+import com.flab.tabling.global.exception.ErrorCode;
+import com.flab.tabling.member.exception.MemberNotFoundException;
 import com.flab.tabling.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,31 +27,24 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		HttpSession session = request.getSession();
-		loginValidation(session);
 		memberRoleTypeValidation(session);
 		return true;
-	}
-
-	private void loginValidation(HttpSession session) {
-		if (session == null || session.getAttribute("MEMBER_ID") == null) { // TODO: 2023-10-07 로그인 기능 추가 후 세션 이름 교체
-			throw new RuntimeException("NO_SESSION"); // TODO: 2023-10-04 커스텀 인증 예외로 교체 필요
-		}
 	}
 
 	private void memberRoleTypeValidation(HttpSession session) {
 		Long sessionMemberId = getSessionMemberId(session);
 		boolean isSeller = memberService.isSeller(sessionMemberId);
 		if (!isSeller) {
-			throw new RuntimeException("INCORRECT_MEMBER_ROLE_TYPE"); // TODO: 2023-10-06 잘못된 회원 타입을 명시하는 커스텀 예외로 교체
+			throw new AuthorizationException(ErrorCode.AUTHORIZATION_FAILED, "member is not a seller");
 		}
 	}
 
 	private Long getSessionMemberId(HttpSession session) {
-		Object sessionMemberId = session.getAttribute("MEMBER_ID");
+		Object sessionMemberId = session.getAttribute(SessionConstant.MEMBER_ID.name());
 		boolean isLongType = sessionMemberId instanceof Long;
 		if (!isLongType) {
-			throw new ClassCastException("Can not cast from " + sessionMemberId + " to Long.class");
+			throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "member is not found");
 		}
-		return (Long)session.getAttribute("MEMBER_ID");
+		return (Long)session.getAttribute(SessionConstant.MEMBER_ID.name());
 	}
 }

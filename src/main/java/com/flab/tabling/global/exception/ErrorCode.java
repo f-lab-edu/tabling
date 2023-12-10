@@ -5,14 +5,16 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-	MEMBER_DUPLICATED("member already exists", 400),
+	MEMBER_DUPLICATED("member already exists", 409),
 	MEMBER_NOT_FOUND("member not found", 404),
 	STORE_NOT_FOUND("store not found", 404),
 	BUSINESS_HOUR_NOT_FOUND("business hour not found", 404),
 	INVALID_SESSION("session is invalid", 400),
 	INVALID_PARAMETER("parameter is invalid", 400),
 	AUTHENTICATION_FAILED("authentication failed", 401),
-	AUTHORIZATION_FAILED("authorization failed", 403);
+	AUTHORIZATION_FAILED("authorization failed", 403),
+	PARAMETER_DUPLICATED("given parameter already exists", 409),
+	PARAMETER_NOT_FOUND("given parameter not found", 404);
 
 	private final String description;
 	private final int status;
