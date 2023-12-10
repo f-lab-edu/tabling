@@ -8,6 +8,7 @@ public enum ErrorCode {
 	MEMBER_DUPLICATED("member already exists", 409),
 	MEMBER_NOT_FOUND("member not found", 404),
 	STORE_NOT_FOUND("store not found", 404),
+	BUSINESS_HOUR_NOT_FOUND("business hour not found", 404),
 	INVALID_SESSION("session is invalid", 400),
 	INVALID_PARAMETER("parameter is invalid", 400),
 	AUTHENTICATION_FAILED("authentication failed", 401),

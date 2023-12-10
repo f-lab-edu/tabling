@@ -45,7 +45,7 @@ class StoreAuthInterceptorTest {
 
 	@Test
 	@DisplayName("로그인한 Member의 RoleType이 SELLER라면 true를 반환한다.")
-	void authSuccessWithSeller() throws Exception {
+	void authSuccessWithSeller() {
 		//given
 		MockHttpSession sessionMock = new MockHttpSession();
 		sessionMock.setAttribute(SessionConstant.MEMBER_ID.name(), 1L);
@@ -64,15 +64,16 @@ class StoreAuthInterceptorTest {
 		assertThat(result).isTrue();
 	}
 
+	@Test
 	@DisplayName("로그인한 Member의 RoleType이 SELLER가 아니라면 false를 반환한다.")
-	void authFailWithNotSeller() throws Exception {
+	void authFailWithNotSeller() {
 		//given
-		HttpServletRequest requestMock = Mockito.mock(HttpServletRequest.class);
 		MockHttpSession sessionMock = new MockHttpSession();
 		sessionMock.setAttribute(SessionConstant.MEMBER_ID.name(), 1L);
+		MockHttpServletRequest requestMock = new MockHttpServletRequest();
+		requestMock.setSession(sessionMock);
+		requestMock.setMethod(HttpMethod.POST.name());
 
-		doReturn(sessionMock).when(requestMock)
-			.getSession();
 		doReturn(false).when(memberService)
 			.isSeller(1L);
 

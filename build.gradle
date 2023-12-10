@@ -72,8 +72,8 @@ asciidoctor {
 
     // source가 없으면 .adoc파일을 전부 html로 만들어버림
     // source 지정시 특정 adoc만 HTML로 만든다.
-    sources{
-        include("**/index.adoc","**/common/*.adoc")
+    sources {
+        include("**/index.adoc", "**/common/*.adoc")
     }
 
     // 특정 .adoc에 다른 adoc 파일을 가져와서(include) 사용하고 싶을 경우 경로를 baseDir로 맞춰주는 설정입니다.
@@ -143,7 +143,8 @@ jacocoTestCoverageVerification {
                     'com.flab.tabling.global.env.**',
                     'com.flab.tabling.global.constant.**',
                     'com.flab.tabling.global.auth.ExceptionHandlerFilter',
-                    'com.flab.tabling.global.auth.Login*'
+                    'com.flab.tabling.global.auth.Login*',
+                    'com.flab.tabling.**.domain.Q*',
             ]
         }
     }
@@ -152,4 +153,8 @@ jacocoTestCoverageVerification {
 // spring boot actuator: build info
 springBoot {
     buildInfo()
+}
+
+clean {
+    delete file('src/main/generated')
 }

@@ -29,6 +29,7 @@ CREATE TABLE `business_hour`
 (
     `id`          bigint PRIMARY KEY AUTO_INCREMENT,
     `store_id`    integer,
+    `day_of_week` varchar(10),
     `start_time`  time(6),
     `end_time`    time(6),
     `created_at`  datetime(6),
@@ -82,7 +83,7 @@ CREATE TABLE `notice`
     `member_id`   bigint      NOT NULL,
     `title`       varchar(50) NOT NULL,
     `content`     text        NOT NULL,
-    `is_deleted`  tinyint(2) COMMENT '논리적 삭제',
+    `is_deleted`  tinyint COMMENT '논리적 삭제',
     `created_at`  datetime(6) NOT NULL,
     `modified_at` datetime(6),
     `created_by`  varchar(50),
