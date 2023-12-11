@@ -28,8 +28,20 @@ class BusinessHourQueryServiceImplTest {
 	private BusinessHourFixture businessHourFixture = FixtureFactory.businessHourFixture();
 
 	@Test
-	@DisplayName("식당 id로 운영 시간 조회에 성공하면 해당 식당의 모든 운영 시간을 반환한다.")
-	void successWithStoreId() {
+	@DisplayName("식당 id로 운영 시간 도메인 조회에 성공한다.")
+	void getStoreSuccessWithStoreId() {
+
+	}
+
+	@Test
+	@DisplayName("식당 id로 운영 시간 도메인 조회에 실패하면 예외가 발생한다.")
+	void getStoreFailWithStoreId() {
+
+	}
+
+	@Test
+	@DisplayName("식당 id로 운영 시간 dto 조회에 성공하면 해당 식당의 모든 운영 시간을 반환한다.")
+	void findSuccessWithStoreId() {
 		//given
 		List<BusinessHour> businessHours = businessHourFixture.getBusinessHoursWithBreakTime(2L, 8, 15, 18, 22);
 
@@ -45,7 +57,7 @@ class BusinessHourQueryServiceImplTest {
 
 	@Test
 	@DisplayName("요청한 시간이 운영 시간이 맞다면 true를 반환한다.")
-	void successWithCorrectBusinessHour() {
+	void findSuccessWithCorrectBusinessHour() {
 		//given
 		LocalDateTime requestDateTime = businessHourFixture.getLocalDateTime(9);
 		List<BusinessHour> targetBusinessHours = businessHourFixture.getBusinessHoursWithBreakTime(2L, 8, 15, 18, 22);
