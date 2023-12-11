@@ -63,7 +63,7 @@ class WaitingFacadeTest {
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
 
 		//when
-		waitingFacade.cancelMember(store.getId(), member.getId(), waiting.getId());
+		waitingFacade.cancelByMember(store.getId(), member.getId(), waiting.getId());
 
 		//then
 		verify(storeService).getStore(anyLong());

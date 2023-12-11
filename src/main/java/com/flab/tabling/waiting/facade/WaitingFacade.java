@@ -31,7 +31,7 @@ public class WaitingFacade {
 	}
 
 	@Transactional
-	public void cancelMember(Long storeId, Long memberId, Long waitingId) {
+	public void cancelByMember(Long storeId, Long memberId, Long waitingId) {
 		Store store = storeService.getStore(storeId);
 		Member member = memberService.getMember(memberId);
 		waitingService.cancelMember(store, member, waitingId);
