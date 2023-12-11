@@ -1,4 +1,4 @@
-package com.flab.tabling.member.service;
+package com.flab.tabling.member.facade;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,7 +22,7 @@ import com.flab.tabling.global.service.TwoWayCipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.exception.InvalidPasswordException;
-import com.flab.tabling.member.facade.AuthFacade;
+import com.flab.tabling.member.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -41,7 +41,7 @@ class AuthFacadeTest {
 	SessionService sessionService;
 
 	@Mock
-	MemberQueryService memberQueryService;
+	MemberService memberService;
 
 	HttpSession session;
 
@@ -68,7 +68,7 @@ class AuthFacadeTest {
 		doReturn("name").when(member).getName();
 		doReturn(sampleEncryptedPassword).when(member).getPassword();
 		doReturn(encryptedEmail).when(twoWayCipherService).encrypt(email);
-		doReturn(member).when(memberQueryService).findByEncryptedEmail(encryptedEmail);
+		doReturn(member).when(memberService).findByEncryptedEmail(encryptedEmail);
 		doReturn(true).when(oneWayCipherService).match(passWord, sampleEncryptedPassword);
 		MemberAuthDto.Response memberResponseDto = new MemberAuthDto.Response(1L);
 		HttpSession session = new MockHttpSession();
@@ -98,7 +98,7 @@ class AuthFacadeTest {
 		Member member = Mockito.mock(Member.class);
 		doReturn(sampleEncryptedPassword).when(member).getPassword();
 		doReturn(encryptedEmail).when(twoWayCipherService).encrypt(email);
-		doReturn(member).when(memberQueryService).findByEncryptedEmail(encryptedEmail);
+		doReturn(member).when(memberService).findByEncryptedEmail(encryptedEmail);
 		doReturn(false).when(oneWayCipherService).match(passWord, sampleEncryptedPassword);
 
 		//when, then

@@ -20,13 +20,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.global.exception.ErrorResponse;
 import com.flab.tabling.global.exception.GlobalExceptionAdvice;
+import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.facade.MemberFacade;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -45,7 +45,7 @@ class MemberControllerTest {
 	@InjectMocks
 	private MemberController memberController;
 	@Mock
-	private MemberService memberService;
+	private MemberFacade memberFacade;
 	private MockMvc mvc;
 	ObjectMapper objectMapper = new ObjectMapper();
 	private MockHttpSession session = new MockHttpSession();
@@ -75,7 +75,7 @@ class MemberControllerTest {
 			.build();
 		MemberAddDto.Response memberResponseDto = new MemberAddDto.Response(1L);
 
-		given(memberService.add(any(MemberAddDto.Request.class), any(HttpSession.class)))
+		given(memberFacade.add(any(MemberAddDto.Request.class), any(HttpSession.class)))
 			.willReturn(memberResponseDto);
 
 		//when

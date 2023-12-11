@@ -44,7 +44,7 @@ public class Member extends BaseTime {
 		this.roleType = roleType;
 	}
 
-	boolean isSeller() {
+	public boolean isSeller() {
 		return this.roleType.equals(RoleType.SELLER);
 	}
 }

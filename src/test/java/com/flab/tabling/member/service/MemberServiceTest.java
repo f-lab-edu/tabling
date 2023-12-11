@@ -1,14 +1,13 @@
 package com.flab.tabling.member.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,87 +15,46 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockHttpSession;
 
-import com.flab.tabling.global.service.OneWayCipherService;
 import com.flab.tabling.global.service.StringGenerateFixture;
-import com.flab.tabling.global.service.TwoWayCipherService;
-import com.flab.tabling.global.service.SessionService;
-import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.domain.RoleType;
-import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.exception.MemberDuplicatedException;
+import com.flab.tabling.member.exception.MemberNotFoundException;
 import com.flab.tabling.member.repository.MemberRepository;
 
-/**
- * @InjectMocks : @Mock이 붙은 Mock 객체를 @InjectMocks이 붙은 객체에 주입
- * @Mock : Mock 객체 생성
- */
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 	@InjectMocks
 	MemberService memberService;
-
-	@Mock
-	OneWayCipherService oneWayCipherService;
-	@Mock
-	TwoWayCipherService twoWayCipherService;
-
-	@Mock
-	SessionService sessionService;
-
 	@Mock
 	MemberRepository memberRepository;
 
-	@Mock
-	MockHttpSession session;
-
-	@BeforeEach
-	void init() {
-		session = new MockHttpSession();
-	}
-
 	@Test
-	@DisplayName("회원가입 성공 : 이메일이 중복되지 않음")
-	void addMemberSuccess() {
-
+	@DisplayName("findByEncryptedEmail 성공 테스트")
+	void findByEmailSuccess() {
 		//given
-		MemberAddDto.Request memberRequestDto = MemberAddDto.Request.builder()
-			.name(StringGenerateFixture.makeByNumbersAndAlphabets(6))
-			.roleType(RoleType.CUSTOMER)
-			.email(StringGenerateFixture.makeEmail(8))
-			.password(StringGenerateFixture.makeByNumbersAndAlphabets(9))
-			.build();
-		doReturn(Optional.empty()).when(memberRepository).findByEmail(any());
-		session = new MockHttpSession();
+		String encryptEmail = StringGenerateFixture.makeByHexCharacter(20);
+		Member member = Mockito.mock(Member.class);
+		doReturn(Optional.of(member)).when(memberRepository).findByEmail(encryptEmail);
 
 		//when
-		MemberAddDto.Response response = memberService.add(memberRequestDto, session);
+		Member result = memberService.findByEncryptedEmail(encryptEmail);
 
 		//then
-		verify(sessionService).add(any(), eq(SessionConstant.MEMBER_NAME), eq(memberRequestDto.getName()));
-		verify(memberRepository).save(any());
-		verify(sessionService).invalidate(any());
+		Assertions.assertThat(result).isSameAs(member);
 	}
 
 	@Test
-	@DisplayName("회원가입 실패 : 이메일 중복")
-	void addMemberFailure() {
-		Member member = Mockito.mock(Member.class);
+	@DisplayName("findByEncryptedEmail 실패 테스트 : MemberNotFound 예외 발생")
+	void findByEmailFailure() {
 		//given
-		MemberAddDto.Request memberRequestDto = MemberAddDto.Request.builder()
-			.name(StringGenerateFixture.makeByNumbersAndAlphabets(6))
-			.roleType(RoleType.CUSTOMER)
-			.email(StringGenerateFixture.makeEmail(8))
-			.password(StringGenerateFixture.makeByNumbersAndAlphabets(9))
-			.build();
-		doReturn(Optional.of(member)).when(memberRepository).findByEmail(any());
-		session = new MockHttpSession();
+		String encryptEmail = StringGenerateFixture.makeByHexCharacter(20);
+		Member member = Mockito.mock(Member.class);
+		doThrow(MemberNotFoundException.class).when(memberRepository).findByEmail(encryptEmail);
 
 		//when, then
-		assertThrows(MemberDuplicatedException.class,
-			() -> memberService.add(memberRequestDto, session));
+		assertThrows(MemberNotFoundException.class, () -> memberService.findByEncryptedEmail(encryptEmail));
 	}
 
 	@Test
@@ -144,4 +102,42 @@ class MemberServiceTest {
 		EasyRandom sellerRandom = new EasyRandom(sellerParam);
 		return sellerRandom.nextObject(Member.class);
 	}
+
+	@Test
+	@DisplayName("checkEmailDuplicated 성공 테스트")
+	public void checkEmailDuplicatedSuccess() {
+		//given
+		String encryptedEmail = StringGenerateFixture.makeEmail(10);
+		doReturn(Optional.empty()).when(memberRepository).findByEmail(encryptedEmail);
+
+		//when, then
+		memberService.checkEmailDuplicated(encryptedEmail);
+	}
+
+	@Test
+	@DisplayName("checkEmailDuplicated 실패 테스트")
+	public void checkEmailDuplicatedFailure() {
+		//given
+		Member member = getCustomer();
+		String encryptedEmail = StringGenerateFixture.makeEmail(10);
+		doReturn(Optional.of(member)).when(memberRepository).findByEmail(encryptedEmail);
+
+		//when, then
+		assertThrows(MemberDuplicatedException.class, () -> memberService.checkEmailDuplicated(encryptedEmail));
+	}
+
+	@Test
+	@DisplayName("add 성공 테스트")
+	void addSuccess() {
+
+		//given
+		Member member = getCustomer();
+
+		//when
+		memberService.add(member.getName(), member.getEmail(), member.getPassword(), member.getRoleType());
+
+		//then
+		verify(memberRepository).save(any(Member.class));
+	}
+
 }
