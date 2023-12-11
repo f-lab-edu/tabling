@@ -1,5 +1,6 @@
 package com.flab.tabling.store.domain;
 
+import com.flab.tabling.global.audit.BaseTime;
 import com.flab.tabling.member.domain.Member;
 
 import jakarta.persistence.Entity;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store {
+public class Store extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
