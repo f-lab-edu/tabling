@@ -34,7 +34,6 @@ public class MemberService {
 		}
 	}
 
-	@Transactional
 	public Member add(String name, String encryptedEmail, String encryptedPassword, RoleType roleType) {
 		Member member = Member.builder()
 			.name(name)
@@ -46,7 +45,6 @@ public class MemberService {
 		return member;
 	}
 
-	@Transactional(readOnly = true)
 	public boolean isSeller(Long memberId) {
 		Member targetMember = getMember(memberId);
 		return targetMember.isSeller(); // TODO: 2023-10-09 Member 엔티티 내부에서 처리
