@@ -32,13 +32,14 @@ public class StoreService {
 	}
 
 	@Transactional
-	public void update(Store targetStore, StoreUpdateDto.Request storeUpdateRequest) {
+	public StoreUpdateDto.Response update(Store targetStore, StoreUpdateDto.Request storeUpdateRequest) {
 		targetStore.update(
 			storeUpdateRequest.getName(),
 			storeUpdateRequest.getCategory(),
 			storeUpdateRequest.getDescription(),
 			storeUpdateRequest.getMaxWaitingCount()
 		);
+		return new StoreUpdateDto.Response(storeUpdateRequest.getId());
 	}
 
 	public void delete(Store targetStore) {

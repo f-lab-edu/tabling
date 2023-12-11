@@ -18,13 +18,14 @@ public class StoreQueryService {
 
 	private final StoreRepository storeRepository;
 
-	public Store getStore(Long storeId) {
-		return storeRepository.findById(storeId)
-			.orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND, "store is not found"));
+	public Store getStore(Long id) {
+		return storeRepository.findById(id)
+			.orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND,
+				"store with this id " + id + " is not found"));
 	}
 
-	public StoreFindDto.Response find(Long storeId) {
-		Store queriedStore = getStore(storeId);
+	public StoreFindDto.Response find(Long id) {
+		Store queriedStore = getStore(id);
 		return new StoreFindDto.Response(queriedStore);
 	}
 

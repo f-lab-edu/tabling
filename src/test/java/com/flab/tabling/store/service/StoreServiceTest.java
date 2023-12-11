@@ -54,9 +54,10 @@ class StoreServiceTest {
 		StoreUpdateDto.Request storeUpdateRequest = getStoreUpdateRequest(2L);
 
 		//when
-		storeService.update(targetStore, storeUpdateRequest);
+		StoreUpdateDto.Response storeUpdateResponse = storeService.update(targetStore, storeUpdateRequest);
 
 		//then
+		assertThat(storeUpdateResponse.getId()).isEqualTo(storeUpdateRequest.getId());
 		assertThat(targetStore.getName()).isEqualTo(storeUpdateRequest.getName());
 		assertThat(targetStore.getCategory()).isEqualTo(storeUpdateRequest.getCategory());
 		assertThat(targetStore.getDescription()).isEqualTo(storeUpdateRequest.getDescription());

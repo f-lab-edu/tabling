@@ -41,8 +41,7 @@ public class StoreFacade {
 	public StoreUpdateDto.Response update(StoreUpdateDto.Request storeUpdateRequest, Long sessionMemberId) {
 		Store targetStore = storeQueryService.getStore(storeUpdateRequest.getId());
 		storeService.validateAuth(targetStore, sessionMemberId);
-		storeService.update(targetStore, storeUpdateRequest);
-		return new StoreUpdateDto.Response(storeUpdateRequest.getId());
+		return storeService.update(targetStore, storeUpdateRequest);
 	}
 
 	public void delete(Long storeId, Long sessionMemberId) {

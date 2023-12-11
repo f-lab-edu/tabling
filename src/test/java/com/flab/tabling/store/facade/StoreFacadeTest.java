@@ -70,15 +70,15 @@ class StoreFacadeTest {
 	void findStoreSuccess() {
 		//given
 		Store savedStore = storeFixture.getStore(2L);
-		StoreFindDto.Response mockStoreFindResponse = new StoreFindDto.Response(savedStore);
+		StoreFindDto.Response storeFindResponse = new StoreFindDto.Response(savedStore);
 
-		doReturn(mockStoreFindResponse).when(storeQueryService).find(2L);
+		doReturn(storeFindResponse).when(storeQueryService).find(2L);
 
 		//when
-		StoreFindDto.Response storeFindResponse = storeFacade.find(2L);
+		storeFacade.find(2L);
 
 		//then
-		assertThat(storeFindResponse.getName()).isEqualTo(mockStoreFindResponse.getName());
+		verify(storeQueryService, times(1)).find(2L);
 	}
 
 	@Test
@@ -87,19 +87,15 @@ class StoreFacadeTest {
 		//given
 		List<Store> stores = storeFixture.getStores(2L, 3L);
 		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
-		Page<StoreFindDto.Response> mockStoreFindPage = new PageImpl<>(stores, pageable, 1).map(
-			StoreFindDto.Response::new);
+		Page<StoreFindDto.Response> storeFindPage = new PageImpl<>(stores, pageable, 1).map(StoreFindDto.Response::new);
 
-		doReturn(mockStoreFindPage).when(storeQueryService).findPage(pageable);
+		doReturn(storeFindPage).when(storeQueryService).findPage(pageable);
 
 		//when
-		Page<StoreFindDto.Response> storeFindPage = storeFacade.findPage(pageable);
+		storeFacade.findPage(pageable);
 
 		//then
-		List<StoreFindDto.Response> responsePage = storeFindPage.getContent();
-		assertThat(responsePage.size()).isEqualTo(2);
-		assertThat(responsePage.get(0)).usingRecursiveComparison().isEqualTo(new StoreFindDto.Response(stores.get(0)));
-		assertThat(responsePage.get(1)).usingRecursiveComparison().isEqualTo(new StoreFindDto.Response(stores.get(1)));
+		verify(storeQueryService, times(1)).findPage(pageable);
 	}
 
 	@Test
@@ -108,14 +104,16 @@ class StoreFacadeTest {
 		//given
 		Store targetStore = storeFixture.getStore(2L);
 		StoreUpdateDto.Request storeUpdateRequest = getStoreUpdateRequest(2L);
+		StoreUpdateDto.Response storeUpdateResponse = getStoreUpdateResponse(2L);
 
 		doReturn(targetStore).when(storeQueryService).getStore(storeUpdateRequest.getId());
+		doReturn(storeUpdateResponse).when(storeService).update(targetStore, storeUpdateRequest);
 
 		//when
-		StoreUpdateDto.Response storeUpdateResponse = storeFacade.update(storeUpdateRequest, 1L);
+		StoreUpdateDto.Response result = storeFacade.update(storeUpdateRequest, 1L);
 
 		//then
-		assertThat(storeUpdateResponse.getId()).isEqualTo(storeUpdateRequest.getId());
+		assertThat(result.getId()).isEqualTo(storeUpdateRequest.getId());
 		verify(storeQueryService, times(1)).getStore(2L);
 		verify(storeService, times(1)).validateAuth(any(Store.class), eq(1L));
 		verify(storeService, times(1)).update(any(Store.class), eq(storeUpdateRequest));
@@ -154,5 +152,11 @@ class StoreFacadeTest {
 		EasyRandomParameters parameters = new EasyRandomParameters()
 			.randomize(named("id"), () -> id);
 		return new EasyRandom(parameters).nextObject(StoreUpdateDto.Request.class);
+	}
+
+	private StoreUpdateDto.Response getStoreUpdateResponse(Long id) {
+		EasyRandomParameters parameters = new EasyRandomParameters()
+			.randomize(named("id"), () -> id);
+		return new EasyRandom(parameters).nextObject(StoreUpdateDto.Response.class);
 	}
 }
