@@ -14,20 +14,21 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpSession;
 
-import com.flab.tabling.global.service.CipherService;
-import com.flab.tabling.global.service.StringGenerateFixture;
-import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.constant.SessionConstant;
+import com.flab.tabling.global.service.CipherService;
+import com.flab.tabling.global.service.SessionService;
+import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.exception.InvalidPasswordException;
+import com.flab.tabling.member.facade.AuthFacade;
 
 import jakarta.servlet.http.HttpSession;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+class AuthFacadeTest {
 	@InjectMocks
-	AuthService authService;
+	AuthFacade authFacade;
 
 	@Mock
 	CipherService oneWayCipherService;
@@ -67,7 +68,7 @@ class AuthServiceTest {
 		HttpSession session = new MockHttpSession();
 
 		//when
-		MemberAuthDto.Response result = authService.login(memberRequestDto, session);
+		MemberAuthDto.Response result = authFacade.login(memberRequestDto, session);
 
 		//then
 		verify(sessionService).add(any(), eq(SessionConstant.MEMBER_NAME), anyString());
@@ -94,7 +95,7 @@ class AuthServiceTest {
 		MemberAuthDto.Response memberResponseDto = new MemberAuthDto.Response(1L);
 
 		//when, then
-		assertThrows(InvalidPasswordException.class, () -> authService.login(memberRequestDto, session));
+		assertThrows(InvalidPasswordException.class, () -> authFacade.login(memberRequestDto, session));
 	}
 
 }

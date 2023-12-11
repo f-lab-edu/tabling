@@ -3,8 +3,8 @@ package com.flab.tabling.member.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.flab.tabling.global.service.CipherService;
 import com.flab.tabling.global.exception.ErrorCode;
+import com.flab.tabling.global.service.CipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.exception.MemberNotFoundException;
 import com.flab.tabling.member.repository.MemberRepository;
@@ -21,6 +21,14 @@ public class MemberQueryService {
 	public Member findByEmail(String email) {
 		String encryptedEmail = twoWayCipherService.encrypt(email);
 		return memberRepository.findByEmail(encryptedEmail)
-			.orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "member with this email is not found"));
+			.orElseThrow(
+				() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "member with this email is not found"));
+	}
+
+	@Transactional(readOnly = true)
+	public Member findByEncryptedEmail(String encryptedEmail) {
+		return memberRepository.findByEmail(encryptedEmail)
+			.orElseThrow(
+				() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "member with this email is not found"));
 	}
 }

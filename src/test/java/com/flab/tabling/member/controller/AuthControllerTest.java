@@ -22,17 +22,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.global.constant.SessionConstant;
+import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.member.dto.MemberAuthDto;
-import com.flab.tabling.member.service.AuthService;
+import com.flab.tabling.member.facade.AuthFacade;
 
 @ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
 	@InjectMocks
 	private AuthController authController;
 	@Mock
-	private AuthService authService;
+	private AuthFacade authFacade;
 	private MockMvc mvc;
 	ObjectMapper objectMapper = new ObjectMapper();
 	private MockHttpSession session = new MockHttpSession();
@@ -42,7 +42,7 @@ class AuthControllerTest {
 		mvc = MockMvcBuilders.standaloneSetup(authController)
 			.build();
 	}
-	
+
 	@DisplayName("로그인 성공 테스트")
 	@Test
 	void loginSuccess() throws Exception {
@@ -57,7 +57,7 @@ class AuthControllerTest {
 
 		//when
 		MemberAuthDto.Response memberResponseDto = new MemberAuthDto.Response(1L);
-		doReturn(memberResponseDto).when(authService).login(any(), any());
+		doReturn(memberResponseDto).when(authFacade).login(any(), any());
 		MockHttpServletResponse response = mvc.perform(post("/login")
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON)
