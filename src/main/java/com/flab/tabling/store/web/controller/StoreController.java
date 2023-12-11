@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.flab.tabling.global.auth.Login;
 import com.flab.tabling.member.dto.MemberSession;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
-import com.flab.tabling.store.service.StoreService;
+import com.flab.tabling.store.facade.StoreFacade;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,45 +28,39 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class StoreController {
-	private final StoreService storeService;
+
+	private final StoreFacade storeFacade;
 
 	@PostMapping("/stores")
-	public ResponseEntity<StoreAddDto.Response> add(@Valid @RequestBody StoreAddDto.Request request,
-		@Login MemberSession memberSession) {
-		StoreAddDto.Response storeResponseDto = storeService.add(request, memberSession.getId());
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(storeResponseDto);
+	public ResponseEntity<StoreAddDto.Response> add(
+		@Valid @RequestBody StoreAddDto.Request request, @Login MemberSession memberSession) {
+		StoreAddDto.Response storeResponseDto = storeFacade.add(request, memberSession.getId());
+		return ResponseEntity.status(HttpStatus.CREATED).body(storeResponseDto);
 	}
 
 	@GetMapping("/stores/{id}")
 	public ResponseEntity<StoreFindDto.Response> find(@PathVariable(name = "id") Long storeId) {
-		StoreFindDto.Response storeFindResponse = storeService.find(storeId);
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(storeFindResponse);
+		StoreFindDto.Response storeFindResponse = storeFacade.find(storeId);
+		return ResponseEntity.status(HttpStatus.OK).body(storeFindResponse);
 	}
 
 	@GetMapping("/stores")
 	public ResponseEntity<Page<StoreFindDto.Response>> findPage(
 		@PageableDefault(sort = "id", direction = DESC) Pageable pageable) {
-		Page<StoreFindDto.Response> storeFindResponsePages = storeService.findPage(pageable);
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(storeFindResponsePages);
+		Page<StoreFindDto.Response> storeFindResponsePages = storeFacade.findPage(pageable);
+		return ResponseEntity.status(HttpStatus.OK).body(storeFindResponsePages);
 	}
 
 	@PutMapping("/stores/{id}")
 	public ResponseEntity<StoreUpdateDto.Response> update(
-		@Valid @RequestBody StoreUpdateDto.Request storeUpdateRequest,
-		@Login MemberSession memberSession) {
-		StoreUpdateDto.Response storeUpdateResponse = storeService.update(storeUpdateRequest, memberSession.getId());
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(storeUpdateResponse);
+		@Valid @RequestBody StoreUpdateDto.Request storeUpdateRequest, @Login MemberSession memberSession) {
+		StoreUpdateDto.Response storeUpdateResponse = storeFacade.update(storeUpdateRequest, memberSession.getId());
+		return ResponseEntity.status(HttpStatus.OK).body(storeUpdateResponse);
 	}
 
 	@DeleteMapping("/stores/{id}")
-	public ResponseEntity<Void> delete(@PathVariable(name = "id") Long storeId,
-		@Login MemberSession memberSession) {
-		storeService.delete(storeId, memberSession.getId());
+	public ResponseEntity<Void> delete(@PathVariable(name = "id") Long storeId, @Login MemberSession memberSession) {
+		storeFacade.delete(storeId, memberSession.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
 	}
 }
