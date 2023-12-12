@@ -18,11 +18,12 @@ import com.flab.tabling.businesshour.BusinessHourFixture;
 import com.flab.tabling.businesshour.domain.BusinessHour;
 import com.flab.tabling.businesshour.dto.BusinessHourFindDto;
 import com.flab.tabling.businesshour.repository.BusinessHourRepository;
+import com.flab.tabling.store.domain.Store;
 
 @ExtendWith(MockitoExtension.class)
-class BusinessHourQueryServiceImplTest {
+class BusinessHourQueryServiceTest {
 	@InjectMocks
-	private BusinessHourQueryServiceImpl businessHourQueryServiceImpl;
+	private BusinessHourQueryService businessHourQueryService;
 	@Mock
 	private BusinessHourRepository businessHourRepository;
 	private BusinessHourFixture businessHourFixture = FixtureFactory.businessHourFixture();
@@ -44,12 +45,12 @@ class BusinessHourQueryServiceImplTest {
 	void findSuccessWithStoreId() {
 		//given
 		List<BusinessHour> businessHours = businessHourFixture.getBusinessHoursWithBreakTime(2L, 8, 15, 18, 22);
+		Store targetStore = businessHours.get(0).getStore();
 
-		doReturn(businessHours).when(businessHourRepository)
-			.findList(2L);
+		doReturn(businessHours).when(businessHourRepository).findBusinessHoursByStore(targetStore);
 
 		//when
-		List<BusinessHourFindDto.Response> businessHourFindResponses = businessHourQueryServiceImpl.find(2L);
+		List<BusinessHourFindDto.Response> businessHourFindResponses = businessHourQueryService.find(targetStore);
 
 		//then
 		assertThat(businessHours.size()).isEqualTo(businessHourFindResponses.size());
@@ -66,7 +67,7 @@ class BusinessHourQueryServiceImplTest {
 			.findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
-		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
+		boolean result = businessHourQueryService.isBusinessHour(2L, requestDateTime);
 
 		//then
 		assertThat(result).isTrue();
@@ -83,7 +84,7 @@ class BusinessHourQueryServiceImplTest {
 			.findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
-		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
+		boolean result = businessHourQueryService.isBusinessHour(2L, requestDateTime);
 
 		//then
 		assertThat(result).isFalse();
@@ -98,7 +99,7 @@ class BusinessHourQueryServiceImplTest {
 		doReturn(List.of()).when(businessHourRepository).findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
-		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
+		boolean result = businessHourQueryService.isBusinessHour(2L, requestDateTime);
 
 		//then
 		assertThat(result).isFalse();

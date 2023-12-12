@@ -68,15 +68,17 @@ class BusinessHourFacadeTest {
 	@DisplayName("식당 id로 운영 시간 dto 조회에 성공한다.")
 	void findSuccessWithStoreId() {
 		//given
+		Store targetStore = storeFixture.getStore(2L);
 		List<BusinessHourFindDto.Response> businessHourFindResponses = getBusinessHourFindResponses();
 
-		doReturn(businessHourFindResponses).when(businessHourQueryService).find(2L);
+		doReturn(targetStore).when(storeQueryService).getStore(2L);
+		doReturn(businessHourFindResponses).when(businessHourQueryService).find(targetStore);
 
 		//when
 		businessHourFacade.find(2L);
 
 		//then
-		verify(businessHourQueryService, times(1)).find(2L);
+		verify(businessHourQueryService, times(1)).find(targetStore);
 	}
 
 	@Test

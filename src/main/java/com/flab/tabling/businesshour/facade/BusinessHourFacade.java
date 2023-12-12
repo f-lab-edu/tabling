@@ -33,7 +33,8 @@ public class BusinessHourFacade {
 	}
 
 	public List<BusinessHourFindDto.Response> find(Long storeId) {
-		return businessHourQueryService.find(storeId);
+		Store targetStore = storeQueryService.getStore(storeId);
+		return businessHourQueryService.find(targetStore);
 	}
 
 	@Transactional
