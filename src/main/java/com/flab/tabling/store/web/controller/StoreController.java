@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.flab.tabling.global.auth.Login;
 import com.flab.tabling.member.dto.MemberSession;
@@ -23,9 +22,11 @@ import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
 import com.flab.tabling.store.service.StoreService;
 
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Timed("api.timer")
 @RestController
 @RequiredArgsConstructor
 public class StoreController {

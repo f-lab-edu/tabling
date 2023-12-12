@@ -19,8 +19,10 @@ import com.flab.tabling.businesshour.dto.BusinessHourUpdateDto;
 import com.flab.tabling.businesshour.service.BusinessHourQueryService;
 import com.flab.tabling.businesshour.service.BusinessHourService;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 
+@Timed("api.timer")
 @RestController
 @RequiredArgsConstructor
 public class BusinessHourController {
