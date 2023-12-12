@@ -11,7 +11,7 @@ import com.flab.tabling.global.service.TwoWayCipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.exception.InvalidPasswordException;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +22,12 @@ public class AuthFacade {
 	private final TwoWayCipherService twoWayCipherService;
 	private final OneWayCipherService oneWayCipherService;
 	private final SessionService sessionService;
-	private final MemberService memberService;
+	private final MemberQueryService memberQueryService;
 
 	@Transactional(readOnly = true)
 	public MemberAuthDto.Response login(MemberAuthDto.Request memberRequestDto, HttpSession session) {
 		String encryptedEmail = twoWayCipherService.encrypt(memberRequestDto.getEmail());
-		Member member = memberService.findByEncryptedEmail(encryptedEmail);
+		Member member = memberQueryService.findByEncryptedEmail(encryptedEmail);
 		boolean isValid = oneWayCipherService.match(memberRequestDto.getPassword(), member.getPassword());
 		if (!isValid) {
 			throw new InvalidPasswordException(ErrorCode.AUTHENTICATION_FAILED, "password is invalid");

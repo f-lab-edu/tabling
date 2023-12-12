@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.flab.tabling.global.exception.AuthorizationException;
 import com.flab.tabling.member.domain.Member;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.store.service.StoreService;
 import com.flab.tabling.waiting.domain.Waiting;
@@ -29,7 +29,7 @@ class WaitingFacadeTest {
 	@Mock
 	StoreService storeService;
 	@Mock
-	MemberService memberService;
+	MemberQueryService memberQueryService;
 	@Mock
 	WaitingService waitingService;
 
@@ -46,7 +46,7 @@ class WaitingFacadeTest {
 
 		//when
 		doReturn(store).when(storeService).getStore(storeId);
-		doReturn(member).when(memberService).getMember(memberId);
+		doReturn(member).when(memberQueryService).getMember(memberId);
 		doReturn(waiting).when(waitingService).add(store, member, headCount);
 
 		//then
@@ -67,7 +67,7 @@ class WaitingFacadeTest {
 
 		//then
 		verify(storeService).getStore(anyLong());
-		verify(memberService).getMember(anyLong());
+		verify(memberQueryService).getMember(anyLong());
 		verify(waitingService).cancelMember(any(), any(), any());
 	}
 

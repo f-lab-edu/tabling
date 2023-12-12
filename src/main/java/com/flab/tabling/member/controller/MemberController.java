@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-	//private final MemberService memberService;
 	private final MemberFacade memberFacade;
 
 	@PostMapping("/members")

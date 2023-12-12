@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.member.domain.Member;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.store.service.StoreService;
 import com.flab.tabling.waiting.domain.Waiting;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WaitingFacade {
 	private final StoreService storeService;
-	private final MemberService memberService;
+	private final MemberQueryService memberQueryService;
 	private final WaitingService waitingService;
 	// private final BusinessHourQueryService businessHourQueryService;
 	//TODO: Business Hour 검증 로직 추가
@@ -25,7 +25,7 @@ public class WaitingFacade {
 	@Transactional
 	public WaitingAddDto.Response add(Long storeId, Long memberId, Integer headCount) {
 		Store store = storeService.getStore(storeId);
-		Member member = memberService.getMember(memberId);
+		Member member = memberQueryService.getMember(memberId);
 		Waiting waiting = waitingService.add(store, member, headCount);
 		return new WaitingAddDto.Response(waiting.getId());
 	}
@@ -33,7 +33,7 @@ public class WaitingFacade {
 	@Transactional
 	public void cancelByMember(Long storeId, Long memberId, Long waitingId) {
 		Store store = storeService.getStore(storeId);
-		Member member = memberService.getMember(memberId);
+		Member member = memberQueryService.getMember(memberId);
 		waitingService.cancelMember(store, member, waitingId);
 	}
 

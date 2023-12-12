@@ -22,6 +22,7 @@ import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.exception.MemberDuplicatedException;
+import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.member.service.MemberService;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +42,9 @@ class MemberFacadeTest {
 	MemberService memberService;
 
 	@Mock
+	MemberQueryService memberQueryService;
+
+	@Mock
 	MockHttpSession session;
 
 	@Test
@@ -57,7 +61,7 @@ class MemberFacadeTest {
 		String encryptedPassword = StringGenerateFixture.makeByNumbersAndLowerLetters(20);
 		String encryptedEmail = StringGenerateFixture.makeByNumbersAndLowerLetters(20);
 
-		doNothing().when(memberService).checkEmailDuplicated(encryptedEmail);
+		doNothing().when(memberQueryService).checkEmailDuplicated(encryptedEmail);
 		Member member = Mockito.mock(Member.class);
 		session = new MockHttpSession();
 		doReturn(encryptedPassword).when(oneWayCipherService).encrypt(memberRequestDto.getPassword());
@@ -89,7 +93,7 @@ class MemberFacadeTest {
 			.build();
 		String encryptedPassword = StringGenerateFixture.makeByNumbersAndLowerLetters(20);
 		String encryptedEmail = StringGenerateFixture.makeByNumbersAndLowerLetters(20);
-		doThrow(MemberDuplicatedException.class).when(memberService).checkEmailDuplicated(encryptedEmail);
+		doThrow(MemberDuplicatedException.class).when(memberQueryService).checkEmailDuplicated(encryptedEmail);
 		doReturn(encryptedPassword).when(oneWayCipherService).encrypt(memberRequestDto.getPassword());
 		doReturn(encryptedEmail).when(twoWayCipherService).encrypt(memberRequestDto.getEmail());
 
