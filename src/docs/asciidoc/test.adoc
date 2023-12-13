@@ -44,10 +44,6 @@ operation::business-hour-controller-rest-docs-test/success-update[snippets="http
 
 operation::business-hour-controller-rest-docs-test/success-delete[snippets="http-request,http-response"]
 
-== 운영 시간 단건 조회 성공
+== 식당별 운영 시간 조회 성공
 
 operation::business-hour-controller-rest-docs-test/success-find[snippets="http-request,http-response"]
-
-== 운영 시간 페이지 조회 성공
-
-operation::business-hour-controller-rest-docs-test/success-find-page[snippets="http-request,http-response"]

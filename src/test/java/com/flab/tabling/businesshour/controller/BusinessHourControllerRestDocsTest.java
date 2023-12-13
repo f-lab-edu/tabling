@@ -60,7 +60,7 @@ class BusinessHourControllerRestDocsTest extends AbstractRestDocsTest {
 
 	@Test
 	@DisplayName("특정 식당의 운영 시간 조회에 성공하면 상태코드와 응답을 반환한다.")
-	void successFindPage() throws Exception {
+	void successFind() throws Exception {
 		//given
 		List<BusinessHourFindDto.Response> businessHourFindResponses = getBusinessHourFindResponses();
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
