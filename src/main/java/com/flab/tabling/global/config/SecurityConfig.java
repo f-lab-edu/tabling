@@ -47,7 +47,7 @@ public class SecurityConfig {
 		return new AesBytesEncryptor(tablingProperties.getEncryptorPassword(), tablingProperties.getEncryptorSalt());
 	}
 
-	// @Bean
+	@Bean
 	public FilterRegistrationBean<Filter> authenticationFilter() {
 		FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
 		bean.setFilter(new AuthenticationFilter(tablingProperties, h2ConsoleProperties));
