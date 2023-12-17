@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.flab.tabling.member.dto.MemberAddDto;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.facade.MemberFacade;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -23,12 +23,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-	private final MemberService memberService;
+	private final MemberFacade memberFacade;
 
 	@PostMapping("/members")
 	private ResponseEntity<MemberAddDto.Response> add(HttpSession session,
 		@Valid @RequestBody MemberAddDto.Request memberRequestDto) {
-		MemberAddDto.Response memberResponseDto = memberService.add(memberRequestDto, session);
+		MemberAddDto.Response memberResponseDto = memberFacade.add(memberRequestDto, session);
 		return ResponseEntity
 			.status(HttpStatus.CREATED)
 			.body(memberResponseDto);

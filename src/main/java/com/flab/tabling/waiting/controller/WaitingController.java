@@ -32,9 +32,9 @@ public class WaitingController {
 	}
 
 	@DeleteMapping("/stores/{storeId}/waiting/{waitingId}")
-	public ResponseEntity<Void> cancelMyself(@Login MemberSession memberSession,
+	public ResponseEntity<Void> cancelByMember(@Login MemberSession memberSession,
 		@PathVariable Long storeId, @PathVariable Long waitingId) {
-		waitingFacade.cancelMember(storeId, memberSession.getId(), waitingId);
+		waitingFacade.cancelByMember(storeId, memberSession.getId(), waitingId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 

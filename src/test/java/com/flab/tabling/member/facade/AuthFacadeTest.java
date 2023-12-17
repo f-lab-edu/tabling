@@ -1,4 +1,4 @@
-package com.flab.tabling.member.service;
+package com.flab.tabling.member.facade;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -14,23 +14,28 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpSession;
 
-import com.flab.tabling.global.service.CipherService;
-import com.flab.tabling.global.service.StringGenerateFixture;
-import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.constant.SessionConstant;
+import com.flab.tabling.global.service.OneWayCipherService;
+import com.flab.tabling.global.service.SessionService;
+import com.flab.tabling.global.service.StringGenerateFixture;
+import com.flab.tabling.global.service.TwoWayCipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.exception.InvalidPasswordException;
+import com.flab.tabling.member.service.MemberQueryService;
 
 import jakarta.servlet.http.HttpSession;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+class AuthFacadeTest {
 	@InjectMocks
-	AuthService authService;
+	AuthFacade authFacade;
 
 	@Mock
-	CipherService oneWayCipherService;
+	OneWayCipherService oneWayCipherService;
+
+	@Mock
+	TwoWayCipherService twoWayCipherService;
 
 	@Mock
 	SessionService sessionService;
@@ -50,6 +55,7 @@ class AuthServiceTest {
 	void loginSuccess() {
 		//given
 		String email = StringGenerateFixture.makeEmail(10);
+		String encryptedEmail = StringGenerateFixture.makeByNumbersAndLowerLetters(10);
 		String passWord = StringGenerateFixture.makeByNumbersAndLowerLetters(10);
 		MemberAuthDto.Request memberRequestDto = MemberAuthDto.Request
 			.builder()
@@ -61,13 +67,14 @@ class AuthServiceTest {
 		doReturn(1L).when(member).getId();
 		doReturn("name").when(member).getName();
 		doReturn(sampleEncryptedPassword).when(member).getPassword();
-		doReturn(member).when(memberQueryService).findByEmail(email);
+		doReturn(encryptedEmail).when(twoWayCipherService).encrypt(email);
+		doReturn(member).when(memberQueryService).findByEncryptedEmail(encryptedEmail);
 		doReturn(true).when(oneWayCipherService).match(passWord, sampleEncryptedPassword);
 		MemberAuthDto.Response memberResponseDto = new MemberAuthDto.Response(1L);
 		HttpSession session = new MockHttpSession();
 
 		//when
-		MemberAuthDto.Response result = authService.login(memberRequestDto, session);
+		MemberAuthDto.Response result = authFacade.login(memberRequestDto, session);
 
 		//then
 		verify(sessionService).add(any(), eq(SessionConstant.MEMBER_NAME), anyString());
@@ -80,6 +87,7 @@ class AuthServiceTest {
 	void loginFailure() {
 		//given
 		String email = StringGenerateFixture.makeEmail(10);
+		String encryptedEmail = StringGenerateFixture.makeByNumbersAndLowerLetters(10);
 		String passWord = StringGenerateFixture.makeByNumbersAndLowerLetters(10);
 		MemberAuthDto.Request memberRequestDto = MemberAuthDto.Request
 			.builder()
@@ -89,12 +97,12 @@ class AuthServiceTest {
 		String sampleEncryptedPassword = StringGenerateFixture.makeByNumbersAndLowerLetters(20);
 		Member member = Mockito.mock(Member.class);
 		doReturn(sampleEncryptedPassword).when(member).getPassword();
-		doReturn(member).when(memberQueryService).findByEmail(email);
+		doReturn(encryptedEmail).when(twoWayCipherService).encrypt(email);
+		doReturn(member).when(memberQueryService).findByEncryptedEmail(encryptedEmail);
 		doReturn(false).when(oneWayCipherService).match(passWord, sampleEncryptedPassword);
-		MemberAuthDto.Response memberResponseDto = new MemberAuthDto.Response(1L);
 
 		//when, then
-		assertThrows(InvalidPasswordException.class, () -> authService.login(memberRequestDto, session));
+		assertThrows(InvalidPasswordException.class, () -> authFacade.login(memberRequestDto, session));
 	}
 
 }
