@@ -11,10 +11,12 @@ import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.facade.AuthFacade;
 
+import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Timed("api.timer")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {

@@ -14,9 +14,11 @@ import com.flab.tabling.member.dto.MemberSession;
 import com.flab.tabling.waiting.dto.WaitingAddDto;
 import com.flab.tabling.waiting.facade.WaitingFacade;
 
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Timed("api.timer")
 @Controller
 @RequiredArgsConstructor
 public class WaitingController {

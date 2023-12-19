@@ -22,9 +22,11 @@ import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
 import com.flab.tabling.store.facade.StoreFacade;
 
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Timed("api.timer")
 @RestController
 @RequiredArgsConstructor
 public class StoreController {

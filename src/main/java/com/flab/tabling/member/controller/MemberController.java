@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.facade.MemberFacade;
 
+import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,10 @@ import lombok.RequiredArgsConstructor;
  * @Component : 컴포넌트 스캔에서 스프링 빈으로 등록
  * @RequiredArgsConstructor : final 필드, @NonNull 필드에 대한 생성자 추가
  * @PostMapping : @RequestMapping(method = RequestMethod.POST
+ * @Timed : 시간 측정 메트릭을 지원하는 AOP 기능
  */
+
+@Timed("api.timer")
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
