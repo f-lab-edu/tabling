@@ -1,5 +1,8 @@
 package com.flab.tabling.store;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
@@ -19,6 +22,13 @@ public class StoreFixture {
 			.randomize(FieldPredicates.named("id"), () -> id)
 			.randomize(FieldPredicates.named("member"), () -> getMember(memberId));
 		return new EasyRandom(storeParameters).nextObject(Store.class);
+	}
+
+	public List<Store> getStores(Long storeAId, Long storeBId) {
+		List<Store> storeList = new ArrayList<>();
+		storeList.add(getStore(storeAId));
+		storeList.add(getStore(storeBId));
+		return storeList;
 	}
 
 	private Member getMember(Long id) { // TODO: 2023-11-19 PR 승인 후, MemberFixture로 이동

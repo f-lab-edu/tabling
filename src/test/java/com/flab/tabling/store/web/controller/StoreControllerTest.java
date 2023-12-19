@@ -32,7 +32,7 @@ import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
-import com.flab.tabling.store.service.StoreService;
+import com.flab.tabling.store.facade.StoreFacade;
 
 /*
 @ExtendWith: Junit의 확장기능, mock 객체를 사용하기 위해 mockito 확장
@@ -42,7 +42,7 @@ class StoreControllerTest {
 	@InjectMocks
 	private StoreController storeController;
 	@Mock
-	private StoreService storeService;
+	private StoreFacade storeFacade;
 	private MockMvc mockMvc;
 	private ObjectMapper objectMapper;
 	private EasyRandom easyRandom = new EasyRandom();
@@ -68,8 +68,7 @@ class StoreControllerTest {
 		StoreAddDto.Response responseDto = easyRandom.nextObject(StoreAddDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
-		doReturn(responseDto).when(storeService)
-			.add(any(), any());
+		doReturn(responseDto).when(storeFacade).add(any(), any());
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.post("/stores")
@@ -88,7 +87,7 @@ class StoreControllerTest {
 		StoreFindDto.Response responseDto = easyRandom.nextObject(StoreFindDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
-		doReturn(responseDto).when(storeService).find(2L);
+		doReturn(responseDto).when(storeFacade).find(2L);
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.get("/stores/{id}", 2L)
@@ -107,7 +106,7 @@ class StoreControllerTest {
 		PageImpl<StoreFindDto.Response> storeFindResponsePage = new PageImpl<>(storeFindResponseList, pageable, 1);
 		String responseJson = objectMapper.writeValueAsString(storeFindResponsePage);
 
-		doReturn(storeFindResponsePage).when(storeService).findPage(any(Pageable.class));
+		doReturn(storeFindResponsePage).when(storeFacade).findPage(any(Pageable.class));
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.get("/stores")
@@ -130,7 +129,7 @@ class StoreControllerTest {
 		StoreUpdateDto.Response storeUpdateResponse = easyRandom.nextObject(StoreUpdateDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(storeUpdateResponse);
 
-		doReturn(storeUpdateResponse).when(storeService).update(any(), any());
+		doReturn(storeUpdateResponse).when(storeFacade).update(any(), any());
 
 		//when
 		mockMvc.perform(MockMvcRequestBuilders.put("/stores/{id}", 2L)
