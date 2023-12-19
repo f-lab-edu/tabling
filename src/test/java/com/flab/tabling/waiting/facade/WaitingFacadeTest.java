@@ -13,8 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.flab.tabling.global.exception.AuthorizationException;
 import com.flab.tabling.member.domain.Member;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.domain.Store;
+import com.flab.tabling.store.service.StoreQueryService;
 import com.flab.tabling.store.service.StoreService;
 import com.flab.tabling.waiting.domain.Waiting;
 import com.flab.tabling.waiting.dto.WaitingAddDto;
@@ -29,7 +30,9 @@ class WaitingFacadeTest {
 	@Mock
 	StoreService storeService;
 	@Mock
-	MemberService memberService;
+	StoreQueryService storeQueryService;
+	@Mock
+	MemberQueryService memberQueryService;
 	@Mock
 	WaitingService waitingService;
 
@@ -45,8 +48,8 @@ class WaitingFacadeTest {
 		Integer headCount = waiting.getHeadCount();
 
 		//when
-		doReturn(store).when(storeService).getStore(storeId);
-		doReturn(member).when(memberService).getMember(memberId);
+		doReturn(store).when(storeQueryService).getStore(storeId);
+		doReturn(member).when(memberQueryService).getMember(memberId);
 		doReturn(waiting).when(waitingService).add(store, member, headCount);
 
 		//then
@@ -63,11 +66,11 @@ class WaitingFacadeTest {
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
 
 		//when
-		waitingFacade.cancelMember(store.getId(), member.getId(), waiting.getId());
+		waitingFacade.cancelByMember(store.getId(), member.getId(), waiting.getId());
 
 		//then
-		verify(storeService).getStore(anyLong());
-		verify(memberService).getMember(anyLong());
+		verify(storeQueryService).getStore(anyLong());
+		verify(memberQueryService).getMember(anyLong());
 		verify(waitingService).cancelMember(any(), any(), any());
 	}
 
@@ -82,7 +85,7 @@ class WaitingFacadeTest {
 		waitingFacade.cancelFirst(store.getId(), seller.getId());
 
 		//then
-		verify(storeService).getStore(anyLong());
+		verify(storeQueryService).getStore(anyLong());
 		verify(storeService).validateAuth(any(), anyLong());
 		verify(waitingService).cancelFirst(any());
 	}
@@ -95,7 +98,7 @@ class WaitingFacadeTest {
 		Store store = WaitingFixture.getStore(seller);
 
 		//when
-		doReturn(store).when(storeService).getStore(store.getId());
+		doReturn(store).when(storeQueryService).getStore(store.getId());
 		doThrow(AuthorizationException.class).when(storeService).validateAuth(store, seller.getId());
 
 		//then
@@ -113,7 +116,7 @@ class WaitingFacadeTest {
 		waitingFacade.acceptFirst(store.getId(), seller.getId());
 
 		//then
-		verify(storeService).getStore(anyLong());
+		verify(storeQueryService).getStore(anyLong());
 		verify(storeService).validateAuth(any(), anyLong());
 		verify(waitingService).acceptFirst(any());
 	}
@@ -126,7 +129,7 @@ class WaitingFacadeTest {
 		Store store = WaitingFixture.getStore(seller);
 
 		//when
-		doReturn(store).when(storeService).getStore(store.getId());
+		doReturn(store).when(storeQueryService).getStore(store.getId());
 		doThrow(AuthorizationException.class).when(storeService).validateAuth(store, seller.getId());
 
 		//then

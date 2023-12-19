@@ -8,7 +8,7 @@ import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.global.exception.AuthorizationException;
 import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.member.exception.MemberNotFoundException;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class StoreAuthInterceptor implements HandlerInterceptor {
-	private final MemberService memberService;
+	private final MemberQueryService memberQueryService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -33,7 +33,7 @@ public class StoreAuthInterceptor implements HandlerInterceptor {
 
 	private void memberRoleTypeValidation(HttpSession session) {
 		Long sessionMemberId = getSessionMemberId(session);
-		boolean isSeller = memberService.isSeller(sessionMemberId);
+		boolean isSeller = memberQueryService.isSeller(sessionMemberId);
 		if (!isSeller) {
 			throw new AuthorizationException(ErrorCode.AUTHORIZATION_FAILED, "member is not a seller");
 		}

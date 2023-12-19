@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.flab.tabling.businesshour.dto.BusinessHourAddDto;
 import com.flab.tabling.businesshour.dto.BusinessHourFindDto;
 import com.flab.tabling.businesshour.dto.BusinessHourUpdateDto;
-import com.flab.tabling.businesshour.service.BusinessHourQueryService;
-import com.flab.tabling.businesshour.service.BusinessHourService;
+import com.flab.tabling.businesshour.facade.BusinessHourFacade;
+import com.flab.tabling.global.auth.Login;
+import com.flab.tabling.member.dto.MemberSession;
 
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
@@ -27,34 +27,34 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BusinessHourController {
 
-	public final BusinessHourService businessHourService;
-	public final BusinessHourQueryService businessHourQueryService;
+	public final BusinessHourFacade businessHourFacade;
 
 	@PostMapping("/stores/{storeId}/business-hours")
-	public ResponseEntity<BusinessHourAddDto.Response> add(@SessionAttribute(name = "MEMBER_ID") Long memberId,
-		@RequestBody BusinessHourAddDto.Request businessHourAddRequest) { // TODO: 2023-11-19 SessionAttribute Enum type 미지원, 타입 변경 고려
-		BusinessHourAddDto.Response businessHourAddResponse = businessHourService.add(memberId, businessHourAddRequest);
+	public ResponseEntity<BusinessHourAddDto.Response> add(
+		@Login MemberSession memberSession, @RequestBody BusinessHourAddDto.Request businessHourAddRequest) {
+		BusinessHourAddDto.Response businessHourAddResponse = businessHourFacade.add(memberSession.getId(),
+			businessHourAddRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(businessHourAddResponse);
 	}
 
 	@GetMapping("/stores/{storeId}/business-hours")
 	public ResponseEntity<List<BusinessHourFindDto.Response>> find(@PathVariable Long storeId) {
-		List<BusinessHourFindDto.Response> businessHourFindResponses = businessHourQueryService.find(storeId);
+		List<BusinessHourFindDto.Response> businessHourFindResponses = businessHourFacade.find(storeId);
 		return ResponseEntity.status(HttpStatus.OK).body(businessHourFindResponses);
 	}
 
 	@PutMapping("/stores/{storeId}/business-hours/{id}")
-	public ResponseEntity<BusinessHourUpdateDto.Response> update(@PathVariable Long id,
-		@SessionAttribute(name = "MEMBER_ID") Long memberId,
-		@RequestBody BusinessHourUpdateDto.Request businessHourUpdateRequest) { // TODO: 2023-11-19 SessionAttribute Enum type 미지원, 타입 변경 고려
-		BusinessHourUpdateDto.Response businessHourUpdateResponse = businessHourService.update(id, memberId,
+	public ResponseEntity<BusinessHourUpdateDto.Response> update(
+		@PathVariable(value = "id") Long id, @Login MemberSession memberSession,
+		@RequestBody BusinessHourUpdateDto.Request businessHourUpdateRequest) {
+		BusinessHourUpdateDto.Response businessHourUpdateResponse = businessHourFacade.update(id, memberSession.getId(),
 			businessHourUpdateRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(businessHourUpdateResponse);
 	}
 
 	@DeleteMapping("/stores/{storeId}/business-hours/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id, @SessionAttribute(name = "MEMBER_ID") Long memberId) {
-		businessHourService.delete(id, memberId); // TODO: 2023-11-19 SessionAttribute Enum type 미지원, 타입 변경 고려
+	public ResponseEntity<Void> delete(@PathVariable(value = "id") Long id, @Login MemberSession memberSession) {
+		businessHourFacade.delete(id, memberSession.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

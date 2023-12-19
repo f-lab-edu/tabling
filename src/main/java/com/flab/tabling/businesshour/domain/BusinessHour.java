@@ -3,6 +3,7 @@ package com.flab.tabling.businesshour.domain;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
+import com.flab.tabling.global.audit.BaseTime;
 import com.flab.tabling.store.domain.Store;
 
 import jakarta.persistence.Entity;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BusinessHour {
+public class BusinessHour extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

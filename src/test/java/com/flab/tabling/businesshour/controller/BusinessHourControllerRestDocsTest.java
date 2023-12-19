@@ -24,16 +24,14 @@ import com.flab.tabling.businesshour.BusinessHourFixture;
 import com.flab.tabling.businesshour.dto.BusinessHourAddDto;
 import com.flab.tabling.businesshour.dto.BusinessHourFindDto;
 import com.flab.tabling.businesshour.dto.BusinessHourUpdateDto;
-import com.flab.tabling.businesshour.service.BusinessHourQueryServiceImpl;
-import com.flab.tabling.businesshour.service.BusinessHourService;
+import com.flab.tabling.businesshour.facade.BusinessHourFacade;
 import com.flab.tabling.global.config.AbstractRestDocsTest;
 
 @WebMvcTest(BusinessHourController.class)
 class BusinessHourControllerRestDocsTest extends AbstractRestDocsTest {
+
 	@MockBean
-	private BusinessHourService businessHourService;
-	@MockBean
-	private BusinessHourQueryServiceImpl businessHourQueryService;
+	private BusinessHourFacade businessHourFacade;
 	private BusinessHourFixture businessHourFixture = FixtureFactory.businessHourFixture();
 
 	@Test
@@ -47,7 +45,7 @@ class BusinessHourControllerRestDocsTest extends AbstractRestDocsTest {
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
 			.writeValueAsString(businessHourAddResponse);
 
-		doReturn(businessHourAddResponse).when(businessHourService).add(eq(1L), any(BusinessHourAddDto.Request.class));
+		doReturn(businessHourAddResponse).when(businessHourFacade).add(any(), any(BusinessHourAddDto.Request.class));
 
 		//expected
 		mockMvc.perform(post("/stores/{storeId}/business-hours", 2L)
@@ -60,13 +58,13 @@ class BusinessHourControllerRestDocsTest extends AbstractRestDocsTest {
 
 	@Test
 	@DisplayName("특정 식당의 운영 시간 조회에 성공하면 상태코드와 응답을 반환한다.")
-	void successFindPage() throws Exception {
+	void successFindList() throws Exception {
 		//given
 		List<BusinessHourFindDto.Response> businessHourFindResponses = getBusinessHourFindResponses();
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
 			.writeValueAsString(businessHourFindResponses);
 
-		doReturn(businessHourFindResponses).when(businessHourQueryService).find(2L);
+		doReturn(businessHourFindResponses).when(businessHourFacade).find(2L);
 
 		//expected
 		mockMvc.perform(get("/stores/{storeId}/business-hours", 2L)
@@ -86,8 +84,8 @@ class BusinessHourControllerRestDocsTest extends AbstractRestDocsTest {
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
 			.writeValueAsString(businessHourUpdateResponse);
 
-		doReturn(businessHourUpdateResponse).when(businessHourService)
-			.update(eq(3L), eq(1L), any(BusinessHourUpdateDto.Request.class));
+		doReturn(businessHourUpdateResponse).when(businessHourFacade)
+			.update(any(), any(), any(BusinessHourUpdateDto.Request.class));
 
 		//expected
 		mockMvc.perform(put("/stores/{storeId}/business-hours/{id}", 2L, 3L)

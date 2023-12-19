@@ -2,6 +2,7 @@ package com.flab.tabling.waiting.service;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.exception.ErrorCode;
 import com.flab.tabling.member.domain.Member;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class WaitingService {
 	private final WaitingRepository waitingRepository;
 
+	@Transactional
 	public Waiting add(Store store, Member member, Integer headCount) {
 		checkWaitingQueueFull(store);
 		if (waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING).isPresent()) {
@@ -41,6 +43,7 @@ public class WaitingService {
 		return waiting;
 	}
 
+	@Transactional
 	public void cancelMember(Store store, Member member, Long waitingId) {
 		Waiting waiting = waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING)
 			.orElseThrow(() -> new WaitingNotFoundException(ErrorCode.PARAMETER_NOT_FOUND,
@@ -51,6 +54,7 @@ public class WaitingService {
 		waitingRepository.delete(waiting);
 	}
 
+	@Transactional
 	public void cancelFirst(Store store) {
 		Waiting waiting = waitingRepository.findFirstByStoreAndStatusOrderByCreatedAt(store, WaitingStatus.ONGOING)
 			.orElseThrow(() -> new WaitingNotFoundException(ErrorCode.STORE_NOT_FOUND,
@@ -58,6 +62,7 @@ public class WaitingService {
 		waitingRepository.delete(waiting);
 	}
 
+	@Transactional
 	public void acceptFirst(Store store) {
 		Waiting waiting = waitingRepository.findFirstByStoreAndStatus(store, WaitingStatus.ONGOING)
 			.orElseThrow(() -> new WaitingNotFoundException(ErrorCode.STORE_NOT_FOUND,

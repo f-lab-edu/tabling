@@ -18,26 +18,39 @@ import com.flab.tabling.businesshour.BusinessHourFixture;
 import com.flab.tabling.businesshour.domain.BusinessHour;
 import com.flab.tabling.businesshour.dto.BusinessHourFindDto;
 import com.flab.tabling.businesshour.repository.BusinessHourRepository;
+import com.flab.tabling.store.domain.Store;
 
 @ExtendWith(MockitoExtension.class)
-class BusinessHourQueryServiceImplTest {
+class BusinessHourQueryServiceTest {
 	@InjectMocks
-	private BusinessHourQueryServiceImpl businessHourQueryServiceImpl;
+	private BusinessHourQueryService businessHourQueryService;
 	@Mock
 	private BusinessHourRepository businessHourRepository;
 	private BusinessHourFixture businessHourFixture = FixtureFactory.businessHourFixture();
 
 	@Test
-	@DisplayName("식당 id로 운영 시간 조회에 성공하면 해당 식당의 모든 운영 시간을 반환한다.")
-	void successWithStoreId() {
+	@DisplayName("식당 id로 운영 시간 도메인 조회에 성공한다.")
+	void getStoreSuccessWithStoreId() {
+
+	}
+
+	@Test
+	@DisplayName("식당 id로 운영 시간 도메인 조회에 실패하면 예외가 발생한다.")
+	void getStoreFailWithStoreId() {
+
+	}
+
+	@Test
+	@DisplayName("식당 id로 운영 시간 dto 조회에 성공하면 해당 식당의 모든 운영 시간을 반환한다.")
+	void findSuccessWithStoreId() {
 		//given
 		List<BusinessHour> businessHours = businessHourFixture.getBusinessHoursWithBreakTime(2L, 8, 15, 18, 22);
+		Store targetStore = businessHours.get(0).getStore();
 
-		doReturn(businessHours).when(businessHourRepository)
-			.findList(2L);
+		doReturn(businessHours).when(businessHourRepository).findBusinessHoursByStore(targetStore);
 
 		//when
-		List<BusinessHourFindDto.Response> businessHourFindResponses = businessHourQueryServiceImpl.find(2L);
+		List<BusinessHourFindDto.Response> businessHourFindResponses = businessHourQueryService.find(targetStore);
 
 		//then
 		assertThat(businessHours.size()).isEqualTo(businessHourFindResponses.size());
@@ -45,7 +58,7 @@ class BusinessHourQueryServiceImplTest {
 
 	@Test
 	@DisplayName("요청한 시간이 운영 시간이 맞다면 true를 반환한다.")
-	void successWithCorrectBusinessHour() {
+	void findSuccessWithCorrectBusinessHour() {
 		//given
 		LocalDateTime requestDateTime = businessHourFixture.getLocalDateTime(9);
 		List<BusinessHour> targetBusinessHours = businessHourFixture.getBusinessHoursWithBreakTime(2L, 8, 15, 18, 22);
@@ -54,7 +67,7 @@ class BusinessHourQueryServiceImplTest {
 			.findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
-		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
+		boolean result = businessHourQueryService.isBusinessHour(2L, requestDateTime);
 
 		//then
 		assertThat(result).isTrue();
@@ -71,7 +84,7 @@ class BusinessHourQueryServiceImplTest {
 			.findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
-		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
+		boolean result = businessHourQueryService.isBusinessHour(2L, requestDateTime);
 
 		//then
 		assertThat(result).isFalse();
@@ -86,7 +99,7 @@ class BusinessHourQueryServiceImplTest {
 		doReturn(List.of()).when(businessHourRepository).findList(2L, requestDateTime.getDayOfWeek());
 
 		//when
-		boolean result = businessHourQueryServiceImpl.isBusinessHour(2L, requestDateTime);
+		boolean result = businessHourQueryService.isBusinessHour(2L, requestDateTime);
 
 		//then
 		assertThat(result).isFalse();
