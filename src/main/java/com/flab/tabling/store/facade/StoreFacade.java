@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.member.domain.Member;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
@@ -22,10 +22,10 @@ public class StoreFacade {
 
 	private final StoreService storeService;
 	private final StoreQueryService storeQueryService;
-	private final MemberService memberService; // TODO: 2023-12-11 회원 조회 서비스로 수정 필요
+	private final MemberQueryService memberQueryService;
 
 	public StoreAddDto.Response add(StoreAddDto.Request storeAddRequest, Long memberId) {
-		Member seller = memberService.getMember(memberId);
+		Member seller = memberQueryService.getMember(memberId);
 		return storeService.add(storeAddRequest, seller);
 	}
 

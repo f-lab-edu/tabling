@@ -20,7 +20,7 @@ import com.flab.tabling.global.exception.ErrorResponse;
 import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.facade.MemberFacade;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -36,9 +36,9 @@ import jakarta.servlet.http.HttpSession;
 class MemberControllerRestDocsTest extends AbstractRestDocsTest {
 	private final String postURI = "/members";
 
-	@MockBean MemberService memberService;
+	@MockBean
+	MemberFacade memberFacade;
 	private MockHttpSession session = new MockHttpSession();
-
 
 	@DisplayName("회원가입")
 	@Test
@@ -58,7 +58,7 @@ class MemberControllerRestDocsTest extends AbstractRestDocsTest {
 			.build();
 		MemberAddDto.Response memberResponseDto = new MemberAddDto.Response(1L);
 
-		given(memberService.add(any(MemberAddDto.Request.class), any(HttpSession.class)))
+		given(memberFacade.add(any(MemberAddDto.Request.class), any(HttpSession.class)))
 			.willReturn(memberResponseDto);
 
 		//when

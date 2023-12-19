@@ -1,10 +1,11 @@
 package com.flab.tabling.member.controller;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import com.flab.tabling.global.config.AbstractRestDocsTest;
 import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.global.service.StringGenerateFixture;
 import com.flab.tabling.member.dto.MemberAuthDto;
-import com.flab.tabling.member.service.AuthService;
+import com.flab.tabling.member.facade.AuthFacade;
 
 /**
  * @AutoConfigureMockMvc : WebApplicationContext 주입
@@ -28,8 +30,9 @@ import com.flab.tabling.member.service.AuthService;
 @WebMvcTest(controllers = {AuthController.class})
 class AuthControllerRestDocsTest extends AbstractRestDocsTest {
 	@MockBean
-	AuthService authService;
+	AuthFacade authFacade;
 	private MockHttpSession session = new MockHttpSession();
+
 	@DisplayName("로그인 성공 테스트")
 	@Test
 	void loginSuccess() throws Exception {
@@ -44,7 +47,7 @@ class AuthControllerRestDocsTest extends AbstractRestDocsTest {
 
 		//when
 		MemberAuthDto.Response memberResponseDto = new MemberAuthDto.Response(1L);
-		doReturn(memberResponseDto).when(authService).login(any(), any());
+		doReturn(memberResponseDto).when(authFacade).login(any(), any());
 		MockHttpServletResponse response = mockMvc.perform(post("/login")
 				.session(session)
 				.contentType(MediaType.APPLICATION_JSON)

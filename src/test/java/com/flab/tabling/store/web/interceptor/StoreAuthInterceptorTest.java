@@ -17,7 +17,7 @@ import org.springframework.mock.web.MockHttpSession;
 
 import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.exception.MemberNotFoundException;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -27,7 +27,7 @@ class StoreAuthInterceptorTest {
 	@InjectMocks
 	private StoreAuthInterceptor storeAuthInterceptor;
 	@Mock
-	private MemberService memberService;
+	private MemberQueryService memberQueryService;
 
 	@Test
 	@DisplayName("요청 메서드가 GET이라면 검증 로직을 수행하지 않는다.")
@@ -54,7 +54,7 @@ class StoreAuthInterceptorTest {
 		requestMock.setMethod(HttpMethod.POST.name());
 		requestMock.setSession(sessionMock);
 
-		doReturn(true).when(memberService)
+		doReturn(true).when(memberQueryService)
 			.isSeller(1L);
 
 		//when
@@ -74,7 +74,7 @@ class StoreAuthInterceptorTest {
 		requestMock.setSession(sessionMock);
 		requestMock.setMethod(HttpMethod.POST.name());
 
-		doReturn(false).when(memberService)
+		doReturn(false).when(memberQueryService)
 			.isSeller(1L);
 
 		//expected todo 커스텀 인증예외로 교체 필요

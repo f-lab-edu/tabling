@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.dto.MemberAuthDto;
-import com.flab.tabling.member.service.AuthService;
+import com.flab.tabling.member.facade.AuthFacade;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -18,13 +18,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-	private final AuthService authService;
+	private final AuthFacade authFacade;
 
 	@PostMapping("/login")
 	public ResponseEntity<MemberAuthDto.Response> login(HttpSession session,
 		@Valid @RequestBody MemberAuthDto.Request memberRequestDto) {
 
-		MemberAuthDto.Response memberResponseDto = authService.login(memberRequestDto, session);
+		MemberAuthDto.Response memberResponseDto = authFacade.login(memberRequestDto, session);
 		return ResponseEntity
 			.status(HttpStatus.OK)
 			.body(memberResponseDto);

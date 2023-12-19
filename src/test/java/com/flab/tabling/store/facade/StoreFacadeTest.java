@@ -23,7 +23,7 @@ import org.springframework.data.domain.Sort;
 
 import com.flab.tabling.FixtureFactory;
 import com.flab.tabling.member.domain.Member;
-import com.flab.tabling.member.service.MemberService;
+import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.StoreFixture;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.store.dto.StoreAddDto;
@@ -42,7 +42,7 @@ class StoreFacadeTest {
 	@Mock
 	private StoreQueryService storeQueryService;
 	@Mock
-	private MemberService memberService;
+	private MemberQueryService memberQueryService;
 	private EasyRandom easyRandom = new EasyRandom();
 	private StoreFixture storeFixture = FixtureFactory.storeFixture();
 
@@ -54,7 +54,7 @@ class StoreFacadeTest {
 		StoreAddDto.Request mockStoreAddRequest = getStoreAddRequest();
 		StoreAddDto.Response mockStoreAddResponse = getStoreAddResponse();
 
-		doReturn(seller).when(memberService).getMember(1L);
+		doReturn(seller).when(memberQueryService).getMember(1L);
 		doReturn(mockStoreAddResponse).when(storeService).add(mockStoreAddRequest, seller);
 
 		//when
@@ -62,7 +62,7 @@ class StoreFacadeTest {
 
 		//then
 		assertThat(storeAddResponse.getId()).isEqualTo(mockStoreAddResponse.getId());
-		verify(memberService, times(1)).getMember(1L);
+		verify(memberQueryService, times(1)).getMember(1L);
 	}
 
 	@Test

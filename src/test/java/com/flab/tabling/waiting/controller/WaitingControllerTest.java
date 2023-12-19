@@ -63,6 +63,7 @@ class WaitingControllerTest extends AbstractRestDocsTest {
 	}
 
 	@Test
+	@DisplayName("가게의 대기열 첫번째 고객 입장 처리 성공")
 	void acceptFirstOfStore() throws Exception {
 		//given
 		session.setAttribute(SessionConstant.MEMBER_ID.name(), 3L);
@@ -78,6 +79,7 @@ class WaitingControllerTest extends AbstractRestDocsTest {
 	}
 
 	@Test
+	@DisplayName("가게의 대기열 첫번째 고객 입장 취소 성공")
 	void cancelFirstOfStore() throws Exception {
 		//given
 		session.setAttribute(SessionConstant.MEMBER_ID.name(), 3L);
