@@ -1,5 +1,6 @@
 package com.flab.tabling.store.web.controller;
 
+import static org.jeasy.random.FieldPredicates.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -7,7 +8,6 @@ import java.util.List;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.FieldPredicates;
 import org.jeasy.random.randomizers.range.IntegerRangeRandomizer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,18 +34,13 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 	@MockBean
 	private StoreFacade storeFacade;
 
-	private EasyRandom easyRandom = new EasyRandom();
-
 	@Test
 	@DisplayName("식당 등록 요청이 성공하면 등록한 식당에 대한 응답과 상태코드를 반환한다.")
 	void addStoreSuccess() throws Exception {
 		//given
-		EasyRandomParameters conditions = getStoreDtoConditions();
-		EasyRandom easyRandom = new EasyRandom(conditions);
-
+		EasyRandom easyRandom = getStoreDtoEasyRandom();
 		StoreAddDto.Request requestDto = easyRandom.nextObject(StoreAddDto.Request.class);
 		String requestJson = objectMapper.writeValueAsString(requestDto);
-
 		StoreAddDto.Response responseDto = easyRandom.nextObject(StoreAddDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
@@ -65,6 +60,7 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 	@DisplayName("식당 조회 요청이 성공하면 식당 정보와 상태코드를 반환한다.")
 	void findStoreSuccess() throws Exception {
 		//given
+		EasyRandom easyRandom = getStoreDtoEasyRandom();
 		StoreFindDto.Response responseDto = easyRandom.nextObject(StoreFindDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
@@ -101,12 +97,9 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 	@DisplayName("수정 요청이 성공적으로 수행되면, 상태코드와 함께 응답을 반환한다.")
 	void updateStoreSuccess() throws Exception {
 		//given
-		EasyRandomParameters conditions = getStoreDtoConditions();
-		EasyRandom easyRandom = new EasyRandom(conditions);
-
+		EasyRandom easyRandom = getStoreDtoEasyRandom();
 		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
 		String requestJson = objectMapper.writeValueAsString(storeUpdateRequest);
-
 		StoreUpdateDto.Response storeUpdateResponse = easyRandom.nextObject(StoreUpdateDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(storeUpdateResponse);
 
@@ -133,14 +126,21 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 			.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
+	private EasyRandom getStoreDtoEasyRandom() {
+		EasyRandomParameters conditions = getStoreDtoConditions();
+		return new EasyRandom(conditions);
+	}
+
 	private EasyRandomParameters getStoreDtoConditions() {
 		return new EasyRandomParameters()
-			.stringLengthRange(2, 20)
-			.randomize(FieldPredicates.named("id"), () -> 2L)
-			.randomize(FieldPredicates.named("maxWaitingCount"), new IntegerRangeRandomizer(1, 50));
+			.randomize(named("id"), () -> 2L)
+			.randomize(named("name"), () -> "식당이름")
+			.randomize(named("description"), () -> "식당정보")
+			.randomize(named("maxWaitingCount"), new IntegerRangeRandomizer(1, 50));
 	}
 
 	private List<StoreFindDto.Response> getStoreFindResponseList() {
+		EasyRandom easyRandom = getStoreDtoEasyRandom();
 		StoreFindDto.Response storeFindResponseA = easyRandom.nextObject(StoreFindDto.Response.class);
 		StoreFindDto.Response storeFindResponseB = easyRandom.nextObject(StoreFindDto.Response.class);
 
