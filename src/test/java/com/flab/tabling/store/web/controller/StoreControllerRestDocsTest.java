@@ -26,13 +26,13 @@ import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.store.dto.StoreAddDto;
 import com.flab.tabling.store.dto.StoreFindDto;
 import com.flab.tabling.store.dto.StoreUpdateDto;
-import com.flab.tabling.store.service.StoreService;
+import com.flab.tabling.store.facade.StoreFacade;
 
 @WebMvcTest(StoreController.class)
 class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 
 	@MockBean
-	private StoreService storeService;
+	private StoreFacade storeFacade;
 
 	@Test
 	@DisplayName("식당 등록 요청이 성공하면 등록한 식당에 대한 응답과 상태코드를 반환한다.")
@@ -44,7 +44,7 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 		StoreAddDto.Response responseDto = easyRandom.nextObject(StoreAddDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
-		doReturn(responseDto).when(storeService).add(any(), any());
+		doReturn(responseDto).when(storeFacade).add(any(), any());
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.post("/stores")
@@ -64,7 +64,7 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 		StoreFindDto.Response responseDto = easyRandom.nextObject(StoreFindDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
-		doReturn(responseDto).when(storeService).find(2L);
+		doReturn(responseDto).when(storeFacade).find(2L);
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.get("/stores/{id}", 2L)
@@ -83,7 +83,7 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 		PageImpl<StoreFindDto.Response> storeFindResponsePage = new PageImpl<>(storeFindResponseList, pageable, 1);
 		String responseJson = objectMapper.writeValueAsString(storeFindResponsePage);
 
-		doReturn(storeFindResponsePage).when(storeService).findPage(any(Pageable.class));
+		doReturn(storeFindResponsePage).when(storeFacade).findPage(any(Pageable.class));
 
 		//expected
 		mockMvc.perform(MockMvcRequestBuilders.get("/stores")
@@ -103,7 +103,7 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 		StoreUpdateDto.Response storeUpdateResponse = easyRandom.nextObject(StoreUpdateDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(storeUpdateResponse);
 
-		doReturn(storeUpdateResponse).when(storeService).update(any(), any());
+		doReturn(storeUpdateResponse).when(storeFacade).update(any(), any());
 
 		//when
 		mockMvc.perform(MockMvcRequestBuilders.put("/stores/{id}", 2L)

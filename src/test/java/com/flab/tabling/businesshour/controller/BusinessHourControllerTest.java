@@ -31,17 +31,14 @@ import com.flab.tabling.businesshour.BusinessHourFixture;
 import com.flab.tabling.businesshour.dto.BusinessHourAddDto;
 import com.flab.tabling.businesshour.dto.BusinessHourFindDto;
 import com.flab.tabling.businesshour.dto.BusinessHourUpdateDto;
-import com.flab.tabling.businesshour.service.BusinessHourQueryServiceImpl;
-import com.flab.tabling.businesshour.service.BusinessHourService;
+import com.flab.tabling.businesshour.facade.BusinessHourFacade;
 
 @ExtendWith(MockitoExtension.class)
 class BusinessHourControllerTest {
 	@InjectMocks
 	private BusinessHourController businessHourController;
 	@Mock
-	private BusinessHourService businessHourService;
-	@Mock
-	private BusinessHourQueryServiceImpl businessHourQueryService;
+	private BusinessHourFacade businessHourFacade;
 	private MockMvc mockMvc;
 	private ObjectMapper objectMapper;
 	private BusinessHourFixture businessHourFixture = FixtureFactory.businessHourFixture();
@@ -65,7 +62,7 @@ class BusinessHourControllerTest {
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
 			.writeValueAsString(businessHourAddResponse);
 
-		doReturn(businessHourAddResponse).when(businessHourService).add(eq(1L), any(BusinessHourAddDto.Request.class));
+		doReturn(businessHourAddResponse).when(businessHourFacade).add(any(), any(BusinessHourAddDto.Request.class));
 
 		//expected
 		mockMvc.perform(post("/stores/{storeId}/business-hours", 2L)
@@ -84,7 +81,7 @@ class BusinessHourControllerTest {
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
 			.writeValueAsString(businessHourFindResponses);
 
-		doReturn(businessHourFindResponses).when(businessHourQueryService).find(2L);
+		doReturn(businessHourFindResponses).when(businessHourFacade).find(2L);
 
 		//expected
 		mockMvc.perform(get("/stores/{storeId}/business-hours", 2L)
@@ -104,14 +101,14 @@ class BusinessHourControllerTest {
 		String responseJson = objectMapper.registerModule(new JavaTimeModule())
 			.writeValueAsString(businessHourUpdateResponse);
 
-		doReturn(businessHourUpdateResponse).when(businessHourService)
-			.update(eq(3L), eq(1L), any(BusinessHourUpdateDto.Request.class));
+		doReturn(businessHourUpdateResponse).when(businessHourFacade)
+			.update(any(), any(), any(BusinessHourUpdateDto.Request.class));
 
 		//expected
 		mockMvc.perform(put("/stores/{storeId}/business-hours/{id}", 2L, 3L)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(requestJson)
-				.sessionAttr("MEMBER_ID", 1L)
+				.sessionAttr(MEMBER_ID.name(), 1L)
 			).andExpect(status().isOk())
 			.andExpect(content().json(responseJson));
 	}
@@ -122,7 +119,7 @@ class BusinessHourControllerTest {
 		//expected
 		mockMvc.perform(delete("/stores/{storeId}/business-hours/{id}", 2L, 3L)
 			.contentType(MediaType.APPLICATION_JSON)
-			.sessionAttr("MEMBER_ID", 1L)
+			.sessionAttr(MEMBER_ID.name(), 1L)
 		).andExpect(status().isNoContent());
 	}
 
