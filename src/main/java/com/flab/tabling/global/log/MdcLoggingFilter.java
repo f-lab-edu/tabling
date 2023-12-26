@@ -13,10 +13,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 
+/*
+@Order: 등록된 필터의 적용 순서 설정
+ */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MdcLoggingFilter implements Filter {
 
-	private final String REQUEST_ID = "request_id";
+	private static final String REQUEST_ID = "request_id";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws
