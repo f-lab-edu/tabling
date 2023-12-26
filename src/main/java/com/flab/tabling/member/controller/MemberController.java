@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.facade.MemberFacade;
 
-import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ import lombok.RequiredArgsConstructor;
  * @Timed : 시간 측정 메트릭을 지원하는 AOP 기능
  */
 
-@Timed("api.timer")
+// @Timed("api.timer")
 @RestController
 @RequiredArgsConstructor
 public class MemberController {

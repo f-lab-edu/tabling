@@ -19,8 +19,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.flab.tabling.global.env.SecurityProperties;
-import com.flab.tabling.global.env.TablingProperties;
 import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.member.exception.AuthenticationException;
 

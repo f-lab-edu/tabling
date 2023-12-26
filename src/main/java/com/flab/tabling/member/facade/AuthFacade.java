@@ -1,6 +1,6 @@
 package com.flab.tabling.member.facade;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.constant.SessionConstant;
@@ -16,7 +16,7 @@ import com.flab.tabling.member.service.MemberQueryService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AuthFacade {
 	private final TwoWayCipherService twoWayCipherService;
