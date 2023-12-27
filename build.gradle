@@ -144,6 +144,7 @@ jacocoTestCoverageVerification {
                     'com.flab.tabling.global.constant.**',
                     'com.flab.tabling.global.auth.ExceptionHandlerFilter',
                     'com.flab.tabling.global.auth.Login*',
+                    'com.flab.tabling.global.log.MdcLoggingFilter',
                     'com.flab.tabling.**.domain.Q*',
             ]
         }

@@ -6,9 +6,9 @@
     <include resource="file-appender.xml"/>
 
     <property name="CONSOLE_LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5level) %clr([%t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} - %msg%n"/>
+              value="[%X{request_id:-start-up}] %d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5level) %clr([%t]){faint} %clr(%logger){cyan} %clr(:){faint} - %msg%n"/>
     <property name="FILE_LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5level ${PID:- } -&#45;&#45; [%15.15t] %-40.40logger{39} : %msg%n"/>
+              value="[%X{request_id:-start-up}] %d{yyyy-MM-dd HH:mm:ss.SSS} %5level ${PID:- } -&#45;&#45; [%t] %logger : %msg%n"/>
     <property name="LOG_PATH" value="./logs"/>
 
     <!--local-->
