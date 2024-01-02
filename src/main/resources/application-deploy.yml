@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+management:
+  server:
+    port: 8081
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+tabling:
+  security-credentials:
+    login-path: "/login"
+    login-method: "POST"
+    member-add-path: "/members"
+    member-add-method: "POST"
+    bytes-encryptor-password: ${ENCRYPTOR_PASSWORD}
+    bytes-encryptor-salt: ${ENCRYPTOR_SALT}
