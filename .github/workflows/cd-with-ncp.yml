@@ -3,8 +3,6 @@ name: CD with Naver Cloud
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build_dockerpush:

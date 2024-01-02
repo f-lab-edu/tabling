@@ -47,3 +47,15 @@ operation::business-hour-controller-rest-docs-test/success-delete[snippets="http
 == 식당별 운영 시간 조회 성공
 
 operation::business-hour-controller-rest-docs-test/success-find[snippets="http-request,http-response"]
+
+== 가게 주인의 손님 입장 허가 성공
+
+operation::waiting-controller-test/accept-first-of-store[snippets="http-request,http-response"]
+
+== 손님의 가게 대기 신청 성공
+
+operation::waiting-controller-test/add-my-self[snippets="http-request,http-response"]
+
+== 가게 주인의 손님 입장 취소 성공
+
+operation::waiting-controller-test/cancel-first-of-store[snippets="http-request,http-response"]
