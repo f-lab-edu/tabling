@@ -59,3 +59,7 @@ operation::waiting-controller-test/add-my-self[snippets="http-request,http-respo
 == 가게 주인의 손님 입장 취소 성공
 
 operation::waiting-controller-test/cancel-first-of-store[snippets="http-request,http-response"]
+
+== 손님의 가게 대기 취소 성공
+
+operation::waiting-controller-test/cancel-myself[snippets="http-request,http-response"]
