@@ -33,6 +33,8 @@ jobs:
           spring.datasource.password: ${{secrets.DB_PASSWORD}}
           tabling.security-credentials.bytes-encryptor-password: ${{secrets.ENCRYPTOR_PASSWORD}}
           tabling.security-credentials.bytes-encryptor-salt: ${{secrets.ENCRYPTOR_SALT}}
+      - name: substitute application.yml
+        run: cp ./src/main/resources/application-deploy.yml ./src/main/resources/application.yml
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: auto build application
