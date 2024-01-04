@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpSession;
 
-import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.global.service.OneWayCipherService;
 import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.service.StringGenerateFixture;
@@ -63,7 +62,6 @@ class MemberFacadeTest {
 
 		doNothing().when(memberQueryService).checkEmailDuplicated(encryptedEmail);
 		Member member = Mockito.mock(Member.class);
-		session = new MockHttpSession();
 		doReturn(encryptedPassword).when(oneWayCipherService).encrypt(memberRequestDto.getPassword());
 		doReturn(encryptedEmail).when(twoWayCipherService).encrypt(memberRequestDto.getEmail());
 		doReturn(member).when(memberService).add(memberRequestDto.getName(), encryptedEmail, encryptedPassword,
@@ -71,13 +69,10 @@ class MemberFacadeTest {
 		doReturn(1L).when(member).getId();
 
 		//when
-		MemberAddDto.Response response = memberFacade.add(memberRequestDto, session);
+		MemberAddDto.Response response = memberFacade.add(memberRequestDto);
 
 		//then
-		verify(sessionService).add(any(MockHttpSession.class), eq(SessionConstant.MEMBER_NAME),
-			eq(memberRequestDto.getName()));
 		verify(memberService).add(anyString(), anyString(), anyString(), any(RoleType.class));
-		verify(sessionService).invalidate(any(MockHttpSession.class));
 		Assertions.assertThat(response.getId()).isEqualTo(1L);
 	}
 
@@ -99,6 +94,6 @@ class MemberFacadeTest {
 
 		//when, then
 		assertThrows(MemberDuplicatedException.class,
-			() -> memberFacade.add(memberRequestDto, session));
+			() -> memberFacade.add(memberRequestDto));
 	}
 }

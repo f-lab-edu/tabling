@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.facade.MemberFacade;
 
-import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ import lombok.RequiredArgsConstructor;
  * @Timed : 시간 측정 메트릭을 지원하는 AOP 기능
  */
 
-@Timed("api.timer")
+// @Timed("api.timer") // TODO: @Timed 주석 해제 시 MemberFacade가 빈으로 등록되지 않는 문제 해결
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
@@ -32,7 +31,7 @@ public class MemberController {
 	@PostMapping("/members")
 	private ResponseEntity<MemberAddDto.Response> add(HttpSession session,
 		@Valid @RequestBody MemberAddDto.Request memberRequestDto) {
-		MemberAddDto.Response memberResponseDto = memberFacade.add(memberRequestDto, session);
+		MemberAddDto.Response memberResponseDto = memberFacade.add(memberRequestDto);
 		return ResponseEntity
 			.status(HttpStatus.CREATED)
 			.body(memberResponseDto);

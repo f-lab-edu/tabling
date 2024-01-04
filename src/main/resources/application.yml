@@ -5,7 +5,6 @@ spring:
     username: sa
     password:
     hikari.jdbc-url: jdbc:h2:mem:~/test;MODE=MYSQL
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -20,6 +19,16 @@ spring:
       mode: always
       schema-locations: classpath:h2/schema.sql
       data-locations: classpath:h2/data.sql
+  session:
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: user
+      password: secret
 
 management:
   server:
@@ -38,6 +47,9 @@ management:
       show-details: always
 
 server:
+  servlet:
+    session:
+      timeout: 54000
   tomcat:
     mbeanregistry:
       enabled: true
