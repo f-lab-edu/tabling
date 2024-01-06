@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
  * @Timed : 시간 측정 메트릭을 지원하는 AOP 기능
  */
 
-// @Timed("api.timer")
+// @Timed("api.timer") TODO: memberFacade 등록 안되는 문제 해결하기
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
