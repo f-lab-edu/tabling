@@ -22,8 +22,6 @@ import com.flab.tabling.member.domain.RoleType;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.facade.MemberFacade;
 
-import jakarta.servlet.http.HttpSession;
-
 /**
  * @WebMvcTest : 웹 계층과 관련된 빈들만을 찾아서 빈으로 등록 @RestController,  @RestControllerAdvice, WebMvcConfigurer, HandlerMethodArgumentResolver
  * @MockBean : 가짜 객체인 Mock 객체를 빈으로 등록, main 클래스의 @EnableJpaAuditing JpaMetamodelMappingContext.class 빈 등록
@@ -58,7 +56,7 @@ class MemberControllerRestDocsTest extends AbstractRestDocsTest {
 			.build();
 		MemberAddDto.Response memberResponseDto = new MemberAddDto.Response(1L);
 
-		given(memberFacade.add(any(MemberAddDto.Request.class), any(HttpSession.class)))
+		given(memberFacade.add(any(MemberAddDto.Request.class)))
 			.willReturn(memberResponseDto);
 
 		//when
