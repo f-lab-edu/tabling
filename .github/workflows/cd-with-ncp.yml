@@ -1,0 +1,44 @@
+name: CD with Naver Cloud
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build_dockerpush:
+    runs-on: ubuntu-latest
+    env:
+      APPLICATION: ${{ secrets.APPLICATION }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: make application.yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./src/main/resources/application-deploy.yml
+        env:
+          spring.datasource.url: ${{secrets.DB_URL}}
+          spring.datasource.username: ${{secrets.DB_USERNAME}}
+          spring.datasource.password: ${{secrets.DB_PASSWORD}}
+          tabling.security-credentials.bytes-encryptor-password: ${{secrets.ENCRYPTOR_PASSWORD}}
+          tabling.security-credentials.bytes-encryptor-salt: ${{secrets.ENCRYPTOR_SALT}}
+      - name: substitute application.yml
+        run: cp ./src/main/resources/application-deploy.yml ./src/main/resources/application.yml
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: auto build application
+        run: |
+          ./gradlew clean build -x test
+      - name: Docker build & push to docker repo
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}:tabling .
+          docker push ${{ secrets.DOCKER_REPO }}:tabling

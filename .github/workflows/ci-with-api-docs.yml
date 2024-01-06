@@ -1,7 +1,7 @@
 name: ci with API rest docs
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
 
 jobs:
@@ -20,11 +20,11 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name : auto configure spring rest docs
+      - name: auto configure spring rest docs
         run: |
           ./gradlew build -x test
           ./gradlew copyDocument
-      - name : upload pages artifact
+      - name: upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: 'src/main/resources/static/docs'

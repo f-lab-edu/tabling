@@ -19,9 +19,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.flab.tabling.global.env.SecurityProperties;
-import com.flab.tabling.global.env.TablingProperties;
 import com.flab.tabling.global.constant.SessionConstant;
+import com.flab.tabling.global.env.SecurityProperties;
 import com.flab.tabling.member.exception.AuthenticationException;
 
 import jakarta.servlet.FilterChain;
@@ -35,7 +34,8 @@ class AuthenticationFilterTest {
 	@InjectMocks
 	private AuthenticationFilter authenticationFilter;
 	@Mock
-	private TablingProperties tablingProperties = new TablingProperties();
+	private SecurityProperties tablingProperties = new SecurityProperties("/login", HttpMethod.POST, "/members",
+		HttpMethod.POST, "abcdefgh", "01234567f");
 	@Mock
 	private H2ConsoleProperties h2ConsoleProperties = new H2ConsoleProperties();
 
