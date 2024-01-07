@@ -37,6 +37,11 @@ public class StoreFacade {
 		return storeQueryService.findPage(pageable);
 	}
 
+	// TODO: 2024-01-07 페이징 기능과 비교후 제거
+	public StoreFindDto.Responses findAll() {
+		return new StoreFindDto.Responses(storeQueryService.findAll());
+	}
+
 	@Transactional
 	public StoreUpdateDto.Response update(StoreUpdateDto.Request storeUpdateRequest, Long sessionMemberId) {
 		Store targetStore = storeQueryService.getStore(storeUpdateRequest.getId());

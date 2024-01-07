@@ -46,6 +46,13 @@ public class StoreController {
 		return ResponseEntity.status(HttpStatus.OK).body(storeFindResponse);
 	}
 
+	// TODO: 2024-01-07 페이징 기능과 비교후 제거
+	@GetMapping("/stores/all")
+	public ResponseEntity<StoreFindDto.Responses> findAll() {
+		StoreFindDto.Responses storesFindResponse = storeFacade.findAll();
+		return ResponseEntity.status(HttpStatus.OK).body(storesFindResponse);
+	}
+
 	@GetMapping("/stores")
 	public ResponseEntity<Page<StoreFindDto.Response>> findPage(
 		@PageableDefault(sort = "id", direction = DESC) Pageable pageable) {
