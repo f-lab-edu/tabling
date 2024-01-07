@@ -31,6 +31,11 @@ public class StoreQueryService {
 		return new StoreFindDto.Response(queriedStore);
 	}
 
+	// TODO: 2024-01-07 성능 측정 후, 페이징 기능으로 변경
+	public List<StoreFindDto.Response> find(String name) {
+		return storeRepository.findStoresByName(name).stream().map(StoreFindDto.Response::new).toList();
+	}
+
 	public Page<StoreFindDto.Response> findPage(Pageable pageable) {
 		return storeRepository.findAll(pageable).map(StoreFindDto.Response::new);
 	}
