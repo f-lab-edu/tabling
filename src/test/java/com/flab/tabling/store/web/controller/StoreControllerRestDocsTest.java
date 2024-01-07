@@ -93,6 +93,23 @@ class StoreControllerRestDocsTest extends AbstractRestDocsTest {
 			.andExpect(MockMvcResultMatchers.content().json(responseJson));
 	}
 
+	@Test // TODO: 2024-01-07 페이징 기능과 비교후 제거
+	@DisplayName("식당 전체 목록 조회에 성공하면 목록과 상태코드를 반환한다.")
+	void findAllSuccess() throws Exception {
+		//given
+		StoreFindDto.Responses storesFindResponse = new StoreFindDto.Responses(getStoreFindResponseList());
+		String responseJson = objectMapper.writeValueAsString(storesFindResponse);
+
+		doReturn(storesFindResponse).when(storeFacade).findAll();
+
+		//expected
+		mockMvc.perform(MockMvcRequestBuilders.get("/stores/all")
+				.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
 	@Test
 	@DisplayName("수정 요청이 성공적으로 수행되면, 상태코드와 함께 응답을 반환한다.")
 	void updateStoreSuccess() throws Exception {

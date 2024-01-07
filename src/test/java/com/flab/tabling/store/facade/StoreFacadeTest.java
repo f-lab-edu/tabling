@@ -98,6 +98,24 @@ class StoreFacadeTest {
 		verify(storeQueryService, times(1)).findPage(pageable);
 	}
 
+	@Test // TODO: 2024-01-07 페이징 기능과 비교후 제거
+	@DisplayName("식당 전체 목록 조회에 성공한다.")
+	void findAllSuccess() {
+		//given
+		List<StoreFindDto.Response> storeFindResponses = storeFixture.getStores(2L, 3L)
+			.stream()
+			.map(StoreFindDto.Response::new)
+			.toList();
+
+		doReturn(storeFindResponses).when(storeQueryService).findAll();
+
+		//when
+		storeFacade.findAll();
+
+		//then
+		verify(storeQueryService, times(1)).findAll();
+	}
+
 	@Test
 	@DisplayName("식당이 존재하고, 요청한 사용자가 식당 주인이 맞다면, 식당 정보 수정에 성공한다.")
 	void updateStoreSuccess() {
