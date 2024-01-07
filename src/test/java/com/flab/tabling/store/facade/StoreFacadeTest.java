@@ -81,6 +81,26 @@ class StoreFacadeTest {
 		verify(storeQueryService, times(1)).find(2L);
 	}
 
+	// TODO: 2024-01-07 성능 측정 후, 페이징 기능으로 변경
+	@Test
+	@DisplayName("요청한 식당 이름과 동일한 식당 목록 반환에 성공한다.")
+	void findStoresSuccessByName() {
+		//given
+		String storeName = "store_name";
+		List<StoreFindDto.Response> storeFindResponses = storeFixture.getStores(2L, 3L)
+			.stream()
+			.map(StoreFindDto.Response::new)
+			.toList();
+
+		doReturn(storeFindResponses).when(storeQueryService).find(storeName);
+
+		//when
+		StoreFindDto.Responses result = storeFacade.find(storeName);
+
+		//then
+		assertThat(result.getStoreFindResponses().size()).isEqualTo(2);
+	}
+
 	@Test
 	@DisplayName("조건에 맞는 식당 페이지 dto 조회에 성공한다.")
 	void findPageSuccessWithPageCondition() {

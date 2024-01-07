@@ -58,7 +58,7 @@ class StoreControllerTest {
 	@DisplayName("식당 등록 요청이 성공하면 등록한 식당에 대한 응답과 상태코드를 반환한다.")
 	void addStoreSuccess() throws Exception {
 		//given
-		EasyRandom easyRandom = getStoreDtoEasyRandom();
+		EasyRandom easyRandom = getStoreDtoEasyRandom(2L);
 		StoreAddDto.Request requestDto = easyRandom.nextObject(StoreAddDto.Request.class);
 		String requestJson = objectMapper.writeValueAsString(requestDto);
 		StoreAddDto.Response responseDto = easyRandom.nextObject(StoreAddDto.Response.class);
@@ -80,7 +80,7 @@ class StoreControllerTest {
 	@DisplayName("식당 조회 요청이 성공하면 식당 정보와 상태코드를 반환한다.")
 	void findStoreSuccess() throws Exception {
 		//given
-		EasyRandom easyRandom = getStoreDtoEasyRandom();
+		EasyRandom easyRandom = getStoreDtoEasyRandom(2L);
 		StoreFindDto.Response responseDto = easyRandom.nextObject(StoreFindDto.Response.class);
 		String responseJson = objectMapper.writeValueAsString(responseDto);
 
@@ -94,11 +94,31 @@ class StoreControllerTest {
 			.andExpect(MockMvcResultMatchers.content().json(responseJson));
 	}
 
+	// TODO: 2024-01-07 성능 측정 후, 페이징 기능으로 변경
+	@Test
+	@DisplayName("식당 이름으로 조회 요청이 성공하면 해당 이름의 식당 목록과 상태코드를 반환한다.")
+	void findStoresSuccessByName() throws Exception {
+		//given
+		String storeName = "식당이름";
+		StoreFindDto.Responses storesFindResponse = new StoreFindDto.Responses(getStoreFindResponses());
+		String responseJson = objectMapper.writeValueAsString(storesFindResponse);
+
+		doReturn(storesFindResponse).when(storeFacade).find(storeName);
+
+		//expected
+		mockMvc.perform(MockMvcRequestBuilders.get("/stores")
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("name", storeName)
+			)
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().json(responseJson));
+	}
+
 	@Test
 	@DisplayName("식당 페이지 조회 요청이 성공하면 페이지와 상태코드를 반환한다.")
 	void findStorePageSuccess() throws Exception {
 		//given
-		List<StoreFindDto.Response> storeFindResponseList = getStoreFindResponseList();
+		List<StoreFindDto.Response> storeFindResponseList = getStoreFindResponses();
 		Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
 		PageImpl<StoreFindDto.Response> storeFindResponsePage = new PageImpl<>(storeFindResponseList, pageable, 1);
 		String responseJson = objectMapper.writeValueAsString(storeFindResponsePage);
@@ -117,7 +137,7 @@ class StoreControllerTest {
 	@DisplayName("식당 전체 목록 조회에 성공하면 목록과 상태코드를 반환한다.")
 	void findAllSuccess() throws Exception {
 		//given
-		StoreFindDto.Responses storesFindResponse = new StoreFindDto.Responses(getStoreFindResponseList());
+		StoreFindDto.Responses storesFindResponse = new StoreFindDto.Responses(getStoreFindResponses());
 		String responseJson = objectMapper.writeValueAsString(storesFindResponse);
 
 		doReturn(storesFindResponse).when(storeFacade).findAll();
@@ -134,7 +154,7 @@ class StoreControllerTest {
 	@DisplayName("수정 요청이 성공적으로 수행되면, 상태코드와 함께 응답을 반환한다.")
 	void updateStoreSuccess() throws Exception {
 		//given
-		EasyRandom easyRandom = getStoreDtoEasyRandom();
+		EasyRandom easyRandom = getStoreDtoEasyRandom(2L);
 		StoreUpdateDto.Request storeUpdateRequest = easyRandom.nextObject(StoreUpdateDto.Request.class);
 		String requestJson = objectMapper.writeValueAsString(storeUpdateRequest);
 		StoreUpdateDto.Response storeUpdateResponse = easyRandom.nextObject(StoreUpdateDto.Response.class);
@@ -163,23 +183,24 @@ class StoreControllerTest {
 			.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
-	private EasyRandom getStoreDtoEasyRandom() {
-		EasyRandomParameters conditions = getStoreDtoConditions();
+	private EasyRandom getStoreDtoEasyRandom(Long storeId) {
+		EasyRandomParameters conditions = getStoreDtoConditions(storeId);
 		return new EasyRandom(conditions);
 	}
 
-	private EasyRandomParameters getStoreDtoConditions() {
+	private EasyRandomParameters getStoreDtoConditions(Long id) {
 		return new EasyRandomParameters()
-			.randomize(named("id"), () -> 2L)
-			.randomize(named("name"), () -> "식당이름")
-			.randomize(named("description"), () -> "식당정보")
+			.randomize(named("id"), () -> id)
+			.randomize(named("name"), () -> "store_name")
+			.randomize(named("description"), () -> "store_description")
 			.randomize(named("maxWaitingCount"), new IntegerRangeRandomizer(1, 50));
 	}
 
-	private List<StoreFindDto.Response> getStoreFindResponseList() {
-		EasyRandom easyRandom = getStoreDtoEasyRandom();
-		StoreFindDto.Response storeFindResponseA = easyRandom.nextObject(StoreFindDto.Response.class);
-		StoreFindDto.Response storeFindResponseB = easyRandom.nextObject(StoreFindDto.Response.class);
+	private List<StoreFindDto.Response> getStoreFindResponses() {
+		EasyRandom storeARandom = getStoreDtoEasyRandom(2L);
+		EasyRandom storeBRandom = getStoreDtoEasyRandom(3L);
+		StoreFindDto.Response storeFindResponseA = storeARandom.nextObject(StoreFindDto.Response.class);
+		StoreFindDto.Response storeFindResponseB = storeBRandom.nextObject(StoreFindDto.Response.class);
 
 		List<StoreFindDto.Response> storeFindResponseList = new ArrayList<>();
 		storeFindResponseList.add(storeFindResponseA);
