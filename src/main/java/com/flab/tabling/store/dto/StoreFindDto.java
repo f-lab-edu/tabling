@@ -1,5 +1,7 @@
 package com.flab.tabling.store.dto;
 
+import java.util.List;
+
 import com.flab.tabling.store.domain.Category;
 import com.flab.tabling.store.domain.Store;
 
@@ -33,6 +35,15 @@ public class StoreFindDto {
 			this.category = store.getCategory();
 			this.description = store.getDescription();
 			this.maxWaitingCount = store.getMaxWaitingCount();
+		}
+	}
+
+	@Getter
+	public static class Responses {
+		List<StoreFindDto.Response> storeFindResponses;
+
+		public Responses(List<StoreFindDto.Response> storeFindResponses) {
+			this.storeFindResponses = storeFindResponses;
 		}
 	}
 }

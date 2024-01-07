@@ -4,6 +4,7 @@ import static org.springframework.data.domain.Sort.Direction.*;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,20 @@ public class StoreController {
 	public ResponseEntity<StoreFindDto.Response> find(@PathVariable(name = "id") Long storeId) {
 		StoreFindDto.Response storeFindResponse = storeFacade.find(storeId);
 		return ResponseEntity.status(HttpStatus.OK).body(storeFindResponse);
+	}
+
+	// TODO: 2024-01-07 성능 측정 후, 페이징 기능으로 변경
+	@GetMapping(value = "/stores", params = "name")
+	public ResponseEntity<StoreFindDto.Responses> find(@Param("name") String name) {
+		StoreFindDto.Responses storeFindResponses = storeFacade.find(name);
+		return ResponseEntity.status(HttpStatus.OK).body(storeFindResponses);
+	}
+
+	// TODO: 2024-01-07 페이징 기능과 비교후 제거
+	@GetMapping("/stores/all")
+	public ResponseEntity<StoreFindDto.Responses> findAll() {
+		StoreFindDto.Responses storesFindResponse = storeFacade.findAll();
+		return ResponseEntity.status(HttpStatus.OK).body(storesFindResponse);
 	}
 
 	@GetMapping("/stores")
