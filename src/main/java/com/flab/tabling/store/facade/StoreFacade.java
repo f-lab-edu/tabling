@@ -33,8 +33,18 @@ public class StoreFacade {
 		return storeQueryService.find(storeId);
 	}
 
+	// TODO: 2024-01-07 성능 측정 후, 페이징 기능으로 변경
+	public StoreFindDto.Responses find(String name) {
+		return new StoreFindDto.Responses(storeQueryService.find(name));
+	}
+
 	public Page<StoreFindDto.Response> findPage(Pageable pageable) {
 		return storeQueryService.findPage(pageable);
+	}
+
+	// TODO: 2024-01-07 페이징 기능과 비교후 제거
+	public StoreFindDto.Responses findAll() {
+		return new StoreFindDto.Responses(storeQueryService.findAll());
 	}
 
 	@Transactional

@@ -28,9 +28,17 @@ operation::store-controller-rest-docs-test/delete-store-success[snippets="http-r
 
 operation::store-controller-rest-docs-test/find-store-success[snippets="http-request,http-response"]
 
+== 가게 이름으로 조회 성공
+
+operation::store-controller-rest-docs-test/find-stores-success-by-name[snippets="http-request,http-response"]
+
 == 가게 페이지 조회 성공
 
 operation::store-controller-rest-docs-test/find-store-page-success[snippets="http-request,http-response"]
+
+== 가게 전체 목록 조회 성공
+
+operation::store-controller-rest-docs-test/find-all-success[snippets="http-request,http-response"]
 
 == 운영 시간 등록 성공
 
