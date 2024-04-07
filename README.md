@@ -18,7 +18,7 @@
 
 ## 서버 아키텍처
 
-![project_structure_v2](https://github.com/f-lab-edu/tabling/assets/118912510/feaf69db-dde9-4116-bf1a-ee0675899103)
+![project_structure](https://github.com/f-lab-edu/tabling/assets/118912510/e372f8be-099f-4f53-a91e-dbbf1dbcaa77)
 
 <br>
 <br>
