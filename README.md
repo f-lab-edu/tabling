@@ -18,7 +18,7 @@
 
 ## 서버 아키텍처
 
-![project_structure_v2](https://github.com/f-lab-edu/tabling/assets/118912510/feaf69db-dde9-4116-bf1a-ee0675899103)
+![project_structure](https://github.com/f-lab-edu/tabling/assets/118912510/e372f8be-099f-4f53-a91e-dbbf1dbcaa77)
 
 <br>
 <br>
@@ -124,9 +124,10 @@ sequenceDiagram
 
 # 트러블 슈팅
 
-* DTO 관리 방법에 대한 고찰: 책임과 기준
-* 테스트 유효성과 픽스처 관리 방법에 대한 고민
-* 올바른 Enum 통신 방법
+* [올바른 Enum 사용으로 클라이언트에 의존하지 않는 API 설계](https://github.com/f-lab-edu/tabling/wiki/%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C-%EC%98%A4%ED%94%84-%EB%B0%8F-%EA%B3%A0%EC%B0%B0#%EC%98%AC%EB%B0%94%EB%A5%B8-enum-%EC%82%AC%EC%9A%A9%EC%9C%BC%EB%A1%9C-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EC%97%90-%EC%9D%98%EC%A1%B4%ED%95%98%EC%A7%80-%EC%95%8A%EB%8A%94-api-%EC%84%A4%EA%B3%84)
+* [역할과 책임에 따른 DTO 관리 전략](https://github.com/f-lab-edu/tabling/wiki/%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C-%EC%98%A4%ED%94%84-%EB%B0%8F-%EA%B3%A0%EC%B0%B0#%EC%97%AD%ED%95%A0%EA%B3%BC-%EC%B1%85%EC%9E%84%EC%97%90-%EB%94%B0%EB%A5%B8-dto-%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5)
+* [단위 테스트와 통합 테스트 사이의 트레이드 오프](https://github.com/f-lab-edu/tabling/wiki/%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C-%EC%98%A4%ED%94%84-%EB%B0%8F-%EA%B3%A0%EC%B0%B0#%EB%8B%A8%EC%9C%84-%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%99%80-%ED%86%B5%ED%95%A9-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%82%AC%EC%9D%B4%EC%9D%98-%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C-%EC%98%A4%ED%94%84)
+* [로그의 일관성과 명확성 사이의 트레이드 오프](https://github.com/f-lab-edu/tabling/wiki/%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C-%EC%98%A4%ED%94%84-%EB%B0%8F-%EA%B3%A0%EC%B0%B0#%EB%A1%9C%EA%B7%B8%EC%9D%98-%EC%9D%BC%EA%B4%80%EC%84%B1%EA%B3%BC-%EB%AA%85%ED%99%95%EC%84%B1-%EC%82%AC%EC%9D%B4%EC%9D%98-%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C-%EC%98%A4%ED%94%84)
 * Spring Security 없이 세션 인증 구현 : 필터와 인터셉터
 * 세션 저장소를 Redis로 바꾸게 된 이유
 * 식당 대기큐에서 동시성 이슈 해결
