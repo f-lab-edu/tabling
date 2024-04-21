@@ -4,9 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.constant.SessionConstant;
-import com.flab.tabling.global.service.OneWayCipherService;
+import com.flab.tabling.global.service.CipherService;
 import com.flab.tabling.global.service.SessionService;
-import com.flab.tabling.global.service.TwoWayCipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.service.MemberQueryService;
@@ -18,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class MemberFacade {
-	private final OneWayCipherService oneWayCipherService;
-	private final TwoWayCipherService twoWayCipherService;
+	private final CipherService oneWayCipherService;
+	private final CipherService twoWayCipherService;
 	private final MemberService memberService;
 	private final MemberQueryService memberQueryService;
 	private final SessionService sessionService;

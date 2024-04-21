@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,7 +27,6 @@ import jakarta.servlet.http.HttpSession;
 
 @ExtendWith(MockitoExtension.class)
 class AuthFacadeTest {
-	@InjectMocks
 	AuthFacade authFacade;
 
 	@Mock
@@ -43,11 +41,12 @@ class AuthFacadeTest {
 	@Mock
 	MemberQueryService memberQueryService;
 
+	@Mock
 	HttpSession session;
 
 	@BeforeEach
 	void init() {
-		session = new MockHttpSession();
+		authFacade = new AuthFacade(oneWayCipherService, twoWayCipherService, memberQueryService, sessionService);
 	}
 
 	@Test
