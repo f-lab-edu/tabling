@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,11 +27,11 @@ import com.flab.tabling.member.service.MemberService;
 
 @ExtendWith(MockitoExtension.class)
 class MemberFacadeTest {
-	@InjectMocks
 	MemberFacade memberFacade;
 
 	@Mock
 	OneWayCipherService oneWayCipherService;
+
 	@Mock
 	TwoWayCipherService twoWayCipherService;
 
@@ -46,6 +46,12 @@ class MemberFacadeTest {
 
 	@Mock
 	MockHttpSession session;
+
+	@BeforeEach
+	public void init() {
+		memberFacade = new MemberFacade(oneWayCipherService, twoWayCipherService, memberService, memberQueryService,
+			sessionService);
+	}
 
 	@Test
 	@DisplayName("회원가입 성공 : 이메일이 중복되지 않음")
