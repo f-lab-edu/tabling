@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/tabling?serverTimezone=UTC
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: qwer1234!
+  jpa:
+    show-sql: true
+tabling:
+  security-credentials:
+    login-path: "/login"
+    login-method: "POST"
+    member-add-path: "/members"
+    member-add-method: "POST"
+    bytes-encryptor-password: "This is a password!"
+    bytes-encryptor-salt: "0123456f"

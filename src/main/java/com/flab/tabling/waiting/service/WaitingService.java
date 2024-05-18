@@ -1,6 +1,5 @@
 package com.flab.tabling.waiting.service;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,22 +23,14 @@ public class WaitingService {
 	@Transactional
 	public Waiting add(Store store, Member member, Integer headCount) {
 		checkWaitingQueueFull(store);
-		if (waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING).isPresent()) {
-			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
-				"waiting for given store already exists");
-		}
+		checkDuplicatedWaiting(store, member);
 		Waiting waiting = Waiting.builder()
 			.store(store)
 			.member(member)
 			.headCount(headCount)
-			.waitingStatus(WaitingStatus.ONGOING)
+			.status(WaitingStatus.ONGOING)
 			.build();
-		try {
-			waitingRepository.save(waiting);
-		} catch (DataIntegrityViolationException e) {
-			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
-				"waiting for given store already exists");
-		}
+		waitingRepository.save(waiting);
 		return waiting;
 	}
 
@@ -74,6 +65,13 @@ public class WaitingService {
 		Integer count = waitingRepository.countWithPessimisticLockByStoreAndStatus(store, WaitingStatus.ONGOING);
 		if (count >= store.getMaxWaitingCount()) {
 			throw new WaitingExceededException(ErrorCode.INVALID_PARAMETER, "waiting queue is full");
+		}
+	}
+
+	private void checkDuplicatedWaiting(Store store, Member member) {
+		if (waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING).isPresent()) {
+			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
+				"waiting for given store already exists");
 		}
 	}
 }
