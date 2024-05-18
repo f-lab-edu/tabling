@@ -44,11 +44,11 @@ public class Waiting extends BaseTime {
 	private WaitingStatus status;
 
 	@Builder
-	public Waiting(Store store, Member member, Integer headCount, WaitingStatus waitingStatus) {
+	public Waiting(Store store, Member member, Integer headCount, WaitingStatus status) {
 		this.store = store;
 		this.member = member;
 		this.headCount = headCount;
-		this.status = waitingStatus;
+		this.status = status;
 	}
 
 	@PrePersist

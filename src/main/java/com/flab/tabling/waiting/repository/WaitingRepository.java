@@ -3,14 +3,13 @@ package com.flab.tabling.waiting.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.store.domain.Store;
 import com.flab.tabling.waiting.domain.Waiting;
 import com.flab.tabling.waiting.domain.WaitingStatus;
-
-import jakarta.persistence.LockModeType;
 
 /**
  * @Lock : 비관적 락, 낙관적 락과 관련하여 락 모드를 지정한다.
@@ -24,7 +23,7 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
 	Optional<Waiting> findFirstByStoreAndStatus(Store store, WaitingStatus status);
 
-	@Lock(LockModeType.PESSIMISTIC_READ)
-	Integer countWithPessimisticLockByStoreAndStatus(Store store, WaitingStatus status);
-
+	@Query(value = "select count(*) from waiting where store_id = :#{#store.id} and status = :#{#status.name} for update", nativeQuery = true)
+	Integer countWithPessimisticLockByStoreAndStatus(@Param("store") Store store,
+		@Param("status") WaitingStatus status);
 }
