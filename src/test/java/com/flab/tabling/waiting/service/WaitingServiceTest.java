@@ -91,7 +91,7 @@ class WaitingServiceTest {
 		Store store = WaitingFixture.getStore(seller);
 		Waiting waiting = WaitingFixture.getWaiting(store, member);
 		doReturn(store.getMaxWaitingCount() + 10).when(waitingRepository)
-			.countWithPessimisticLockByStoreAndStatus(store, WaitingStatus.ONGOING);
+			.countByStoreAndStatus(store, WaitingStatus.ONGOING);
 		//when, then
 		assertThrows(WaitingExceededException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
 	}
