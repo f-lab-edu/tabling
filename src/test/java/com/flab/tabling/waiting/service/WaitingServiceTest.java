@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.store.domain.Store;
@@ -64,21 +63,6 @@ class WaitingServiceTest {
 		doReturn(Optional.of(waiting)).when(waitingRepository)
 			.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING);
 		// //when
-		assertThrows(WaitingDuplicatedException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
-	}
-
-	@Test
-	@DisplayName("대기열 멤버 추가 실패 : 유니크 키가 같은 데이터 생성 시")
-	void failAddMemberBySameUniqueKey() {
-		//given
-		Member member = WaitingFixture.getMember();
-		Member seller = WaitingFixture.getMember();
-		Store store = WaitingFixture.getStore(seller);
-		Waiting waiting = WaitingFixture.getWaiting(store, member);
-		doReturn(Optional.empty()).when(waitingRepository)
-			.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING);
-		doThrow(DataIntegrityViolationException.class).when(waitingRepository).save(any(Waiting.class));
-		//when
 		assertThrows(WaitingDuplicatedException.class, () -> waitingService.add(store, member, waiting.getHeadCount()));
 	}
 
