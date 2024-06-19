@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.flab.tabling.global.exception.AuthorizationException;
+import com.flab.tabling.global.repository.NamedLockRepository;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.domain.Store;
@@ -35,6 +36,8 @@ class WaitingFacadeTest {
 	MemberQueryService memberQueryService;
 	@Mock
 	WaitingService waitingService;
+	@Mock
+	NamedLockRepository namedLockRepository;
 
 	@Test
 	@DisplayName("사용자 식당 대기열 추가 성공")
