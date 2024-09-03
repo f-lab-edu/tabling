@@ -35,6 +35,16 @@ jobs:
       - name: Build without test
         run: ./gradlew build -x test
 
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: 3306
+          container port: 3306
+          character set server: 'utf8'
+          mysql database: 'tabling'
+          mysql user: 'root'
+          mysql password: '1111'
+
       - name : auto configure spring rest docs
         run: |
           ./gradlew copyDocument
