@@ -41,15 +41,11 @@ jobs:
           host port: 3306
           container port: 3306
           mysql database: 'tabling'
-          mysql user: 'developer'
-          mysql password: '1111'
-
-      - name: Docker Process list
-        run: docker ps -a
+          mysql root password: '1111'
 
       - name : auto configure spring rest docs
         run: |
-          ./gradlew --stacktrace --info copyDocument
+          ./gradlew copyDocument
 
       - name: Runs the unit tests with coverage
         run: ./gradlew testCoverage
