@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost/tabling?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/tabling?serverTimezone=UTC
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: 1111
