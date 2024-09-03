@@ -31,9 +31,10 @@ jobs:
         with:
           host port: 3306
           container port: 3306
+          character set server: 'utf8'
+          mysql version: '8.0'
           mysql database: 'tabling'
-          mysql user: 'developer'
-          mysql password: '1111'
+          mysql root password: '1111'
 
       - name: Grant execute permission for gradlew
         run : chmod +x gradlew
