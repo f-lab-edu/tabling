@@ -43,7 +43,8 @@ jobs:
           character set server: 'utf8'
           mysql version: '8.0'
           mysql database: 'tabling'
-          mysql root password: '1111'
+          mysql user: 'developer'
+          mysql password: '1111'
 
       - name: Docker Process list
         run: docker ps -a
