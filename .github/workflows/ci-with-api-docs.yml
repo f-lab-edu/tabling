@@ -28,7 +28,7 @@ jobs:
           container port: 3306
           character set server: 'utf8'
           mysql database: 'tabling'
-          mysql user: 'root'
+          mysql user: 'developer'
           mysql password: '1111'
 
       - name: Grant execute permission for gradlew
