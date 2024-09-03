@@ -3,9 +3,20 @@ spring:
     url: jdbc:mysql://localhost/tabling?serverTimezone=UTC
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
-    password: qwer1234!
+    password: 1111
   jpa:
-    show-sql: true
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
 tabling:
   security-credentials:
     login-path: "/login"
