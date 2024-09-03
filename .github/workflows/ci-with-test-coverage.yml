@@ -41,7 +41,8 @@ jobs:
           host port: 3306
           container port: 3306
           mysql database: 'tabling'
-          mysql root password: '1111'
+          mysql user: 'developer'
+          mysql password: '1111'
 
       - name : auto configure spring rest docs
         run: |
