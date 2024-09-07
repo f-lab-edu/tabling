@@ -27,13 +27,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - uses: mirromutth/mysql-action@v1.1
+      - name: Set up MySQL
+        uses: samin/mysql-action@v1.3
         with:
           host port: 3306
           container port: 3306
           mysql database: 'tabling'
-          mysql user: 'root'
-          mysql password: 1111
+          mysql user: 'developer'
+          mysql password: '1111'
 
       - name: Grant execute permission for gradlew
         run : chmod +x gradlew
