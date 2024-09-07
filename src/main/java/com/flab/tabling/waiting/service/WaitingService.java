@@ -1,7 +1,7 @@
 package com.flab.tabling.waiting.service;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.exception.ErrorCode;
@@ -21,25 +21,17 @@ import lombok.RequiredArgsConstructor;
 public class WaitingService {
 	private final WaitingRepository waitingRepository;
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Waiting add(Store store, Member member, Integer headCount) {
 		checkWaitingQueueFull(store);
-		if (waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING).isPresent()) {
-			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
-				"waiting for given store already exists");
-		}
+		checkDuplicatedWaiting(store, member);
 		Waiting waiting = Waiting.builder()
 			.store(store)
 			.member(member)
 			.headCount(headCount)
 			.waitingStatus(WaitingStatus.ONGOING)
 			.build();
-		try {
-			waitingRepository.save(waiting);
-		} catch (DataIntegrityViolationException e) {
-			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
-				"waiting for given store already exists");
-		}
+		waitingRepository.save(waiting);
 		return waiting;
 	}
 
@@ -71,9 +63,16 @@ public class WaitingService {
 	}
 
 	private void checkWaitingQueueFull(Store store) {
-		Integer count = waitingRepository.countWithPessimisticLockByStoreAndStatus(store, WaitingStatus.ONGOING);
-		if (count >= store.getMaxWaitingCount()) {
+		Integer count = waitingRepository.countByStoreAndStatus(store, WaitingStatus.ONGOING);
+		if (count >= store.getMaxWaitingCount()) { // TODO: 2024-09-07 대기 가능 여부를 Store 도메인 내부에서 판단하는 방법 고려
 			throw new WaitingExceededException(ErrorCode.INVALID_PARAMETER, "waiting queue is full");
+		}
+	}
+
+	private void checkDuplicatedWaiting(Store store, Member member) {
+		if (waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING).isPresent()) {
+			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
+				"waiting for given store already exists");
 		}
 	}
 }

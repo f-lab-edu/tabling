@@ -18,16 +18,28 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Set up MySQL
+        uses: samin/mysql-action@v1.3
+        with:
+          host port: 3306
+          container port: 3306
+          mysql database: 'tabling'
+          mysql user: 'developer'
+          mysql password: '1111'
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
       - name: auto configure spring rest docs
         run: |
           ./gradlew build -x test
           ./gradlew copyDocument
+
       - name: upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: 'src/main/resources/static/docs'
+
   deploy:
     needs: build
     permissions:

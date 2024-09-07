@@ -35,6 +35,15 @@ jobs:
       - name: Build without test
         run: ./gradlew build -x test
 
+      - name: Set up MySQL
+        uses: samin/mysql-action@v1.3
+        with:
+          host port: 3306
+          container port: 3306
+          mysql database: 'tabling'
+          mysql user: 'developer'
+          mysql password: '1111'
+
       - name : auto configure spring rest docs
         run: |
           ./gradlew copyDocument
