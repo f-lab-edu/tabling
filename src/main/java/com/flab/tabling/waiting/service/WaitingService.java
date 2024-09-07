@@ -24,10 +24,7 @@ public class WaitingService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Waiting add(Store store, Member member, Integer headCount) {
 		checkWaitingQueueFull(store);
-		if (waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING).isPresent()) {
-			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
-				"waiting for given store already exists");
-		}
+		checkDuplicatedWaiting(store, member);
 		Waiting waiting = Waiting.builder()
 			.store(store)
 			.member(member)
@@ -67,8 +64,15 @@ public class WaitingService {
 
 	private void checkWaitingQueueFull(Store store) {
 		Integer count = waitingRepository.countByStoreAndStatus(store, WaitingStatus.ONGOING);
-		if (count >= store.getMaxWaitingCount()) {
+		if (count >= store.getMaxWaitingCount()) { // TODO: 2024-09-07 대기 가능 여부를 Store 도메인 내부에서 판단하는 방법 고려
 			throw new WaitingExceededException(ErrorCode.INVALID_PARAMETER, "waiting queue is full");
+		}
+	}
+
+	private void checkDuplicatedWaiting(Store store, Member member) {
+		if (waitingRepository.findByMemberAndStoreAndStatus(member, store, WaitingStatus.ONGOING).isPresent()) {
+			throw new WaitingDuplicatedException(ErrorCode.PARAMETER_DUPLICATED,
+				"waiting for given store already exists");
 		}
 	}
 }
