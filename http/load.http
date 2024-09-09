@@ -1,0 +1,2 @@
+GET localhost:8080/load
+Content-Type: application/json

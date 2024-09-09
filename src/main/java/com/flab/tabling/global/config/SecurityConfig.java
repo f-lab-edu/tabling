@@ -48,7 +48,7 @@ public class SecurityConfig {
 			securityProperties.getBytesEncryptorSalt());
 	}
 
-	@Bean
+	//@Bean
 	public FilterRegistrationBean<Filter> authenticationFilter() {
 		FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
 		bean.setFilter(new AuthenticationFilter(securityProperties, h2ConsoleProperties));
