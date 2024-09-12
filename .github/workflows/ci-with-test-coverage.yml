@@ -23,11 +23,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -44,7 +44,7 @@ jobs:
           mysql user: 'developer'
           mysql password: '1111'
 
-      - name : auto configure spring rest docs
+      - name: auto configure spring rest docs
         run: |
           ./gradlew copyDocument
 

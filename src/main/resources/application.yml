@@ -1,4 +1,7 @@
 spring:
+  threads:
+    virtual:
+      enabled: true
   datasource:
     url: jdbc:h2:mem:~/test
     driverClassName: org.h2.Driver

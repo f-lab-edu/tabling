@@ -21,11 +21,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Set up MySQL
         uses: samin/mysql-action@v1.3
@@ -37,6 +37,6 @@ jobs:
           mysql password: '1111'
 
       - name: Grant execute permission for gradlew
-        run : chmod +x gradlew
+        run: chmod +x gradlew
 
       - run: ./gradlew build
