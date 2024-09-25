@@ -1,49 +1,38 @@
 # 테이블링 서비스
 
-웨이팅이 필요한 식당을 편리하게 이용할 수 있는 서비스입니다.<br>
-식당 이용객은 순서를 기다리기 위해 현장에서 대기하지 않아도 되며, 식당측은 간편하게 대기열을 관리할 수 있습니다.
+**현장에서 직접 대기하지 않고, 식당에 대기 할 수 있는 서비스**
+
+* 식당 이용객은 순서를 기다리기 위해 현장에서 대기하지 않아도 된다.
+* 식당측은 간편하게 대기열을 관리할 수 있다.
 
 <br>
 <br>
-
-# 기술 스택
-
-* Backend: Java 17, Spring Boot 3.1.3, Spring Data JPA, Spring Rest Docs
-* DevOps: MySQL 8.2.0, Redis, Docker, Naver Cloud Platform, Prometheus, Grafana, Ngrinder
-
+<br>
 <br>
 <br>
 
-# 트러블 슈팅
+## 기술 스택
 
-* [올바른 Enum 사용으로 클라이언트에 의존하지 않는 API 설계](https://github.com/f-lab-edu/tabling/wiki/troubleshooting#%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EC%97%90-%EC%9D%98%EC%A1%B4%ED%95%98%EC%A7%80-%EC%95%8A%EB%8A%94-api-%EC%84%A4%EA%B3%84)
-* [역할과 책임에 따른 DTO 관리 전략](https://github.com/f-lab-edu/tabling/wiki/troubleshooting#dto-%EA%B4%80%EB%A6%AC-%EC%A0%84%EB%9E%B5-%EC%99%B8%EB%B6%80-%ED%81%B4%EB%9E%98%EC%8A%A4-vs-%EC%A0%95%EC%A0%81-%EC%A4%91%EC%A0%91-%ED%81%B4%EB%9E%98%EC%8A%A4)
-* [단위 테스트와 통합 테스트 사이의 트레이드 오프](https://github.com/f-lab-edu/tabling/wiki/troubleshooting#%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%A0%84%EB%9E%B5-mockist-vs-classicist)
-* [로그의 일관성과 명확성 사이의 트레이드 오프](https://github.com/f-lab-edu/tabling/wiki/troubleshooting#%EB%A1%9C%EA%B7%B8-%ED%8C%A8%ED%84%B4-%EC%9D%BC%EA%B4%80%EC%84%B1-vs-%EB%AA%85%ED%99%95%EC%84%B1)
-* [Spring Security 없이 세션 인증 구현 : 필터를 선택해서 구현](https://github.com/f-lab-edu/tabling/wiki/troubleshooting#spring-security-%EC%97%86%EC%9D%B4-%EC%84%B8%EC%85%98-%EC%9D%B8%EC%A6%9D-%EA%B5%AC%ED%98%84-%ED%95%84%ED%84%B0%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%B4%EC%84%9C-%EA%B5%AC%ED%98%84)
-* [세션 저장소를 Redis로 바꾸게 된 이유](https://github.com/f-lab-edu/tabling/wiki/troubleshooting#redis%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%B4-%EC%84%B8%EC%85%98-%EB%B6%88%EC%9D%BC%EC%B9%98-%ED%98%84%EC%83%81-%ED%95%B4%EA%B2%B0)
-* [식당 대기열에서 동시성 이슈 해결](https://github.com/f-lab-edu/tabling/wiki/troubleshooting#named-lock%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%B4-%EB%8C%80%EA%B8%B0-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%97%90%EC%84%9C-%EB%B0%9C%EC%83%9D%ED%95%9C-%EB%8F%99%EC%8B%9C%EC%84%B1-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
+* Backend: `Java 17`, `Spring Boot 3.1.3`, `Spring Data JPA`, `Spring Rest Docs`
+* DevOps: `MySQL 8.2.0`, `Redis`, `Docker`, `Naver Cloud Platform`, `Prometheus`, `Grafana`, `Ngrinder`
 
 <br>
 <br>
-
-# 인프라 구조
-
-## 서버 아키텍처
-
-![project_structure](https://github.com/f-lab-edu/tabling/assets/118912510/e372f8be-099f-4f53-a91e-dbbf1dbcaa77)
-
+<br>
 <br>
 <br>
 
-## CI/CD
+## 인프라 아키텍처
 
-![CI_CD_pipeline_v2](https://github.com/f-lab-edu/tabling/assets/118912510/d970452c-76b3-4756-b760-0998707827fe)
+![project_structure](https://github.com/user-attachments/assets/e5669be8-c2e7-41b3-8a4f-c222a15a6644)
 
 <br>
 <br>
+<br>
+<br>
+<br>
 
-# 주요 기능 시퀀스 다이어그램
+## 시퀀스 다이어그램
 
 ### 로그인
 
@@ -102,29 +91,41 @@ sequenceDiagram
 
 <br>
 <br>
+<br>
+<br>
+<br>
 
-## 브랜치 전략
+## 프로젝트 컨벤션
 
-* [테이블링 브랜치 전략](https://github.com/f-lab-edu/tabling/wiki/%EB%B8%8C%EB%9E%9C%EC%B9%98-%EC%A0%84%EB%9E%B5)
+* [객체지향 설계를 위한 규칙](https://github.com/f-lab-edu/tabling/wiki/Convention#객체지향-설계)
+* [커밋 메시지 규칙](https://github.com/f-lab-edu/tabling/wiki/Convention#commit-message)
+* [PR 규칙](https://github.com/f-lab-edu/tabling/wiki/Convention#pr-guideline)
+* [코딩 스타일](https://github.com/f-lab-edu/tabling/wiki/Convention#java-coding-style)
+* [빌더 패턴 규칙](https://github.com/f-lab-edu/tabling/wiki/Convention#builder-pattern)
+* [브랜치 전략](https://github.com/f-lab-edu/tabling/wiki/브랜치-전략#github-flow)
+* [유스케이스](https://github.com/f-lab-edu/tabling/wiki/유스-케이스)
 
 <br>
 <br>
 
-## 유스케이스
-
-* [테이블링 유스케이스](https://github.com/f-lab-edu/tabling/wiki/%EC%9C%A0%EC%8A%A4-%EC%BC%80%EC%9D%B4%EC%8A%A4)
-
-<br>
-<br>
-
-## API 명세
-
-* [API 명세 Github 페이지](https://f-lab-edu.github.io/tabling/)
+## 문제 해결 및 성능 개선
+* [식당 대기 시스템의 동시성 문제 해결 및 성능 개선](https://github.com/f-lab-edu/tabling/wiki/식당-대기-시스템의-동시성-문제-해결-및-성능-개선)
+* [Java 21 마이그레이션 및 Virtual thread 성능 측정](https://github.com/f-lab-edu/tabling/wiki/Java-21-마이그레이션-및-Virtual-thread-성능-측정)
 
 <br>
 <br>
 
-# ERD
+## 트레이드 오프 및 고찰
+* [테스트 커버리지 비율 80%를 달성한 후 생긴 고민](https://github.com/f-lab-edu/tabling/wiki/테스트-커버리지-비율-80%25를-달성한-후-생긴-고민)
+* [DTO 관리 전략: 외부 클래스와 정적 중접 클래스](https://github.com/f-lab-edu/tabling/wiki/DTO-관리-전략:-외부-클래스와-정적-중첩-클래스)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## ERD
 
 <br>
 <img width="682" alt="image" src="https://github.com/user-attachments/assets/d611af9e-4593-4bfb-b054-fbe3b600bf36">
