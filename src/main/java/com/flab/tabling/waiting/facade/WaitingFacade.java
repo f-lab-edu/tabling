@@ -5,7 +5,6 @@ import static java.util.concurrent.TimeUnit.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.flab.tabling.global.repository.NamedLockRepository;
 import com.flab.tabling.global.service.NamedLockService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.service.MemberQueryService;
