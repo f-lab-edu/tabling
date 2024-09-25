@@ -1,9 +1,11 @@
 package com.flab.tabling.waiting.facade;
 
+import static java.util.concurrent.TimeUnit.*;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.flab.tabling.global.repository.NamedLockRepository;
+import com.flab.tabling.global.service.NamedLockService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.domain.Store;
@@ -22,7 +24,7 @@ public class WaitingFacade {
 	private final StoreQueryService storeQueryService;
 	private final MemberQueryService memberQueryService;
 	private final WaitingService waitingService;
-	private final NamedLockRepository namedLockRepository;
+	private final NamedLockService namedLockService;
 	// private final BusinessHourQueryService businessHourQueryService;
 	//TODO: Business Hour 검증 로직 추가
 
@@ -59,10 +61,10 @@ public class WaitingFacade {
 	private Waiting addWaitingWithNamedLock(String lockKey, Store store, Member member, Integer headCount) {
 		Waiting waiting;
 		try {
-			namedLockRepository.getLock(lockKey);
+			namedLockService.lock(lockKey, 3, SECONDS);
 			waiting = waitingService.add(store, member, headCount);
 		} finally {
-			namedLockRepository.releaseLock(lockKey);
+			namedLockService.unlock(lockKey);
 		}
 		return waiting;
 	}

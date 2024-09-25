@@ -167,6 +167,7 @@ jacocoTestCoverageVerification {
                     'com.flab.tabling.global.auth.Login*',
                     'com.flab.tabling.global.log.MdcLoggingFilter',
                     'com.flab.tabling.**.domain.Q*',
+                    'com.flab.tabling.global.service.NamedLockService'
             ]
         }
     }
