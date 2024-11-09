@@ -61,8 +61,9 @@ public class WaitingFacade {
 	private Waiting addWaitingWithNamedLock(String lockKey, Store store, Member member, Integer headCount) {
 		Waiting waiting;
 		try {
+			if (!namedLockService.lock(lockKey, 3, SECONDS)) {
+				throw new RuntimeException("Failed to acquire lock for key: " + lockKey);
 			namedLockService.lock(lockKey, 3, SECONDS);
-			waiting = waitingService.add(store, member, headCount);
 		} finally {
 			namedLockService.unlock(lockKey);
 		}

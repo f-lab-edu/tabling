@@ -26,6 +26,7 @@ import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@TestPropertySource(properties = {"spring.data.redis.host=localhost", "spring.data.redis.port=6379"})
 @SpringBootTest
 public class WaitingFacadeConcurrencyTest {
 
@@ -62,7 +63,10 @@ public class WaitingFacadeConcurrencyTest {
 	}
 
 	private void executeConcurrentRequests(Long storeId) throws InterruptedException {
+		int threadCount = 20;
+		ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
 		ExecutorService executorService = Executors.newFixedThreadPool(10);
+		for (int i = 0; i < threadCount; i++) {
 		for (int i = 0; i < 8; i++) {
 			executorService.execute(() -> waitingFacade.add(storeId, memberIdx++, 3));
 		}
