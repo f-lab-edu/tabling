@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.constant.SessionConstant;
 import com.flab.tabling.global.exception.ErrorCode;
-import com.flab.tabling.global.service.CipherService;
 import com.flab.tabling.global.service.SessionService;
+import com.flab.tabling.global.service.cipher.CipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.exception.InvalidPasswordException;

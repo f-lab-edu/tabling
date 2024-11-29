@@ -1,4 +1,4 @@
-package com.flab.tabling.global.service;
+package com.flab.tabling.global.service.cipher;
 
 public interface CipherService {
 	String encrypt(String value);

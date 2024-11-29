@@ -16,6 +16,9 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+src/main/resources/application.yml
+src/main/resources/application-deploy.yml
+src/test/resources/application.yml
 
 ### IntelliJ IDEA ###
 .idea

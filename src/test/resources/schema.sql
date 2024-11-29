@@ -1,4 +1,3 @@
--- 참조 테이블들부터 삭제합니다.
 DROP TABLE IF EXISTS `history`;
 DROP TABLE IF EXISTS `favorite`;
 DROP TABLE IF EXISTS `waiting`;
@@ -8,8 +7,6 @@ DROP TABLE IF EXISTS `notice`;
 DROP TABLE IF EXISTS `penalty`;
 DROP TABLE IF EXISTS `point`;
 DROP TABLE IF EXISTS `address`;
-
--- 참조되는 테이블들을 삭제합니다.
 DROP TABLE IF EXISTS `store`;
 DROP TABLE IF EXISTS `member`;
 

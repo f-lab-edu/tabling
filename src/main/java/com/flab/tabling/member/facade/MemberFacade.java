@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.flab.tabling.global.constant.SessionConstant;
-import com.flab.tabling.global.service.CipherService;
 import com.flab.tabling.global.service.SessionService;
+import com.flab.tabling.global.service.cipher.CipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAddDto;
 import com.flab.tabling.member.service.MemberQueryService;

@@ -5,7 +5,7 @@ import static java.util.concurrent.TimeUnit.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.flab.tabling.global.service.NamedLockService;
+import com.flab.tabling.global.service.lock.DistributedLockService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.service.MemberQueryService;
 import com.flab.tabling.store.domain.Store;
@@ -24,8 +24,7 @@ public class WaitingFacade {
 	private final StoreQueryService storeQueryService;
 	private final MemberQueryService memberQueryService;
 	private final WaitingService waitingService;
-	private final NamedLockService namedLockService;
-	// private final BusinessHourQueryService businessHourQueryService;
+	private final DistributedLockService distributedLockService;
 	//TODO: Business Hour 검증 로직 추가
 
 	@Transactional
@@ -61,10 +60,10 @@ public class WaitingFacade {
 	private Waiting addWaitingWithNamedLock(String lockKey, Store store, Member member, Integer headCount) {
 		Waiting waiting;
 		try {
-			namedLockService.lock(lockKey, 3, SECONDS);
+			distributedLockService.lock(lockKey, 3, SECONDS);
 			waiting = waitingService.add(store, member, headCount);
 		} finally {
-			namedLockService.unlock(lockKey);
+			distributedLockService.unlock(lockKey);
 		}
 		return waiting;
 	}

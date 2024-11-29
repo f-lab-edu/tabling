@@ -9,6 +9,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.encrypt.Encryptors;
 
+import com.flab.tabling.global.service.cipher.TwoWayCipherService;
+
 @ExtendWith(MockitoExtension.class)
 class TwoWayCipherServiceTest {
 	private TwoWayCipherService twoWayCipherService;

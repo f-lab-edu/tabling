@@ -14,10 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpSession;
 
 import com.flab.tabling.global.constant.SessionConstant;
-import com.flab.tabling.global.service.OneWayCipherService;
+import com.flab.tabling.global.service.cipher.OneWayCipherService;
 import com.flab.tabling.global.service.SessionService;
 import com.flab.tabling.global.service.StringGenerateFixture;
-import com.flab.tabling.global.service.TwoWayCipherService;
+import com.flab.tabling.global.service.cipher.TwoWayCipherService;
 import com.flab.tabling.member.domain.Member;
 import com.flab.tabling.member.dto.MemberAuthDto;
 import com.flab.tabling.member.exception.InvalidPasswordException;

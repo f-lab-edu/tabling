@@ -1,4 +1,4 @@
-package com.flab.tabling.global.service;
+package com.flab.tabling.global.service.lock;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
-public class NamedLockService {
+// @Component
+public class ReentrantLockService {
 	private final ConcurrentHashMap<String, ReentrantLock> lockMap = new ConcurrentHashMap<>();
 
 	private ReentrantLock getLock(String key) {
@@ -26,7 +26,7 @@ public class NamedLockService {
 					"Failed to acquire lock for key: " + key + " within timeout: " + timeout + " " + unit);
 			}
 		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt(); // 현재 스레드의 인터럽트 상태 복원
+			Thread.currentThread().interrupt();
 			throw new RuntimeException("Thread was interrupted while trying to acquire lock for key: " + key, e);
 		}
 	}
@@ -35,7 +35,7 @@ public class NamedLockService {
 		ReentrantLock lock = getLock(key);
 		if (lock.isHeldByCurrentThread()) {
 			lock.unlock();
-			if (!lock.hasQueuedThreads()) { // 현재 대기 중인 스레드가 있다면 제거하지 못한다.
+			if (!lock.hasQueuedThreads()) {
 				lockMap.remove(key);
 			}
 		}

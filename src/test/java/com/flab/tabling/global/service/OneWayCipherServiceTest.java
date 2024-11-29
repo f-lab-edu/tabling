@@ -10,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.flab.tabling.global.service.cipher.OneWayCipherService;
+
 /**
  * @ExtendWith : 테스트 클래스, 테스트 인터페이스, 테스트 메소드, 테스트 매개변수 또는 필드 등 확장을 등록하는데 사용되는 반복가능한 어노테이션
  * @Spy : 기존 인스턴스를 감싼다. 기존 인스턴스와 동일한 방식으로 작동
